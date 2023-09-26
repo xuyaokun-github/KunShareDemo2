@@ -23,6 +23,8 @@ public class RedissonUtil {
 
     private static String LAST_NODE_ID;//上一次使用的node标识
 
+    private static String NODE_ID_PATH = "/appdata/redisson";
+
     public static void init(RedissonClient redisson){
         if (redisson == null){
             return;
@@ -42,8 +44,17 @@ public class RedissonUtil {
 
         //读取springboot应用根目录下的node.txt文件
         try {
+            File dirFile = new File(NODE_ID_PATH);
+            if (!dirFile.exists()){
+                try {
+                    dirFile.mkdirs();
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+
             String oldString = "";
-            File file = new File("node.txt");
+            File file = new File(NODE_ID_PATH + "/node.txt");
             if (file.exists()){
                 oldString = FileUtils.readFileToString(file, "UTF-8");
                 System.out.println(file.getAbsolutePath());

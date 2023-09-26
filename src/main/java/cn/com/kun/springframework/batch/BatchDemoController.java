@@ -15,11 +15,13 @@ import org.springframework.batch.core.repository.JobInstanceAlreadyCompleteExcep
 import org.springframework.batch.core.repository.JobRestartException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.dao.DeadlockLoserDataAccessException;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.annotation.Resource;
 import java.util.List;
 import java.util.UUID;
 
@@ -62,7 +64,11 @@ public class BatchDemoController {
 
     //可复现 Caused by: org.springframework.beans.factory.BeanNotOfRequiredTypeException
 //    @Autowired
-    BatchRateLimitDynamicCheckScheduler batchRateLimitDynamicCheckScheduler;
+//    @Qualifier("batchRateLimitDynamicCheckScheduler")
+//    @Resource
+    @Autowired
+    CommandLineRunner batchRateLimitDynamicCheckScheduler;
+//    BatchRateLimitDynamicCheckScheduler batchRateLimitDynamicCheckScheduler;
 
     /**
      * 测试job1

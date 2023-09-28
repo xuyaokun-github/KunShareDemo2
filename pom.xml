@@ -643,14 +643,29 @@
                                  和jar包同级的位置下，有一个lib文件夹-->
                             <classpathPrefix>lib/</classpathPrefix>
                             <!-- 此处为主入口-->
-                            <mainClass>cn.com.kun.apache.flink.FlinkDemoCommonEntrance</mainClass>
+<!--                            <mainClass>cn.com.kun.foo.javacommon.agent.BeforeJvmAgent</mainClass>-->
+                            <mainClass>cn.com.kun.foo.javacommon.agent.AfterJvmAgent</mainClass>
                         </manifest>
+                        <!-- agent包demo需要用到下面的配置 -->
+                        <manifestEntries>
+<!--                            <Premain-Class>cn.com.kun.foo.javacommon.agent.BeforeJvmAgent</Premain-Class>-->
+                            <Premain-Class>cn.com.kun.foo.javacommon.agent.AfterJvmAgent</Premain-Class>
+                            <!-- 启动前植入的agent无需指定Agent-Class
+                                假如是用attach方式，必须指定Agent-Class-->
+                            <Agent-Class>cn.com.kun.foo.javacommon.agent.AfterJvmAgent</Agent-Class>
+                            <Can-Redefine-Classes>true</Can-Redefine-Classes>
+                            <Can-Retransform-Classes>true</Can-Retransform-Classes>
+                        </manifestEntries>
                     </archive>
+                    <!-- 引入 路径（这个没生效） -->
+<!--                    <includes>-->
+<!--                        <include>**/agent/**</include>-->
+<!--                    </includes>-->
                     <excludes>
                         <exclude>testData/**</exclude>
                         <exclude>redis/**</exclude>
                     </excludes>
-                    <!-- executions似乎被移除了，会报红  -->
+                    <!-- 高版本jar插件executions似乎被移除了，会报红  -->
 <!--                    <executions>-->
 <!--                        <execution>-->
 <!--                            <id>copy</id>-->

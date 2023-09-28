@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.annotation.PostConstruct;
 import java.util.concurrent.atomic.AtomicLong;
 
 @RequestMapping("/feign-NoHttpResponseException")
@@ -26,7 +27,7 @@ public class FeignNoHttpResponseExceptionDemoController {
     @Autowired
     PoolingHttpClientConnectionManager connectionManager;
 
-//    @PostConstruct
+    @PostConstruct
     public void init(){
         //为了更容易观察归还连接的过程，可以先将连接校验的过程设置久一点
         connectionManager.setValidateAfterInactivity(1000 * 2000);
@@ -152,7 +153,7 @@ public class FeignNoHttpResponseExceptionDemoController {
 
         AtomicLong atomicLong = new AtomicLong(0);
         //请求第三方系统
-        for (int j = 0; j < 300; j++) {
+        for (int j = 0; j < 30; j++) {
             new Thread(()->{
                 try {
                     for (int i = 0; i < 1000; i++) {
@@ -178,8 +179,79 @@ public class FeignNoHttpResponseExceptionDemoController {
                 }
             }).start();
         }
-
         
+        return ResultVo.valueOfSuccess();
+    }
+
+
+    @GetMapping("/testAsync101Thread")
+    public ResultVo testAsync101Thread(){
+
+        AtomicLong atomicLong = new AtomicLong(0);
+        //请求第三方系统
+        for (int j = 0; j < 105; j++) {
+            new Thread(()->{
+                try {
+                    for (int i = 0; i < 2; i++) {
+                        ResultVo resultVo = kunwebdemoFeign.result();
+//                        LOGGER.info("res：{}", JacksonUtils.toJSONString(resultVo));
+//                        try {
+//                            Thread.sleep(70000);
+//                        } catch (InterruptedException e) {
+//                            e.printStackTrace();
+//                        }
+                        atomicLong.incrementAndGet();
+                    }
+                    LOGGER.info("总数：{}", atomicLong.get());
+                }catch (Exception e){
+//                    e.printStackTrace();
+                    if (e instanceof NoHttpResponseException){
+                        e.printStackTrace();
+                        LOGGER.error("主动关闭进程");
+                        System.exit(0);
+                    }else {
+                        LOGGER.error("访问异常", e);
+                    }
+                }
+            }).start();
+        }
+
+        return ResultVo.valueOfSuccess();
+    }
+
+
+    @GetMapping("/testAsyncSameConnMoreTimes")
+    public ResultVo testAsyncSameConnMoreTimes(){
+
+        AtomicLong atomicLong = new AtomicLong(0);
+        //请求第三方系统
+        for (int j = 0; j < 1; j++) {
+            new Thread(()->{
+                try {
+                    for (int i = 0; i < 200; i++) {
+                        ResultVo resultVo = kunwebdemoFeign.result();
+//                        LOGGER.info("res：{}", JacksonUtils.toJSONString(resultVo));
+//                        try {
+//                            Thread.sleep(70000);
+//                        } catch (InterruptedException e) {
+//                            e.printStackTrace();
+//                        }
+                        atomicLong.incrementAndGet();
+                    }
+                    LOGGER.info("总数：{}", atomicLong.get());
+                }catch (Exception e){
+//                    e.printStackTrace();
+                    if (e instanceof NoHttpResponseException){
+                        e.printStackTrace();
+                        LOGGER.error("主动关闭进程");
+                        System.exit(0);
+                    }else {
+                        LOGGER.error("访问异常", e);
+                    }
+                }
+            }).start();
+        }
+
         return ResultVo.valueOfSuccess();
     }
 }

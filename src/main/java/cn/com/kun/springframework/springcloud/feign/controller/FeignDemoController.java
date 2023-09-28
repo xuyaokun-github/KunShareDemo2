@@ -23,12 +23,19 @@ public class FeignDemoController {
     @Autowired
     private KunwebdemoFeign kunwebdemoFeign;
 
-    @GetMapping("/test1")
-    public ResultVo test1(){
+    @GetMapping("/test")
+    public ResultVo test(){
 
         ResultVo res = kunShareClientOneFeignService.result();
         logger.info("result:{}", JacksonUtils.toJSONString(res));
         return res;
+    }
+
+    @GetMapping("/test1")
+    public ResultVo test1(){
+
+        logger.info("result:{}", JacksonUtils.toJSONString(ResultVo.valueOfSuccess()));
+        return ResultVo.valueOfSuccess();
     }
 
     @GetMapping("/test2")

@@ -10,12 +10,25 @@ import org.springframework.data.jpa.repository.query.QueryEnhancerFactory;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 
-
+/**
+ * Springboot2.7.12 Demo
+ *
+ * author:xuyaokun_kzx
+ * date:2023/9/26
+ * desc:
+*/
 @SpringBootApplication
-//@SpringBootApplication(exclude= {WebMvcMetricsAutoConfiguration.class, TomcatMetricsAutoConfiguration.class})
 public class KunShareDemoApplication {
 
 	public static void main(String[] args) {
+
+
+		disableJsqlparser();
+
+		SpringApplication.run(KunShareDemoApplication.class, args);
+	}
+
+	private static void disableJsqlparser() {
 
 		try {
 			QueryEnhancerFactory.forQuery(null) ;
@@ -36,7 +49,6 @@ public class KunShareDemoApplication {
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
-		SpringApplication.run(KunShareDemoApplication.class, args);
 	}
 
 }

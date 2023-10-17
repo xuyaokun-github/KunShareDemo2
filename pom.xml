@@ -644,15 +644,17 @@
                             <classpathPrefix>lib/</classpathPrefix>
                             <!-- 此处为主入口-->
 <!--                            <mainClass>cn.com.kun.foo.javacommon.agent.BeforeJvmAgent</mainClass>-->
-                            <mainClass>cn.com.kun.foo.javacommon.agent.AfterJvmAgent</mainClass>
+<!--                            <mainClass>cn.com.kun.foo.javacommon.agent.AfterJvmAgent</mainClass>-->
+                            <mainClass>cn.com.kun.foo.javacommon.agent.accurate.AccurateTestAgent</mainClass>
                         </manifest>
                         <!-- agent包demo需要用到下面的配置 -->
                         <manifestEntries>
 <!--                            <Premain-Class>cn.com.kun.foo.javacommon.agent.BeforeJvmAgent</Premain-Class>-->
-                            <Premain-Class>cn.com.kun.foo.javacommon.agent.AfterJvmAgent</Premain-Class>
+<!--                            <Premain-Class>cn.com.kun.foo.javacommon.agent.AfterJvmAgent</Premain-Class>-->
+                            <Premain-Class>cn.com.kun.foo.javacommon.agent.accurate.AccurateTestAgent</Premain-Class>
                             <!-- 启动前植入的agent无需指定Agent-Class
                                 假如是用attach方式，必须指定Agent-Class-->
-                            <Agent-Class>cn.com.kun.foo.javacommon.agent.AfterJvmAgent</Agent-Class>
+<!--                            <Agent-Class>cn.com.kun.foo.javacommon.agent.AfterJvmAgent</Agent-Class>-->
                             <Can-Redefine-Classes>true</Can-Redefine-Classes>
                             <Can-Retransform-Classes>true</Can-Retransform-Classes>
                         </manifestEntries>
@@ -661,6 +663,9 @@
 <!--                    <includes>-->
 <!--                        <include>**/agent/**</include>-->
 <!--                    </includes>-->
+                    <includes>
+                        <include>cn/com/kun/foo/javacommon/agent/accurate/**</include>
+                    </includes>
                     <excludes>
                         <exclude>testData/**</exclude>
                         <exclude>redis/**</exclude>
@@ -677,6 +682,7 @@
 <!--                    </executions>-->
                 </configuration>
             </plugin>
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-dependency-plugin</artifactId>
@@ -752,6 +758,11 @@
                             <!--                            <classpathPrefix>lib/</classpathPrefix>-->
                             <mainClass>cn.com.kun.apache.flink.FlinkDemoCommonEntrance</mainClass>
                         </manifest>
+                        <archive>
+                            <manifestEntries>
+                                <Premain-Class>cn.com.kun.foo.javacommon.agent.accurate.AccurateTestAgent</Premain-Class>
+                            </manifestEntries>
+                        </archive>
                     </archive>
                 </configuration>
                 <executions>

@@ -1,10 +1,7 @@
 package cn.com.kun;
 
 import org.springframework.boot.SpringApplication;
-import org.springframework.boot.actuate.autoconfigure.metrics.web.servlet.WebMvcMetricsAutoConfiguration;
-import org.springframework.boot.actuate.autoconfigure.metrics.web.tomcat.TomcatMetricsAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
 import org.springframework.data.jpa.repository.query.QueryEnhancerFactory;
 
 import java.lang.reflect.Field;
@@ -22,7 +19,12 @@ public class KunShareDemoApplication {
 
 	public static void main(String[] args) {
 
-
+		System.out.println("KunShareDemoApplication main invoke!");
+		if (args != null){
+			for (String arg : args){
+				System.out.println("main方法接收到的参数：" + arg);
+			}
+		}
 		disableJsqlparser();
 
 		SpringApplication.run(KunShareDemoApplication.class, args);

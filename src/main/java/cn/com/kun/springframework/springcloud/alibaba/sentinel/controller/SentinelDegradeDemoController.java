@@ -10,6 +10,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.io.FileNotFoundException;
 
+/**
+ * 降级demo
+ *
+ * author:xuyaokun_kzx
+ * date:2023/10/20
+ * desc:
+*/
 @RequestMapping("/sentinel-degrade-demo")
 @RestController
 public class SentinelDegradeDemoController {

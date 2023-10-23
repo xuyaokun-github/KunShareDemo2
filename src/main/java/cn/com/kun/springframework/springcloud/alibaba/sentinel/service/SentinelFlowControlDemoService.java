@@ -16,7 +16,7 @@ public class SentinelFlowControlDemoService {
     /**
      * 简单限流(注解方式，直接能用，无法做额外的配置)
      */
-    @SentinelFlowControl(value = "SentinelFlowControlDemoService", bizName = "查询用户体系", pauseTime = 1000)
+    @SentinelFlowControl(value = "QUERY_USERCENTER", bizName = "查询用户体系", pauseTime = 1000)
     public String test(){
         // 被保护的逻辑
         LOGGER.info("正在查询用户体系");

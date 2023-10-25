@@ -1,4 +1,4 @@
-package cn.com.kun.framework.schedule.xxljob.bean;
+package cn.com.kun.framework.schedule.xxljob.extend.bean;
 
 import java.util.Date;
 

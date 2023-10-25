@@ -1,9 +1,9 @@
-package cn.com.kun.framework.schedule.xxljob.service;
+package cn.com.kun.framework.schedule.xxljob.extend;
 
 import cn.com.kun.common.utils.JacksonUtils;
 import cn.com.kun.common.vo.ResultVo;
-import cn.com.kun.framework.schedule.xxljob.bean.XxlJobInfo;
-import cn.com.kun.framework.schedule.xxljob.bean.XxlJobUser;
+import cn.com.kun.framework.schedule.xxljob.extend.bean.XxlJobInfo;
+import cn.com.kun.framework.schedule.xxljob.extend.bean.XxlJobUser;
 import cn.com.kun.framework.schedule.xxljob.handler.ExecTemplateJobHandler;
 import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.job.core.executor.impl.XxlJobSpringExecutor;

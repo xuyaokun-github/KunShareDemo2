@@ -1,9 +1,9 @@
-package cn.com.kun.framework.schedule.xxljob.controller;
+package cn.com.kun.framework.schedule.xxljob.extend.controller;
 
 
 import cn.com.kun.common.vo.ResultVo;
-import cn.com.kun.framework.schedule.xxljob.bean.XxlJobInfo;
-import cn.com.kun.framework.schedule.xxljob.service.XxlJobExtendService;
+import cn.com.kun.framework.schedule.xxljob.extend.bean.XxlJobInfo;
+import cn.com.kun.framework.schedule.xxljob.extend.XxlJobExtendService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,9 +23,9 @@ import org.springframework.web.bind.annotation.RestController;
 */
 @RequestMapping("/xxl-job-extend")
 @RestController
-public class XxljobDemoController {
+public class XxljobExtendDemoController {
 
-    private Logger LOGGER = LoggerFactory.getLogger(XxljobDemoController.class);
+    private Logger LOGGER = LoggerFactory.getLogger(XxljobExtendDemoController.class);
 
     @Autowired
     private XxlJobExtendService xxlJobExtendService;

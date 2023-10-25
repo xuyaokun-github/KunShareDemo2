@@ -1,8 +1,8 @@
-package cn.com.kun.component.kafkaConsumerSpeed;
+package cn.com.kun.kafka.speedControl;
 
 import cn.com.kun.common.utils.JacksonUtils;
-import cn.com.kun.component.sentinel.sentinelFlowMonitor.SentinelFlowMonitor;
-import cn.com.kun.component.sentinel.sentinelFlowMonitor.vo.FlowMonitorRes;
+import cn.com.kun.component.sentinel.flowmonitor.SentinelFlowMonitor;
+import cn.com.kun.component.sentinel.vo.FlowMonitorRes;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,59 +11,90 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 
-import static cn.com.kun.springframework.springcloud.alibaba.sentinel.SentinelResourceConstants.*;
-
 /**
  * Kafka消费线程管理器
  * 作用：通过让Kafka线程睡眠，从而控制Kafka线程消费速度
+ * 依赖了sentinel扩展组件
  *
  * author:xuyaokun_kzx
  * date:2021/10/8
  * desc:
 */
 @Component
-public class KafkaConsumerThreadManager {
+public class KafkaSpeedControlManager {
 
-    private final static Logger LOGGER = LoggerFactory.getLogger(KafkaConsumerThreadManager.class);
+    private final static Logger LOGGER = LoggerFactory.getLogger(KafkaSpeedControlManager.class);
 
-    @Autowired
-    private SentinelFlowMonitor sentinelFlowMonitor;
-
-    //
+    /**
+     *  配置文件
+     */
     @Autowired
     private KafkaConsumerSpeedProperties kafkaConsumerSpeedProperties;
 
+    @Autowired
+    private TopicResourceRelationHolder topicResourceRelationHolder;
+
+    /**
+     * 强依赖 sentinel扩展组件
+     */
+    @Autowired
+    private SentinelFlowMonitor sentinelFlowMonitor;
+
+
     @PostConstruct
     public void init(){
+
         LOGGER.info("kafkaConsumerSpeedProperties：{}", JacksonUtils.toJSONString(kafkaConsumerSpeedProperties));
-
-        //注册需要关注的资源信息
-        sentinelFlowMonitor.registContextName("sentinel_default_context");
-        sentinelFlowMonitor.registContextName(CONTEXT_MSG_PUSH);
-
-        //注册监控的黄色预警线（每个资源对应的黄色预警线不一致）
-        //假如没配，默认取85%？
-        //例如当QPS超过20就触发黄色预警
-        sentinelFlowMonitor.registYellowLineThreshold(RESOURCE_NAME, 20L);
     }
 
     /**
-     * 开始等待
-     * 假如需要控制消费线程速度，可以在一批消息执行完之后调用该方法
-     * 睡眠N秒，然后开始下一次拉取
+     * 供上层调用
+     *
+     * @param contextName
      */
-    public void await(String consumerThreadType) throws InterruptedException {
+    public void registContext(String contextName){
+
+        sentinelFlowMonitor.registContextName(contextName);
+    }
+
+    
+
+    /**
+     * 假如需要控制消费线程速度，可以在一批消息执行完之后调用该方法
+     * 进入睡眠等待N秒，然后开始下一次拉取
+     *
+     * @param consumerThreadType 消费者类型
+     * @param topic 主题名
+     * @throws InterruptedException
+     */
+    public void await(String consumerThreadType, String topic) throws InterruptedException {
+
+        if (!kafkaConsumerSpeedProperties.isEnabled()){
+            //开关未开启
+            return;
+        }
 
         /*
          * 需要监听哪些资源，根据业务决定
+         * 通过主题名，能找到待监听的限流资源列表
          */
-//        FlowMonitorRes flowMonitorRes = flowMonitorProcessor.getFlowMonitorRes(RESOURCE_NAME);
-        FlowMonitorRes flowMonitorRes = sentinelFlowMonitor.getMergeFlowMonitorRes(RESOURCE_SCENE_DX, RESOURCE_SCENE_WX);
-        LOGGER.info("flowMonitorRes：{}", JacksonUtils.toJSONString(flowMonitorRes));
+        String[] resources = topicResourceRelationHolder.get(topic);
+        if (resources == null || resources.length < 1){
+            //假如上层未注册，则直接return
+            return;
+        }
+        /*
+            监听一个资源或者多个资源，由上层决定
+         */
+        FlowMonitorRes flowMonitorRes = sentinelFlowMonitor.getMergeFlowMonitorRes(resources);
+        if (LOGGER.isDebugEnabled()){
+            LOGGER.debug("flowMonitorRes：{}", JacksonUtils.toJSONString(flowMonitorRes));
+        }
         if (flowMonitorRes != null){
             //计算睡眠时间
             long sleepTime = calculateWaitTime(flowMonitorRes, consumerThreadType);
             if (sleepTime > 0){
+                LOGGER.info("{}开始睡眠{}ms", Thread.currentThread().getName(), sleepTime);
                 Thread.sleep(sleepTime);
             }
         }
@@ -80,7 +111,7 @@ public class KafkaConsumerThreadManager {
 
         String time = "";
 
-        if(KafkaConsumerThreadConstants.CONSUMER_THREAD_TYPE_HIGH.equals(consumerThreadType)){
+        if(ConsumerThreadTypeEnum.HIGH.getTypeName().equals(consumerThreadType)){
             /*
              * 决定睡眠多久，可以灵活设置
              */
@@ -91,7 +122,7 @@ public class KafkaConsumerThreadManager {
             } else {
                 time = kafkaConsumerSpeedProperties.getHighSleepTimeWhenGreen();
             }
-        }else if (KafkaConsumerThreadConstants.CONSUMER_THREAD_TYPE_MIDDLE.equals(consumerThreadType)){
+        }else if (ConsumerThreadTypeEnum.MIDDLE.getTypeName().equals(consumerThreadType)){
             /*
              * 决定睡眠多久，可以灵活设置
              */
@@ -102,7 +133,7 @@ public class KafkaConsumerThreadManager {
             } else {
                 time = kafkaConsumerSpeedProperties.getMiddleSleepTimeWhenGreen();
             }
-        }else if (KafkaConsumerThreadConstants.CONSUMER_THREAD_TYPE_LOW.equals(consumerThreadType)){
+        }else if (ConsumerThreadTypeEnum.LOW.getTypeName().equals(consumerThreadType)){
             /*
              * 决定睡眠多久，可以灵活设置
              */
@@ -115,7 +146,7 @@ public class KafkaConsumerThreadManager {
             }
         }
 
-        //也可以根据具体的QPS值决定该睡多久,可以制定一个公式，灵活判断
+        //也可以根据具体的QPS值决定该睡多久,可以制定一个公式，灵活判断 TODO
 //        flowMonitorRes.getTotalQps();
 
         return StringUtils.isEmpty(time) ? 0L : Long.valueOf(time);

@@ -1,4 +1,4 @@
-package cn.com.kun.component.kafkaConsumerSpeed;
+package cn.com.kun.kafka.speedControl;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
@@ -18,7 +18,7 @@ public class KafkaConsumerSpeedProperties implements Serializable {
     /**
      * 开关：是否启用中优先级和低优先级线程
      */
-    private boolean middleAndLowEnabled;
+    private boolean enabled;
 
     private String highSleepTimeWhenRed;
 
@@ -38,13 +38,12 @@ public class KafkaConsumerSpeedProperties implements Serializable {
 
     private String lowSleepTimeWhenGreen;
 
-
-    public boolean isMiddleAndLowEnabled() {
-        return middleAndLowEnabled;
+    public boolean isEnabled() {
+        return enabled;
     }
 
-    public void setMiddleAndLowEnabled(boolean middleAndLowEnabled) {
-        this.middleAndLowEnabled = middleAndLowEnabled;
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
     }
 
     public String getHighSleepTimeWhenRed() {

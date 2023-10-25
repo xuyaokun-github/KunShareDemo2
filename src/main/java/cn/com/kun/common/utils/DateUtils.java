@@ -39,6 +39,12 @@ public class DateUtils {
         return dateTimeFormatter.format(now);
     }
 
+    public static String nowWithMillis(){
+        LocalDateTime now = LocalDateTime.now();
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern(PATTERN_yyyy_MM_dd_HH_mm_ss_SSS);
+        return dateTimeFormatter.format(now);
+    }
+
     public static String nowWithNoSymbol(){
         LocalDateTime now = LocalDateTime.now();
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");

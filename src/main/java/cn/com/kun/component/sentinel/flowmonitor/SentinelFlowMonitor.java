@@ -1,6 +1,6 @@
-package cn.com.kun.component.sentinel.sentinelFlowMonitor;
+package cn.com.kun.component.sentinel.flowmonitor;
 
-import cn.com.kun.component.sentinel.sentinelFlowMonitor.vo.FlowMonitorRes;
+import cn.com.kun.component.sentinel.vo.FlowMonitorRes;
 import com.alibaba.csp.sentinel.command.vo.NodeVo;
 import com.alibaba.csp.sentinel.concurrent.NamedThreadFactory;
 import org.slf4j.Logger;
@@ -40,10 +40,10 @@ public class SentinelFlowMonitor {
     private List<String> contextNameList = new ArrayList<>();
 
     /**
-     * key ->
-     * value -> FlowMonitorRes(装载着红、黄、绿三个状态的标识)
+     * key -> 资源名称
+     * value -> FlowMonitorRes(装载着红、黄、绿三个状态的标识) FlowMonitorRes是可复用对象
      */
-    private Map<String, FlowMonitorRes> monitorFlagMap = new ConcurrentHashMap();
+    private Map<String, FlowMonitorRes> monitorResMap = new ConcurrentHashMap();
 
     /**
      * 绿黄分隔线具体值
@@ -86,7 +86,7 @@ public class SentinelFlowMonitor {
      */
     public FlowMonitorRes getFlowMonitorRes(String resourceName) {
 
-        return monitorFlagMap.get(resourceName);
+        return monitorResMap.get(resourceName);
     }
 
 
@@ -104,7 +104,7 @@ public class SentinelFlowMonitor {
         mergeRes.markGreen();
         for (String resourceName : resourceNames) {
             //遍历所有资源对应的监控结果，合并成一个统一结果返回
-            FlowMonitorRes flowMonitorRes = monitorFlagMap.get(resourceName);
+            FlowMonitorRes flowMonitorRes = monitorResMap.get(resourceName);
             if (flowMonitorRes != null){
                 if (flowMonitorRes.isRed()){
                     //打上红色标记并退出
@@ -129,6 +129,7 @@ public class SentinelFlowMonitor {
     /**
      * 注册需要监控的context
      * 未注册的不会获取QPS指标
+     *
      * @param contextName
      */
     public void registContextName(String contextName){
@@ -169,17 +170,18 @@ public class SentinelFlowMonitor {
                     }
 
                     for (String contextName : contextNameList){
+                        //根据上下文名称获取各个资源对应的限流情况
                         List<NodeVo> results = CustomFetchJsonTreeHandler.getJsonTreeForFixedContext(contextName);
                         if (results == null){
                             continue;
                         }
                         results.forEach(nodeVo -> {
                             String resourceName = nodeVo.getResource();
-                            FlowMonitorRes flowMonitorRes = monitorFlagMap.get(resourceName);
+                            FlowMonitorRes flowMonitorRes = monitorResMap.get(resourceName);
                             if(flowMonitorRes == null){
                                 flowMonitorRes = new FlowMonitorRes();
                                 flowMonitorRes.setResource(resourceName);
-                                monitorFlagMap.put(resourceName, flowMonitorRes);
+                                monitorResMap.put(resourceName, flowMonitorRes);
                             }
                             //刷新MonitorFlag对象
                             refreshMonitorFlag(flowMonitorRes, nodeVo);
@@ -193,7 +195,6 @@ public class SentinelFlowMonitor {
                     }
                 } catch (Exception e) {
                     LOGGER.error("FlowMonitorTask异常", e);
-//                    e.printStackTrace();
                 }finally {
                     //监控频率间隔1秒或者几秒，这个可以通过阈值设置
                     try {

@@ -18,4 +18,10 @@ public class SentinelResourceConstants {
 
     public static final String RESOURCE_NAME_4 = "testDegrade";
 
+    public static final String RESOURCE_MSG_PUSH_SM01 = "MSG_PUSH_SM01";
+
+    public static final String RESOURCE_MSG_PUSH_SM02 = "MSG_PUSH_SM02";
+
+    public static final String RESOURCE_MSG_PUSH_SPS = "MSG_PUSH_SPS";
+
 }

@@ -1,4 +1,4 @@
-package cn.com.kun.component.sentinel.sentinelFlowMonitor.vo;
+package cn.com.kun.component.sentinel.vo;
 
 import com.alibaba.csp.sentinel.slots.block.flow.FlowRule;
 
@@ -12,6 +12,9 @@ import com.alibaba.csp.sentinel.slots.block.flow.FlowRule;
 */
 public class CustomFlowRule extends FlowRule {
 
+    /**
+     * 黄线阈值
+     */
     private Long yellowLineThreshold;
 
     public Long getYellowLineThreshold() {

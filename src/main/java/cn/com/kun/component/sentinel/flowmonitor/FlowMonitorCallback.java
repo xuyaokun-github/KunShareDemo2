@@ -1,6 +1,6 @@
-package cn.com.kun.component.sentinel.sentinelFlowMonitor;
+package cn.com.kun.component.sentinel.flowmonitor;
 
-import cn.com.kun.component.sentinel.sentinelFlowMonitor.vo.FlowMonitorRes;
+import cn.com.kun.component.sentinel.vo.FlowMonitorRes;
 
 @FunctionalInterface
 public interface FlowMonitorCallback {

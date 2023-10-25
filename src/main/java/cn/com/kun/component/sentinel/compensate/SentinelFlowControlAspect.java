@@ -1,4 +1,4 @@
-package cn.com.kun.component.sentinel.sentinelCompensate;
+package cn.com.kun.component.sentinel.compensate;
 
 import com.alibaba.csp.sentinel.Entry;
 import com.alibaba.csp.sentinel.SphU;
@@ -26,7 +26,7 @@ public class SentinelFlowControlAspect {
 
     private final static Logger LOGGER = LoggerFactory.getLogger(SentinelFlowControlAspect.class);
 
-    @Pointcut("@annotation(cn.com.kun.component.sentinel.sentinelCompensate.SentinelFlowControl)")
+    @Pointcut("@annotation(cn.com.kun.component.sentinel.compensate.SentinelFlowControl)")
     public void pointCut(){
 
     }

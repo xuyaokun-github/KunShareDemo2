@@ -1,10 +1,10 @@
 package cn.com.kun.springframework.springcloud.alibaba.sentinel.service.scenelimit;
 
 import cn.com.kun.common.vo.ResultVo;
-import cn.com.kun.component.sentinel.sentinelFlowMonitor.FlowMonitorCallback;
-import cn.com.kun.component.sentinel.sentinelFlowMonitor.SentinelFlowMonitor;
-import cn.com.kun.component.sentinel.sentinelFlowMonitor.SentinelRuleLoader;
-import cn.com.kun.component.sentinel.sentinelFlowMonitor.vo.FlowMonitorRes;
+import cn.com.kun.component.sentinel.flowmonitor.FlowMonitorCallback;
+import cn.com.kun.component.sentinel.flowmonitor.SentinelFlowMonitor;
+import cn.com.kun.component.sentinel.core.SentinelRuleLoader;
+import cn.com.kun.component.sentinel.vo.FlowMonitorRes;
 import com.alibaba.csp.sentinel.Entry;
 import com.alibaba.csp.sentinel.SphU;
 import com.alibaba.csp.sentinel.context.ContextUtil;

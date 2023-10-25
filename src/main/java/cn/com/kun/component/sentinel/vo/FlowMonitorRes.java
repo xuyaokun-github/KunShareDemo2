@@ -1,4 +1,4 @@
-package cn.com.kun.component.sentinel.sentinelFlowMonitor.vo;
+package cn.com.kun.component.sentinel.vo;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 

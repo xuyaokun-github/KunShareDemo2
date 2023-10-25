@@ -1,7 +1,8 @@
-package cn.com.kun.component.sentinel.sentinelFlowMonitor;
+package cn.com.kun.component.sentinel.core;
 
-import cn.com.kun.component.sentinel.sentinelFlowMonitor.properties.SentinelRuleProperties;
-import cn.com.kun.component.sentinel.sentinelFlowMonitor.vo.CustomFlowRule;
+import cn.com.kun.component.sentinel.flowmonitor.SentinelFlowMonitor;
+import cn.com.kun.component.sentinel.properties.SentinelRuleProperties;
+import cn.com.kun.component.sentinel.vo.CustomFlowRule;
 import com.alibaba.csp.sentinel.slots.block.RuleConstant;
 import com.alibaba.csp.sentinel.slots.block.degrade.DegradeRule;
 import com.alibaba.csp.sentinel.slots.block.degrade.DegradeRuleManager;
@@ -20,10 +21,10 @@ import java.util.Map;
 public class SentinelRuleLoader {
 
     @Autowired
-    private SentinelFlowMonitor sentinelFlowMonitor;
+    private SentinelRuleProperties sentinelRuleProperties;
 
     @Autowired
-    private SentinelRuleProperties sentinelRuleProperties;
+    private SentinelFlowMonitor sentinelFlowMonitor;
 
     @PostConstruct
     public void init(){
@@ -45,6 +46,7 @@ public class SentinelRuleLoader {
             String key = (String) entry.getKey();
             CustomFlowRule flowRule = (CustomFlowRule) entry.getValue();
             if (flowRule.getYellowLineThreshold() != null){
+                //假如配置了黄线监控值，则注册监控行为
                 sentinelFlowMonitor.registYellowLineThreshold(key, flowRule.getYellowLineThreshold());
             }
         }

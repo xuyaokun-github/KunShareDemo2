@@ -1,4 +1,4 @@
-package cn.com.kun.component.sentinel.sentinelCompensate;
+package cn.com.kun.component.sentinel.compensate;
 
 import java.lang.annotation.*;
 

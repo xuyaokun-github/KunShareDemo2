@@ -1,4 +1,4 @@
-package cn.com.kun.component.sentinel.sentinelFlowMonitor;
+package cn.com.kun.component.sentinel.flowmonitor;
 
 import com.alibaba.csp.sentinel.Constants;
 import com.alibaba.csp.sentinel.command.vo.NodeVo;
@@ -14,6 +14,7 @@ import java.util.concurrent.atomic.AtomicReference;
 /**
  * 解析jsonTree,只获取感兴趣的resource对应的统计信息
  * 参考源类com.alibaba.csp.sentinel.command.handler.FetchJsonTreeCommandHandler
+ * CustomFetchJsonTreeHandler不需要实现CommandHandler接口，它只是扩展了FetchJsonTreeCommandHandler的方法
  *
  * author:xuyaokun_kzx
  * date:2021/9/30

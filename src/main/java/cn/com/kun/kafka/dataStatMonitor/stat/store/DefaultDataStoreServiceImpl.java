@@ -139,7 +139,7 @@ public class DefaultDataStoreServiceImpl implements DataStoreService{
 
     private String buildProducerHostnameTopicKey(String hostname, String topic) {
 
-        return DATA_STAT_PRODUCER + hostname + ":" + topic;
+        return DATA_STAT_PRODUCER + ":" + hostname + ":" + topic;
     }
 
     @Override
@@ -178,7 +178,7 @@ public class DefaultDataStoreServiceImpl implements DataStoreService{
 
     private String buildConsumerHostnameTopicKey(String hostname, String topic) {
 
-        return DATA_STAT_CONSUMER + hostname + ":" + topic;
+        return DATA_STAT_CONSUMER + ":" + hostname + ":" + topic;
     }
 
     @Override

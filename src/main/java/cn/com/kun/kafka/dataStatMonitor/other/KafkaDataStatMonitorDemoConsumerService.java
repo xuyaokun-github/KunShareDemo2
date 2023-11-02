@@ -47,8 +47,6 @@ public class KafkaDataStatMonitorDemoConsumerService {
     @PostConstruct
     public void init() {
 
-        maxWaitTime = getMaxWaitTime(kafkaConsumerProperties.getMaxPollIntervalMs());
-
         new Thread(() -> {
             while (true) {
                 try {

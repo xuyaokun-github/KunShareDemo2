@@ -1,8 +1,8 @@
 package cn.com.kun.kafka.consumer;
 
 import cn.com.kun.kafka.config.KafkaConsumerProperties;
+import org.apache.kafka.clients.consumer.Consumer;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
-import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +27,7 @@ public class HelloTopicConsumerService3 {
 
     @Autowired
     @Qualifier("helloTopicKafkaConsumerMore")
-    private KafkaConsumer consumer;
+    private Consumer consumer;
 
     private long maxWaitTime;
 

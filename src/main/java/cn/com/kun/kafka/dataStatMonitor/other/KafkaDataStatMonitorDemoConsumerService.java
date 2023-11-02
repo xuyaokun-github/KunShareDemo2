@@ -4,8 +4,8 @@ import cn.com.kun.kafka.config.KafkaConsumerProperties;
 import cn.com.kun.kafka.consumer.HelloTopicMsgRunnable;
 import cn.com.kun.kafka.consumer.MsgCacheMsgProcessor;
 import cn.com.kun.kafka.consumer.RecordWrapper;
+import org.apache.kafka.clients.consumer.Consumer;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
-import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,9 +32,7 @@ public class KafkaDataStatMonitorDemoConsumerService {
 
     @Autowired
     @Qualifier("dataStatMonitorKafkaConsumer")
-    private KafkaConsumer consumer;
-
-    private long maxWaitTime;
+    private Consumer consumer;
 
     @Autowired
     @Qualifier("myKafkaMsgExecutor")

@@ -35,7 +35,7 @@ public class FlowRuleRefresher {
                 newFlowRule.setControlBehavior(flowRule.getControlBehavior());
                 newFlowRule.setCount(flowRule.getCount());
                 if (flowRule.getResource().equals(resource) && flowRule.getCount() != count){
-                    //限流值不相同时，才有必要调用刷新(必须重建对象，否则框架认为限流规则没变，因为底层复现了equals方法)
+                    //限流值不相同时，才有必要调用刷新(必须重建对象，否则框架认为限流规则没变，因为底层实现了equals方法)
                     newFlowRule.setCount(count);
                     needRefresh = true;
                 }

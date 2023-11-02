@@ -2,8 +2,8 @@ package cn.com.kun.kafka.dynamicConsume.other;
 
 import cn.com.kun.kafka.config.KafkaConsumerProperties;
 import cn.com.kun.kafka.consumer.MsgCacheMsgProcessor;
+import org.apache.kafka.clients.consumer.Consumer;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
-import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +27,7 @@ public class CustomTopicOneConsumerService {
      */
     @Autowired
     @Qualifier("customTopicOneKafkaConsumer")
-    private KafkaConsumer consumer;
+    private Consumer consumer;
 
     @Autowired
     @Qualifier("myKafkaMsgExecutor")

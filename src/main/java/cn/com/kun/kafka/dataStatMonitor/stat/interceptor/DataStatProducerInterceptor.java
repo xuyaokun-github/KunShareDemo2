@@ -24,11 +24,6 @@ public class DataStatProducerInterceptor implements ProducerInterceptor<String, 
 
     private final static Logger LOGGER = LoggerFactory.getLogger(DataStatProducerInterceptor.class);
 
-    private int errorCounter = 0;
-
-    private int successCounter = 0;
-
-
     /**
      *  发送消息回调
      * @return
@@ -52,7 +47,6 @@ public class DataStatProducerInterceptor implements ProducerInterceptor<String, 
             TopicDataStatCounter.add(record.topic(), msgType);
         }
 
-        LOGGER.info("调用onSend方法");
         return record;
     }
 
@@ -61,13 +55,7 @@ public class DataStatProducerInterceptor implements ProducerInterceptor<String, 
      */
     @Override
     public void onAcknowledgement(RecordMetadata recordMetadata, Exception e) {
-        LOGGER.info("调用onAcknowledgement方法");
-        // 统计成功和失败的次数
-        if (e == null) {
-            successCounter++;
-        } else {
-            errorCounter++;
-        }
+
     }
 
     /**
@@ -75,9 +63,7 @@ public class DataStatProducerInterceptor implements ProducerInterceptor<String, 
      */
     @Override
     public void close() {
-        // 保存结果
-//        System.out.println("Successful sent: " + successCounter);
-//        System.out.println("Failed sent: " + errorCounter);
+
     }
 
     /**
@@ -85,6 +71,6 @@ public class DataStatProducerInterceptor implements ProducerInterceptor<String, 
      */
     @Override
     public void configure(Map<String, ?> map) {
-//        System.out.println("111222");
+
     }
 }

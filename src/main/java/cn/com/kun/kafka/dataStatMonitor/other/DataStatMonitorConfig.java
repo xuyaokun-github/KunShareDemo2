@@ -2,15 +2,21 @@ package cn.com.kun.kafka.dataStatMonitor.other;
 
 import cn.com.kun.kafka.config.KafkaConsumerProperties;
 import cn.com.kun.kafka.dataStatMonitor.lag.TopicLagMonitor;
+import cn.com.kun.kafka.dataStatMonitor.stat.store.DataStoreService;
+import cn.com.kun.kafka.dataStatMonitor.stat.store.DefaultDataStoreServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.redis.core.RedisTemplate;
 
 @Configuration
 public class DataStatMonitorConfig {
 
     @Autowired
     KafkaConsumerProperties kafkaConsumerProperties;
+
+    @Autowired
+    private RedisTemplate redisTemplate;
 
     /**
      * 定义主题Lag监控器
@@ -48,5 +54,13 @@ public class DataStatMonitorConfig {
 
     }
 
-
+    /**
+     * 强依赖RedisTemplate
+     *
+     * @return
+     */
+    @Bean
+    public DataStoreService dataStoreService(){
+        return new DefaultDataStoreServiceImpl(redisTemplate);
+    }
 }

@@ -177,6 +177,8 @@ public class TopicLagMonitor {
         props.put("group.id", groupId);
         props.put("key.deserializer", StringDeserializer.class.getName());
         props.put("value.deserializer", StringDeserializer.class.getName());
+        //解决The coordinator is not aware of this member.问题
+        props.put("enable.auto.commit", "false");
 
 //        props.put("enable.auto.commit", kafkaConsumerProperties.getEnableAutoCommit());//手动提交
 //        props.put("auto.commit.interval.ms", kafkaConsumerProperties.getAutoCommitIntervalMs());

@@ -1,6 +1,7 @@
 package cn.com.kun.kafka.dataStatMonitor.other;
 
 import cn.com.kun.common.vo.ResultVo;
+import cn.com.kun.kafka.consumer.ConsumerHelper;
 import cn.com.kun.kafka.dataStatMonitor.lag.TopicLagMonitor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,6 +30,9 @@ public class KafkaDataStatMonitorDemoController {
 
     @Autowired
     private KafkaDataStatMonitorDemoProducerService kafkaDataStatMonitorDemoProducerService;
+
+    @Autowired
+    private ConsumerHelper consumerHelper;
 
     @GetMapping("/testDataStatMonitor")
     public ResultVo testDataStatMonitor(){
@@ -73,6 +77,62 @@ public class KafkaDataStatMonitorDemoController {
         msgVO.put(MSG_TYPE_HEADER_KEY_NAME, ThreadLocalRandom.current().nextInt(10)%2==0?"AAA":"BBB");
 
         kafkaDataStatMonitorDemoProducerService.produce(msgVO, "dataStatMonitor-topic");
+        return ResultVo.valueOfSuccess();
+    }
+
+    @GetMapping("/testProduceMore")
+    public ResultVo testProduceMore(){
+
+        for (int i = 0; i < 5000; i++) {
+            Map<String, String> msgVO = new HashMap<>();
+            msgVO.put("uuid", UUID.randomUUID().toString());
+            msgVO.put(MSG_TYPE_HEADER_KEY_NAME, ThreadLocalRandom.current().nextInt(10)%2==0?"AAA":"BBB");
+
+            kafkaDataStatMonitorDemoProducerService.produce(msgVO, "dataStatMonitor-topic");
+        }
+
+        return ResultVo.valueOfSuccess();
+    }
+
+
+    @GetMapping("/testProduceMoreAAA")
+    public ResultVo testProduceMoreAAA(){
+
+        for (int i = 0; i < 5000; i++) {
+            Map<String, String> msgVO = new HashMap<>();
+            msgVO.put("uuid", UUID.randomUUID().toString());
+            msgVO.put(MSG_TYPE_HEADER_KEY_NAME, "AAA");
+
+            kafkaDataStatMonitorDemoProducerService.produce(msgVO, "dataStatMonitor-topic");
+        }
+
+        return ResultVo.valueOfSuccess();
+    }
+
+    @GetMapping("/testProduceMoreBBB")
+    public ResultVo testProduceMoreBBB(){
+
+        for (int i = 0; i < 5000; i++) {
+            Map<String, String> msgVO = new HashMap<>();
+            msgVO.put("uuid", UUID.randomUUID().toString());
+            msgVO.put(MSG_TYPE_HEADER_KEY_NAME, "BBB");
+
+            kafkaDataStatMonitorDemoProducerService.produce(msgVO, "dataStatMonitor-topic");
+        }
+
+        return ResultVo.valueOfSuccess();
+    }
+
+
+    @GetMapping("/testConsumerHelper")
+    public ResultVo testConsumerHelper(){
+
+        if (consumerHelper.isConsumeSlow()){
+            consumerHelper.consumeFast();
+        }else {
+            consumerHelper.consumeSlow();
+        }
+
         return ResultVo.valueOfSuccess();
     }
 

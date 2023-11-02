@@ -28,7 +28,7 @@ public class DataStatConsumerInterceptor implements ConsumerInterceptor<String, 
     @Override
     public ConsumerRecords<String, String> onConsume(ConsumerRecords<String, String> records) {
 
-        LOGGER.info("进入onConsume方法");
+//        LOGGER.info("进入onConsume方法");
         if (records.count() > 0) {
 
             records.forEach(record ->{
@@ -40,7 +40,8 @@ public class DataStatConsumerInterceptor implements ConsumerInterceptor<String, 
                     for (Header header : headers){
                         if (MSG_TYPE_HEADER_KEY_NAME.equals(header.key())){
                             msgType = new String(header.value(), StandardCharsets.UTF_8);
-                            LOGGER.info("消费者拦截器解析到消息类型：{}", msgType);
+                            //测试时先屏蔽日志
+//                            LOGGER.info("消费者拦截器解析到消息类型：{}", msgType);
                             break;
                         }
                     }

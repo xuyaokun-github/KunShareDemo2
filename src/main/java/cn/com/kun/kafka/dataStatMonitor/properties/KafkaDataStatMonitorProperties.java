@@ -15,7 +15,11 @@ import java.io.Serializable;
 @ConfigurationProperties(prefix ="kafka.data-stat")
 public class KafkaDataStatMonitorProperties implements Serializable {
 
-    private boolean dataReportEnabled;
+    private boolean collectReportEnabled;
+
+    private boolean producerReportEnabled;
+
+    private boolean consumerReportEnabled;
 
     private boolean lagCheckEnabled;
 
@@ -25,12 +29,14 @@ public class KafkaDataStatMonitorProperties implements Serializable {
      */
     private long normalTimeIntervalMs;
 
-    public boolean isDataReportEnabled() {
-        return dataReportEnabled;
+    private long dataCollectScheduledIntervalMs;
+
+    public boolean isCollectReportEnabled() {
+        return collectReportEnabled;
     }
 
-    public void setDataReportEnabled(boolean dataReportEnabled) {
-        this.dataReportEnabled = dataReportEnabled;
+    public void setCollectReportEnabled(boolean collectReportEnabled) {
+        this.collectReportEnabled = collectReportEnabled;
     }
 
     public boolean isLagCheckEnabled() {
@@ -47,5 +53,29 @@ public class KafkaDataStatMonitorProperties implements Serializable {
 
     public void setNormalTimeIntervalMs(long normalTimeIntervalMs) {
         this.normalTimeIntervalMs = normalTimeIntervalMs;
+    }
+
+    public boolean isProducerReportEnabled() {
+        return producerReportEnabled;
+    }
+
+    public void setProducerReportEnabled(boolean producerReportEnabled) {
+        this.producerReportEnabled = producerReportEnabled;
+    }
+
+    public boolean isConsumerReportEnabled() {
+        return consumerReportEnabled;
+    }
+
+    public void setConsumerReportEnabled(boolean consumerReportEnabled) {
+        this.consumerReportEnabled = consumerReportEnabled;
+    }
+
+    public long getDataCollectScheduledIntervalMs() {
+        return dataCollectScheduledIntervalMs;
+    }
+
+    public void setDataCollectScheduledIntervalMs(long dataCollectScheduledIntervalMs) {
+        this.dataCollectScheduledIntervalMs = dataCollectScheduledIntervalMs;
     }
 }

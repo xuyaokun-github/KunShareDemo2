@@ -265,6 +265,22 @@ public class SpringRedisDemocontroller {
         return ResultVo.valueOfSuccess();
     }
 
+    /**
+     *
+     * @return
+     */
+    @RequestMapping(value = "/testString4", method = RequestMethod.GET)
+    public ResultVo testString4(){
+
+        redisTemplate.opsForValue().set("Kunghsu-String4", UUID.randomUUID().toString());
+        redisTemplate.expire("Kunghsu-String4", 1L, TimeUnit.HOURS);
+
+
+        redisTemplate.opsForValue().set("Kunghsu-String4", UUID.randomUUID().toString());
+
+        return ResultVo.valueOfSuccess();
+    }
+
     @RequestMapping(value = "/testSetAdd", method = RequestMethod.GET)
     public ResultVo testSetAdd(HttpServletRequest request){
 

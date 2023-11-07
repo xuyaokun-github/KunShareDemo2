@@ -12,8 +12,8 @@ import org.springframework.web.bind.annotation.*;
  * date:2021/5/26
  * desc:
 */
-@FeignClient(name = "kunwebdemo", url = "http://127.0.0.1:8091")
-//@FeignClient(name = "kunwebdemo") //假如不指定url,则走注册中心
+//@FeignClient(name = "kunwebdemo", url = "http://127.0.0.1:8091")
+@FeignClient(name = "kunwebdemo") //假如不指定url,则走注册中心
 public interface KunwebdemoFeign {
 
     /**

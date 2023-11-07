@@ -42,6 +42,27 @@ public class UserDemoController {
         return "OK";
     }
 
+    @GetMapping("/testInsertBatch")
+    public String testInsertBatch() throws SQLException {
+
+        Long maxId = userMapper.findMaxId();
+
+        String prefix = "testInsertBatch-";
+        List<User> userList = new ArrayList<>();
+        for (int i = 0; i < 15; i++) {
+            User user = new User();
+            user.setId(Long.valueOf(++maxId));
+            user.setCreateTime(new Date());
+            user.setAge(ThreadLocalRandom.current().nextInt(100));
+            user.setLastname(prefix + UUID.randomUUID().toString());
+            user.setFirstname(prefix + UUID.randomUUID().toString());
+            user.setUsername(prefix + UUID.randomUUID().toString());
+            userList.add(user);
+        }
+        userMapper.insertByBatch(userList);
+        return "OK";
+    }
+
     @Transactional
     @GetMapping("/testSelectAllByMoreResultMap")
     public String testSelectAllByMoreResultMap(){

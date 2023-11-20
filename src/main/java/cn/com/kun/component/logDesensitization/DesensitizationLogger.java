@@ -38,7 +38,7 @@ public class DesensitizationLogger {
         try {
             //将参数转为密文，然后打印
             Object[] newArguments = null;
-            if (arguments.length > 0){
+            if (arguments != null && arguments.length > 0){
                 newArguments = new Object[arguments.length];
                 for (int i = 0; i < arguments.length; i++) {
                     newArguments[i] = arguments[i] instanceof String ?

@@ -3,6 +3,7 @@ package cn.com.kun.springframework.springcloud.feign.controller;
 import cn.com.kun.common.utils.JacksonUtils;
 import cn.com.kun.common.vo.ResultVo;
 import cn.com.kun.springframework.springcloud.feign.client.KunwebdemoFeign;
+import cn.com.kun.springframework.springcloud.feign.client.KunwebdemoFeign2;
 import cn.com.kun.springframework.springcloud.feign.extend.EurekaInstanceDiscover;
 import cn.com.kun.springframework.springcloud.feign.extend.MicroserviceInstanceDiscover;
 import cn.com.kun.springframework.springcloud.feign.service.KunShareClientOneFeignService;
@@ -28,9 +29,12 @@ public class FeignDemoController {
     private KunwebdemoFeign kunwebdemoFeign;
 
     @Autowired
-    private MicroserviceInstanceDiscover microserviceInstanceDiscover;
+    private KunwebdemoFeign2 kunwebdemoFeign2;
 
     @Autowired
+    private MicroserviceInstanceDiscover microserviceInstanceDiscover;
+
+    @Autowired(required = false)
     private EurekaInstanceDiscover eurekaInstanceDiscover;
 
     @GetMapping("/test")
@@ -98,4 +102,16 @@ public class FeignDemoController {
 
         return ResultVo.valueOfSuccess();
     }
+
+    @GetMapping("/test-allow-bean-definition-overriding")
+    public ResultVo testAllowBeanDefinitionOverriding(){
+
+        ResultVo resultVo = kunwebdemoFeign.result1("xyk");
+        ResultVo resultVo2 = kunwebdemoFeign2.result1("xyk");
+        logger.info("resultVo:{}", JacksonUtils.toJSONString(resultVo));
+        logger.info("resultVo2:{}", JacksonUtils.toJSONString(resultVo2));
+
+        return ResultVo.valueOfSuccess();
+    }
+
 }

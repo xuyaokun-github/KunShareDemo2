@@ -1,10 +1,9 @@
 package cn.com.kun.springframework.core.ioc.beanoverride;
 
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.web.filter.CharacterEncodingFilter;
 
-@Configuration
+//@Configuration
 public class CharacterEncodingFilterConfig {
 
     @Bean

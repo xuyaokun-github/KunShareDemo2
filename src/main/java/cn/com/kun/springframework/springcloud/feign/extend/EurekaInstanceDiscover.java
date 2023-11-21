@@ -1,6 +1,7 @@
 package cn.com.kun.springframework.springcloud.feign.extend;//package com.xxl.job.admin.extend.component;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.cloud.netflix.eureka.EurekaDiscoveryClient;
 import org.springframework.cloud.netflix.eureka.EurekaServiceInstance;
@@ -21,6 +22,7 @@ import java.util.List;
  * date:2023/11/3
  * desc:
 */
+@ConditionalOnProperty(prefix = "eureka.client", value = {"enabled"}, havingValue = "true", matchIfMissing = false)
 @Component
 public class EurekaInstanceDiscover {
 

@@ -119,6 +119,30 @@ public class SpringRedisDemocontroller {
     }
 
     /**
+     * 验证hash对象的putAll
+     *
+     * @param request
+     * @return
+     */
+    @RequestMapping(value = "/testHashSetPut", method = RequestMethod.GET)
+    public String testHashSetPut(HttpServletRequest request){
+
+        redisTemplate.delete("kunghsu_set");
+
+        Map<String, String> map = new HashMap<>();
+        map.put("A", "11");
+        redisTemplate.opsForHash().putAll("kunghsu_set", map);
+
+        Map<String, String> map2 = new HashMap<>();
+        map2.put("B", "22");
+        redisTemplate.opsForHash().putAll("kunghsu_set", map2);
+
+        redisTemplate.opsForHash().delete("kunghsu_set", "B");
+
+        return "OK";
+    }
+
+    /**
      * 测试hash
      * @param request
      * @return

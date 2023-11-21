@@ -89,7 +89,10 @@ public class TwiceAccessAspect {
             setResponseHeaders(response, TwiceAccessReturnVO.firstRtnVO(waitTime, requestId));
             return null;
         } if (isSecondAccess(request) && isRedisAccessorEnabled()) {
-            String requestId = request.getParameter("twiceAccessRequestId");
+            String requestId = request.getParameter(TWICE_ACCESS_REQUEST_ID);
+            if (requestId == null || requestId.length() == 0){
+                requestId = request.getHeader(TWICE_ACCESS_HEADER_QUERY_REQUEST_ID);
+            }
             LOGGER.info("二次访问-阶段2，获取结果requestId：{}", requestId);
             //从Redis中取出结果返回
             result = getResult(requestId);
@@ -119,10 +122,10 @@ public class TwiceAccessAspect {
     private void setResponseHeaders(HttpServletResponse response, TwiceAccessReturnVO twiceAccessReturnVO) {
 
         if (response != null){
-            response.addHeader("TwiceAccess-RtnType", twiceAccessReturnVO.getRtnType());
-            response.addHeader("TwiceAccess-WaitTime", String.valueOf(twiceAccessReturnVO.getWaitTime()));
-            response.addHeader("TwiceAccess-RequestId", twiceAccessReturnVO.getRequestId());
-            response.addHeader("TwiceAccess-Message", twiceAccessReturnVO.getMessage());
+            response.addHeader(TWICE_ACCESS_HEADER_RTN_TYPE, twiceAccessReturnVO.getRtnType());
+            response.addHeader(TWICE_ACCESS_HEADER_WAITTIME, String.valueOf(twiceAccessReturnVO.getWaitTime()));
+            response.addHeader(TWICE_ACCESS_HEADER_REQUEST_ID, twiceAccessReturnVO.getRequestId());
+            response.addHeader(TWICE_ACCESS_HEADER_MESSAGE, twiceAccessReturnVO.getMessage());
         }
     }
 
@@ -153,24 +156,30 @@ public class TwiceAccessAspect {
         TwiceAccessRedisAccessor.getRedisAccessor().getRedisTemplate().opsForValue().set(redisKey, realResult, expiredTime, TimeUnit.MILLISECONDS);
     }
 
-    private boolean isSecondAccess(HttpServletRequest request) {
-
-        String twiceAccessQueryType = "";
-        if (request != null){
-            twiceAccessQueryType = request.getParameter(TWICE_ACCESS_QUERY_TYPE);
-        }
-
-        return TWICE_ACCESS_QUERY_TYPE_OF_SECOND.equals(twiceAccessQueryType);
-    }
 
     private boolean isFirstAccess(HttpServletRequest request) {
 
+        String twiceAccessQueryType = getTwiceAccessQueryType(request);
+        return TWICE_ACCESS_QUERY_TYPE_OF_FIRST.equals(twiceAccessQueryType);
+    }
+
+    private boolean isSecondAccess(HttpServletRequest request) {
+
+        String twiceAccessQueryType = getTwiceAccessQueryType(request);
+        return TWICE_ACCESS_QUERY_TYPE_OF_SECOND.equals(twiceAccessQueryType);
+    }
+
+    private String getTwiceAccessQueryType(HttpServletRequest request) {
+
         String twiceAccessQueryType = "";
         if (request != null){
             twiceAccessQueryType = request.getParameter(TWICE_ACCESS_QUERY_TYPE);
+            if (twiceAccessQueryType == null){
+                twiceAccessQueryType = request.getHeader(TWICE_ACCESS_HEADER_QUERY_TYPE);
+            }
         }
-
-        return TWICE_ACCESS_QUERY_TYPE_OF_FIRST.equals(twiceAccessQueryType);
+        return twiceAccessQueryType;
     }
+
 
 }

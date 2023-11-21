@@ -4,6 +4,7 @@ import java.lang.annotation.*;
 
 
 /**
+ * 二次访问组件注解
  *
  * author:xuyaokun_kzx
  * date:2023/11/21

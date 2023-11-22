@@ -88,7 +88,7 @@ public class TwiceAccessAspect {
             //设置response headers，返回空
             setResponseHeaders(response, TwiceAccessReturnVO.firstRtnVO(waitTime, requestId));
             return null;
-        } if (isSecondAccess(request) && isRedisAccessorEnabled()) {
+        } if (isSecondAccess(request) && isRedisAccessorEnabled() && request != null) {
             String requestId = request.getParameter(TWICE_ACCESS_REQUEST_ID);
             if (requestId == null || requestId.length() == 0){
                 requestId = request.getHeader(TWICE_ACCESS_HEADER_QUERY_REQUEST_ID);

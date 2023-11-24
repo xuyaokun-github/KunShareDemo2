@@ -132,6 +132,9 @@ public class TwiceAccessAspect {
         String redisKey = buildKey(requestId);
         String failMessage = "";
         try {
+            if (e.getMessage() == null || e.getMessage().length() == 0){
+                failMessage = "系统执行异常，请稍后重试";
+            }
             failMessage = URLEncoder.encode(e.getMessage(), "UTF-8");
         } catch (UnsupportedEncodingException ex) {
             LOGGER.warn("TwiceAccess错误描述转码出现不支持编码", ex);

@@ -53,4 +53,22 @@ public class TwiceAccessDemoController {
         return ResultVo.valueOfSuccess(res);
     }
 
+    @TwiceAccess(waitTime = 3000)
+    @PostMapping("/test3")
+    public ResultVo test3(@RequestBody TwiceAccessDemoReq twiceAccessDemoReq) throws InterruptedException {
+
+        LOGGER.info("test3 result:{}", JacksonUtils.toJSONString(twiceAccessDemoReq));
+
+        if (true){
+            throw new RuntimeException("XXX业务参数缺失");
+        }
+
+        TwiceAccessDemoRes res = new TwiceAccessDemoRes();
+        res.setResString(twiceAccessDemoReq.getQueryParam());
+        res.setResType("888");
+        Thread.sleep(1 * 60 * 1000);
+        return ResultVo.valueOfSuccess(res);
+    }
+
+
 }

@@ -40,6 +40,14 @@ public class TwiceAccessReturnVO {
         return twiceAccessReturnVO;
     }
 
+    public static TwiceAccessReturnVO resultFailVO(String failMessage) {
+
+        TwiceAccessReturnVO twiceAccessReturnVO = new TwiceAccessReturnVO();
+        twiceAccessReturnVO.setRtnType("3");
+        twiceAccessReturnVO.setMessage(failMessage);
+        return twiceAccessReturnVO;
+    }
+
     public String getRtnType() {
         return rtnType;
     }
@@ -72,5 +80,10 @@ public class TwiceAccessReturnVO {
         this.message = message;
     }
 
+
+    public boolean failResult() {
+
+        return "3".equals(rtnType);
+    }
 
 }

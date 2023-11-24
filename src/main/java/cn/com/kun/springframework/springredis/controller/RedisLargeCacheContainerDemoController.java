@@ -17,7 +17,7 @@ import java.util.UUID;
 @RestController
 public class RedisLargeCacheContainerDemoController {
 
-    private final static Logger LOGGER = LoggerFactory.getLogger(SpringRedisDemocontroller.class);
+    private final static Logger LOGGER = LoggerFactory.getLogger(RedisLargeCacheContainerDemoController.class);
 
     @Autowired
     RedisLargeCacheContainerDemoService redisLargeCacheContainerDemoService;

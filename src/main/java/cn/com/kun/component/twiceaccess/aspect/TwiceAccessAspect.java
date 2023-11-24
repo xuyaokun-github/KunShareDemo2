@@ -18,7 +18,9 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Method;
+import java.net.URLEncoder;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
@@ -77,6 +79,8 @@ public class TwiceAccessAspect {
                     storeResult(requestId, realResult, waitTime, fullMethodName);
                 } catch (Throwable e) {
                     LOGGER.warn("业务层执行失败", e);
+                    //放置一个失败的结果
+                    storeFailResult(requestId, waitTime, e);
                 }
 
             });
@@ -102,6 +106,9 @@ public class TwiceAccessAspect {
 //                return ResultVo.valueOfSuccess(twiceAccessReturnVO);
                 setResponseHeaders(response, TwiceAccessReturnVO.resultNotReadyVO(waitTime, requestId));
                 return null;
+            } if (result instanceof TwiceAccessReturnVO && ((TwiceAccessReturnVO)result).failResult()) {
+                setResponseHeaders(response, ((TwiceAccessReturnVO)result));
+                return null;
             }else {
                 //建议不要返回中文，可能会导致乱码问题
                 setResponseHeaders(response, TwiceAccessReturnVO.resultResultAlreadyReturnedVO(waitTime, requestId));
@@ -112,6 +119,25 @@ public class TwiceAccessAspect {
         }
 
         return result;
+    }
+
+    private void storeFailResult(String requestId, long waitTime, Throwable e) {
+
+        if (TwiceAccessRedisAccessor.getRedisAccessor().getRedisTemplate() == null){
+            LOGGER.warn("TwiceAccess强依赖Redis，请补充redis实现，二次访问组件功能失效");
+            return ;
+        }
+        //过期时间，默认在原来的基础上加 5分钟
+        long expiredTime = waitTime + 5 * 60 * 1000;
+        String redisKey = buildKey(requestId);
+        String failMessage = "";
+        try {
+            failMessage = URLEncoder.encode(e.getMessage(), "UTF-8");
+        } catch (UnsupportedEncodingException ex) {
+            LOGGER.warn("TwiceAccess错误描述转码出现不支持编码", ex);
+        }
+        TwiceAccessReturnVO twiceAccessReturnVO = TwiceAccessReturnVO.resultFailVO(failMessage);
+        TwiceAccessRedisAccessor.getRedisAccessor().getRedisTemplate().opsForValue().set(redisKey, twiceAccessReturnVO, expiredTime, TimeUnit.MILLISECONDS);
     }
 
     private boolean isRedisAccessorEnabled() {

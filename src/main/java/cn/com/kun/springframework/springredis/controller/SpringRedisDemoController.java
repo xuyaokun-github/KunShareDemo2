@@ -7,6 +7,7 @@ import cn.com.kun.component.redis.RedisTemplateHelper;
 import cn.com.kun.springframework.springredis.counter.RedisCounterDemoService;
 import cn.com.kun.springframework.springredis.service.RedisListDemoService;
 import cn.com.kun.springframework.springredis.vo.JobVO;
+import cn.com.kun.springframework.springredis.vo.RedisConsumerInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,9 +30,9 @@ import java.util.concurrent.TimeUnit;
  */
 @RequestMapping("/spring-redis")
 @RestController
-public class SpringRedisDemocontroller {
+public class SpringRedisDemoController {
 
-    private final static Logger LOGGER = LoggerFactory.getLogger(SpringRedisDemocontroller.class);
+    private final static Logger LOGGER = LoggerFactory.getLogger(SpringRedisDemoController.class);
 
     private final String HASH_KEY = "kunghsu.hash";
 
@@ -196,6 +197,24 @@ public class SpringRedisDemocontroller {
         return "OK";
     }
 
+    /**
+     * 测试 hash反序列化问题--缺少get-set方法导致Redis反序列化数据丢失
+     *
+     * @param request
+     * @return
+     */
+    @RequestMapping(value = "/testHashGetAll", method = RequestMethod.GET)
+    public String testHashGetAll(HttpServletRequest request){
+
+        Map<String, String> map = new HashMap<>();
+        map.put("name", "xyk");
+        map.put("address", "sz");
+
+        RedisConsumerInfo consumerInfo = JacksonUtils.toJavaObject(map, RedisConsumerInfo.class);
+
+
+        return "OK";
+    }
 
     @RequestMapping(value = "/testString", method = RequestMethod.GET)
     public ResultVo testString(HttpServletRequest request){

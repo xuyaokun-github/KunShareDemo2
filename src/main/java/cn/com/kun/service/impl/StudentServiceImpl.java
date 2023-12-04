@@ -348,4 +348,17 @@ public class StudentServiceImpl implements StudentService {
             }
         });
     }
+
+    @Transactional
+    public int updateStudent() {
+
+        Student student = new Student();
+        student.setAddress(UUID.randomUUID().toString());
+        student.setIdCard("888");
+        student.setId(1L);
+        int res = studentMapper.update(student);
+        return res;
+    }
+
+
 }

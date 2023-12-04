@@ -2,21 +2,27 @@ package cn.com.kun.springframework.springcloud.feign.controller;
 
 import cn.com.kun.common.utils.JacksonUtils;
 import cn.com.kun.common.vo.ResultVo;
+import cn.com.kun.springframework.springcloud.feign.client.KunShareDemo2Feign;
 import cn.com.kun.springframework.springcloud.feign.client.KunwebdemoFeign;
 import cn.com.kun.springframework.springcloud.feign.client.KunwebdemoFeign2;
 import cn.com.kun.springframework.springcloud.feign.extend.EurekaInstanceDiscover;
 import cn.com.kun.springframework.springcloud.feign.extend.MicroserviceInstanceDiscover;
 import cn.com.kun.springframework.springcloud.feign.service.KunShareClientOneFeignService;
+import cn.com.kun.springframework.springcloud.feign.vo.FeignJacksonDO;
+import cn.com.kun.springframework.springcloud.feign.vo.FeignJacksonResVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
-@RequestMapping("/feign")
+@RequestMapping("/feign-demo")
 @RestController
 public class FeignDemoController {
 
@@ -30,6 +36,9 @@ public class FeignDemoController {
 
     @Autowired
     private KunwebdemoFeign2 kunwebdemoFeign2;
+
+    @Autowired
+    private KunShareDemo2Feign kunShareDemo2Feign;
 
     @Autowired
     private MicroserviceInstanceDiscover microserviceInstanceDiscover;
@@ -110,6 +119,53 @@ public class FeignDemoController {
         ResultVo resultVo2 = kunwebdemoFeign2.result1("xyk");
         logger.info("resultVo:{}", JacksonUtils.toJSONString(resultVo));
         logger.info("resultVo2:{}", JacksonUtils.toJSONString(resultVo2));
+
+        return ResultVo.valueOfSuccess();
+    }
+
+
+    @GetMapping("/test-jackson")
+    public ResultVo testJacksonServer() throws InterruptedException {
+
+        FeignJacksonResVO feignJacksonResVO = new FeignJacksonResVO();
+        feignJacksonResVO.setUuid(UUID.randomUUID().toString());
+        feignJacksonResVO.setCreateTime(new Date());
+
+        /*
+            反例代码：返回FeignJacksonDO 并且createTime没有指定@JsonFormat注解
+            这个代码在springboot1.5.15没问题，但是在2.7有问题
+         */
+        FeignJacksonDO feignJacksonDO = new FeignJacksonDO();
+        BeanUtils.copyProperties(feignJacksonResVO, feignJacksonDO);
+
+        return ResultVo.valueOfSuccess(feignJacksonDO);
+    }
+
+
+    /**
+     * jackson 升级springboot2.7.12问题
+     * @return
+     */
+    @GetMapping("/testJackson")
+    public ResultVo testJackson(){
+
+        //请求1.5.15版本的服务端
+        ResultVo resultVo = kunwebdemoFeign.testJackson();
+        logger.info("resultVo:{}", JacksonUtils.toJSONString(resultVo));
+
+        return ResultVo.valueOfSuccess();
+    }
+
+    /**
+     * jackson 升级springboot2.7.12问题
+     * @return
+     */
+    @GetMapping("/testJackson2")
+    public ResultVo testJackson2(){
+
+        //请求2.7版本的服务端
+        ResultVo resultVo = kunShareDemo2Feign.testJackson();
+        logger.info("resultVo:{}", JacksonUtils.toJSONString(resultVo));
 
         return ResultVo.valueOfSuccess();
     }

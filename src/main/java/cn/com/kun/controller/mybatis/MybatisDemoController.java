@@ -2,13 +2,13 @@ package cn.com.kun.controller.mybatis;
 
 import cn.com.kun.bean.entity.Student;
 import cn.com.kun.bean.entity.User;
+import cn.com.kun.bean.model.user.UserQueryParam;
 import cn.com.kun.common.utils.DateUtils;
 import cn.com.kun.common.utils.JacksonUtils;
 import cn.com.kun.common.vo.ResultVo;
-import cn.com.kun.bean.model.user.UserQueryParam;
 import cn.com.kun.mapper.StudentMapper;
 import cn.com.kun.mapper.UserMapper;
-import cn.com.kun.service.mybatis.MybatisCursorDemoService;
+import cn.com.kun.service.StudentService;
 import cn.com.kun.service.mybatis.UserService;
 import com.github.pagehelper.PageHelper;
 import org.apache.ibatis.session.SqlSession;
@@ -23,7 +23,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static cn.com.kun.common.utils.DateUtils.PATTERN_yyyy_MM_dd_HH_mm_ss_SSS;
 
@@ -46,7 +48,7 @@ public class MybatisDemoController {
     private StudentMapper studentMapper;
 
     @Autowired
-    private MybatisCursorDemoService mybatisCursorDemoService;
+    StudentService studentService;
 
     @GetMapping("/test")
     public String test(){
@@ -208,4 +210,37 @@ public class MybatisDemoController {
     }
 
 
+
+    /**
+     * 存在多个事务管理器，执行普通的查询不会报错，因为执行普通查询时不需要创建事务。
+     *
+     * @return
+     */
+    @GetMapping("/testDataSourceTransactionManager")
+    public ResultVo<Integer> testDataSourceTransactionManager(){
+
+//        studentService.updateStudent();
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("idCard", "1604590836961");
+        List<Student> studentList = studentService.query(map);
+
+        return ResultVo.valueOfSuccess(studentList);
+    }
+
+    /**
+     *
+     * @return
+     */
+    @GetMapping("/testDataSourceTransactionManager2")
+    public ResultVo<Integer> testDataSourceTransactionManager2(){
+
+        studentService.updateStudent();
+
+//        Map<String, String> map = new HashMap<>();
+//        map.put("idCard", "1604590836961");
+//        List<Student> studentList = studentService.query(map);
+
+        return ResultVo.valueOfSuccess();
+    }
 }

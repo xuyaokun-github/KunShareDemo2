@@ -35,4 +35,5 @@ public interface StudentService {
 
     void saveBatch(List<Student> studentList);
 
+    int updateStudent();
 }

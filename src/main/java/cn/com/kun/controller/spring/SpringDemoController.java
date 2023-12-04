@@ -8,6 +8,9 @@ import cn.com.kun.springframework.core.applicationContextInitializer.Application
 import cn.com.kun.springframework.core.beanDefinition.BeanDefinitionDemoService;
 import cn.com.kun.springframework.core.binder.NbaplayBinderDemo;
 import cn.com.kun.springframework.core.orderComparator.OrderComparatorDemoServcie;
+import cn.com.kun.springframework.springcloud.feign.vo.FeignJacksonDO;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,6 +34,7 @@ import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 @RequestMapping("/springdemo")
 @RestController
@@ -143,6 +147,25 @@ public class SpringDemoController {
 
         String res = new LiveBeansView().getSnapshotAsJson();
         return res;
+    }
+
+    @GetMapping("/testJacksonDateSerialize")
+    public String testJacksonDateSerialize(){
+
+        FeignJacksonDO feignJacksonDO = new FeignJacksonDO();
+        feignJacksonDO.setCreateTime(new Date());
+        feignJacksonDO.setUuid(UUID.randomUUID().toString());
+
+        ObjectMapper mapper = new ObjectMapper();
+        String string = null;
+        try {
+            string = mapper.writeValueAsString(feignJacksonDO);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+//        String string = JacksonUtils.toJSONString(feignJacksonDO);
+        System.out.println(string);
+        return string;
     }
 
 

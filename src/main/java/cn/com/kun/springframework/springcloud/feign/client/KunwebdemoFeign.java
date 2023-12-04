@@ -1,7 +1,8 @@
 package cn.com.kun.springframework.springcloud.feign.client;
 
-import cn.com.kun.common.vo.ResultVo;
 import cn.com.kun.bean.model.people.People;
+import cn.com.kun.common.vo.ResultVo;
+import cn.com.kun.springframework.springcloud.feign.vo.FeignJacksonResVO;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.*;
 
@@ -50,5 +51,8 @@ public interface KunwebdemoFeign {
     ResultVo result3(@RequestBody People name,
                      @RequestHeader(value = "source", required = false) String source);
 
+
+    @GetMapping("/kunwebdemo/feign-demo/test-jackson")
+    ResultVo<FeignJacksonResVO> testJackson();
 
 }

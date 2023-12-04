@@ -1,8 +1,5 @@
 package cn.com.kun.foo.javacommon.base64;
 
-import sun.misc.BASE64Encoder;
-
-import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 
 /**
@@ -19,17 +16,21 @@ public class Base64JdkImplUtils {
 
     public static void main(String[] args) {
 
-        BASE64Encoder base64Encoder = new BASE64Encoder();
-        String sourceString = base64Encoder.encode("kunghsu深圳市福田区kunghsu发的发发发沙发沙发沙发沙发发送到发放".getBytes(StandardCharsets.UTF_8));
-        //解码失败
-        System.out.println(DECODER.decode(sourceString));
-        sourceString = base64Encoder.encode("kunghsu深圳市福田区kunghsu".getBytes());
-        //解码失败
-        System.out.println(DECODER.decode(sourceString));
+//        BASE64Encoder base64Encoder = new BASE64Encoder();
+//        String sourceString = base64Encoder.encode("kunghsu深圳市福田区kunghsu发的发发发沙发沙发沙发沙发发送到发放".getBytes(StandardCharsets.UTF_8));
+//        //解码失败
+//        System.out.println(DECODER.decode(sourceString));
+//        sourceString = base64Encoder.encode("kunghsu深圳市福田区kunghsu".getBytes());
+//        //解码失败
+//        System.out.println(DECODER.decode(sourceString));
 
         //成功
 //        sourceString = encrypt("kunghsu深圳市福田区kunghsu");
 //        System.out.println(decrypt(sourceString));
+
+        String sourceString = "eyJ1c2VyX2lkIjogOTksICJ0YXNrX2lkIjogIjAiLCAiZW1haWxfaWQiOiAiMTcwMTI0NDA3MjM5Nl85OV8xNTQ0Xzg1ODIua3p4LWVtYWlsLUkwNi5pbmJvdW5kMCQxODcyMDk3NTA1NUAxNjMuY29tIiwgImFwcF9pZCI6IDIxMSwgInVzZXJfaGVhZGVycyI6IHsiU0MtQ3VzdG9tLXRlbXBsYXRlQ29kZSI6ICJkYXl0cmFuc2FjdGlvbnN0YXRlbWVudDIwMjIwNjExIn0sICJsYWJlbCI6IDAsICJzaWduIjogImJlZTMxZmE3MmI2ODY3YjNkZTgyZjAyOWQzMmE4YjBlIiwgIm9nX2lkIjogM30=";
+        System.out.println(decrypt(sourceString));
+
     }
 
     /**

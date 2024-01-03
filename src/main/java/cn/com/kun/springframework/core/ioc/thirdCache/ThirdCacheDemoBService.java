@@ -1,9 +1,8 @@
 package cn.com.kun.springframework.core.ioc.thirdCache;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
-@Service
+//@Service
 public class ThirdCacheDemoBService {
 
     @Autowired

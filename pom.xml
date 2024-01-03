@@ -108,11 +108,14 @@
             <artifactId>feign-httpclient</artifactId>
         </dependency>
 
+        <!-- 引入hystrix -->
         <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-netflix-hystrix</artifactId>
+            <!-- 20231208记录：目前hystrix最新版本是2.2.10.RELEASE，支持springboot2.3.12  -->
             <version>2.2.10.RELEASE</version>
         </dependency>
+
 
         <!-- 分布式服务跟踪 -->
         <dependency>
@@ -167,16 +170,19 @@
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
+            <!-- springboot2.7.12 可以继续用5.1.47版本 -->
             <version>5.1.47</version>
             <!-- 注释掉runtime，方便看源码时debug -->
 <!--            <scope>runtime</scope>-->
+<!--            <version>8.0.33</version>-->
         </dependency>
 
         <!-- 分页插件 -->
         <dependency>
             <groupId>com.github.pagehelper</groupId>
             <artifactId>pagehelper-spring-boot-starter</artifactId>
-            <version>1.2.10</version>
+            <!-- 解决循环依赖问题，需要设置版本为1.4.1 -->
+            <version>1.4.1</version>
         </dependency>
 
         <!-- 引入JPA -->
@@ -310,25 +316,40 @@
             <artifactId>micrometer-registry-prometheus</artifactId>
         </dependency>
 
+        <!-- spring redis -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-redis</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>io.lettuce</groupId>
+                    <artifactId>lettuce-core</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
+
+        <!-- springboot2.1.6用：2.9.0
+             springboot2.7.12用：3.8.0
+            解决java.lang.ClassNotFoundException: redis.clients.jedis.util.SafeEncoder
+        -->
+        <dependency>
+            <groupId>redis.clients</groupId>
+            <artifactId>jedis</artifactId>
+        </dependency>
+
         <!-- Spring-boot session manager -->
         <dependency>
             <groupId>org.springframework.session</groupId>
             <artifactId>spring-session-data-redis</artifactId>
         </dependency>
 
-        <!-- springboot2.1.6用：2.9.0
-            springboot2.7.12用：3.8.0
-            解决java.lang.ClassNotFoundException: redis.clients.jedis.util.SafeEncoder
-            -->
+        <!-- Redisson start-->
         <dependency>
-            <groupId>redis.clients</groupId>
-            <artifactId>jedis</artifactId>
-            <version>3.8.0</version>
+            <groupId>org.redisson</groupId>
+            <artifactId>redisson-spring-boot-starter</artifactId>
+            <version>3.11.4</version>
         </dependency>
+        <!-- Redisson end-->
 
         <dependency>
             <groupId>org.springframework.kafka</groupId>
@@ -346,14 +367,6 @@
             <artifactId>httpmime</artifactId>
             <version>4.5.3</version>
         </dependency>
-
-        <!-- Redisson start-->
-        <dependency>
-            <groupId>org.redisson</groupId>
-            <artifactId>redisson-spring-boot-starter</artifactId>
-            <version>3.11.4</version>
-        </dependency>
-        <!-- Redisson end-->
 
         <!-- 引入私服的包 -->
 <!--        <dependency>
@@ -523,6 +536,13 @@
             <version>8.8.0</version>
         </dependency>
 
+        <!-- skywalking traceId依赖 -->
+        <dependency>
+            <groupId>org.apache.skywalking</groupId>
+            <artifactId>apm-toolkit-log4j-2.x</artifactId>
+            <version>8.16.0</version>
+        </dependency>
+
         <!-- JDBC工具类 -->
         <dependency>
             <groupId>commons-dbutils</groupId>
@@ -535,6 +555,9 @@
 <!--            <artifactId>jetty-util</artifactId>-->
 <!--            <version>9.4.31.v20200723</version>-->
 <!--        </dependency>-->
+
+
+
 
     </dependencies>
 
@@ -668,7 +691,6 @@
                     </includes>
                     <excludes>
                         <exclude>testData/**</exclude>
-                        <exclude>redis/**</exclude>
                     </excludes>
                     <!-- 高版本jar插件executions似乎被移除了，会报红  -->
 <!--                    <executions>-->

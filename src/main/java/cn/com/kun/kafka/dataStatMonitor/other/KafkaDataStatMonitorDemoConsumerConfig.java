@@ -1,8 +1,8 @@
 package cn.com.kun.kafka.dataStatMonitor.other;
 
 import cn.com.kun.kafka.config.KafkaConsumerProperties;
+import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
-import org.apache.kafka.clients.producer.ProducerConfig;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
@@ -29,7 +29,7 @@ public class KafkaDataStatMonitorDemoConsumerConfig {
         // 2. 构建拦截链
         List<String> interceptors = new ArrayList<>();
         interceptors.add("cn.com.kun.kafka.dataStatMonitor.stat.interceptor.DataStatConsumerInterceptor");
-        props.put(ProducerConfig.INTERCEPTOR_CLASSES_CONFIG, interceptors);
+        props.put(ConsumerConfig.INTERCEPTOR_CLASSES_CONFIG, interceptors);
 
         KafkaConsumer<String, String> consumer = new KafkaConsumer<>(props);
         consumer.subscribe(Arrays.asList("dataStatMonitor-topic"));

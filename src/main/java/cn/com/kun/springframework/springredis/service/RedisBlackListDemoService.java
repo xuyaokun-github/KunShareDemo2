@@ -35,7 +35,8 @@ public class RedisBlackListDemoService {
 
     @Autowired
     private RedisBloomFilter redisBloomFilter;
-    @Autowired
+
+    @Autowired(required = false)
     private BloomFilterHelper bloomFilterHelper;
 
     /**

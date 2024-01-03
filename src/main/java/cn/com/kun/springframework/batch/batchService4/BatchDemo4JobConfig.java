@@ -1,12 +1,11 @@
 package cn.com.kun.springframework.batch.batchService4;
 
 import cn.com.kun.bean.entity.User;
-import cn.com.kun.springframework.batch.exception.SkippableException;
 import cn.com.kun.common.utils.JacksonUtils;
 import cn.com.kun.springframework.batch.batchService1.UserFileItem;
 import cn.com.kun.springframework.batch.common.BatchCommonCountListener;
+import cn.com.kun.springframework.batch.exception.SkippableException;
 import org.apache.ibatis.session.SqlSessionFactory;
-import org.mybatis.spring.batch.MyBatisBatchItemWriter;
 import org.mybatis.spring.batch.MyBatisCursorItemReader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -146,20 +145,6 @@ public class BatchDemo4JobConfig {
 
         return reader;
     }
-
-    //定义一个写操作
-    @Bean("job4Writer4ForCustom")
-    public MyBatisBatchItemWriter<User> job4Writer4ForCustom(){
-
-        //使用Mybatis提供的写操作类
-        MyBatisBatchItemWriter<User> writer = new MyBatisBatchItemWriter<>();
-        //这个在xml文件里定义的插入语句的id,必须全局唯一（建议加上命名空间，更加具体）
-        writer.setStatementId("cn.com.kun.mapper.UserMapper.insert");
-        writer.setSqlSessionFactory(sqlSessionFactory);
-        return writer;
-    }
-
-
 
 
 }

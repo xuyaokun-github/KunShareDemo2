@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 任务分配器
+ * 分布式任务分配器 TODO
  * 知道有哪些任务可拉取，目前已经拉取了哪个任务
  *
  * author:xuyaokun_kzx
@@ -19,6 +19,7 @@ public class TaskAssignFetcher {
     private List<Object> taskList = new ArrayList<>();
 
     public void startKeepAliveThread(){
+
 
 
     }

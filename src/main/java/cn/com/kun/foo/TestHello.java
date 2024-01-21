@@ -9,6 +9,8 @@ public class TestHello {
     private static final String aaa = "aaa";
 
     public static void main(String[] args) {
+
+
         System.out.println(399999998 % 2);
         List<Integer> list = new ArrayList<>();
         list.add(1);

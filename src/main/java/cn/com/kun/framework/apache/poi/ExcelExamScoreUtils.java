@@ -1,7 +1,6 @@
 package cn.com.kun.framework.apache.poi;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.xssf.usermodel.*;
 
 import java.io.File;
@@ -86,7 +85,7 @@ public class ExcelExamScoreUtils {
                     for (int j = 0; j < lastCellNum; j++) {
                         XSSFCell cell = row.getCell(j);
                         if (cell != null) {
-                            cell.setCellType(Cell.CELL_TYPE_STRING);
+//                            cell.setCellType(Cell.CELL_TYPE_STRING);//高版本poi包，不存在这个CELL_TYPE_STRING
                             String value = cell.getStringCellValue();
 
                             if (i == 1) {
@@ -147,7 +146,7 @@ public class ExcelExamScoreUtils {
             for (int j = 0; j < lastCellNum; j++) {
                 XSSFCell cell = row.getCell(j);
                 if (cell != null){
-                    cell.setCellType(Cell.CELL_TYPE_STRING);
+//                    cell.setCellType(Cell.CELL_TYPE_STRING);
                     String value = cell.getStringCellValue();
                     if (j == indexOfZqda){
                         indexOfZqdaSrting = value;

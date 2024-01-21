@@ -97,8 +97,10 @@ public class NameUtilsV2 {
                 boolean isMainType2 = mainTypeSet.contains(inputData2.getWuXingType());
                 if (isMainType1 || isMainType2){
                     //添加
+                    int count = allNameList.size();
                     addName(allNameList, wordNamesMap, inputData1.getAllWordList(), inputData2.getAllWordList(), inputData1.getFamilyName(),
                             inputData1.getWuXingType(), inputData2.getWuXingType());
+                    System.out.println(String.format("%s+%s:%s", inputData1.getWuXingType(), inputData2.getWuXingType(), allNameList.size() - count));
                 }
 
             }

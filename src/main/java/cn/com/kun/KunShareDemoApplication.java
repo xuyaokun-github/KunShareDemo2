@@ -1,6 +1,5 @@
 package cn.com.kun;
 
-import cn.com.kun.common.listener.CustomContextInitializedListener;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.data.jpa.repository.query.QueryEnhancerFactory;
@@ -28,11 +27,11 @@ public class KunShareDemoApplication {
 		}
 		disableJsqlparser();
 
-//		SpringApplication.run(KunShareDemoApplication.class, args);
+		SpringApplication.run(KunShareDemoApplication.class, args);
 
-		SpringApplication application = new SpringApplication(KunShareDemoApplication.class);
-		application.addListeners(new CustomContextInitializedListener());
-		application.run(args);
+//		SpringApplication application = new SpringApplication(KunShareDemoApplication.class);
+//		application.addListeners(new CustomContextInitializedListener());
+//		application.run(args);
 	}
 
 	private static void disableJsqlparser() {

@@ -29,7 +29,7 @@ public class DesedeUtils implements InitializingBean {
 
     private static final String charset = "UTF-8";
 
-    @Value("${kunghsu.des.key:a0M1MWtzbUxhdFFXTGxmckFubTNnOGVG}")
+    @Value("${kunghsu.des.key}")
     private String key;
 
     @Override

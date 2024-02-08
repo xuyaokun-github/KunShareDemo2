@@ -1,6 +1,7 @@
 org.springframework.context.ApplicationContextInitializer=\
-cn.com.kun.component.configload.MyResourceLoaderInitializer
+cn.com.kun.component.configload.MyResourceLoaderInitializer,\
+cn.com.kun.common.initializer.MyBeanLoadInitializer
 
-#通常这个是封装在jar包里，提供给需要用的微服务
+#通锟斤拷锟斤拷锟斤拷欠锟阶帮拷锟絡ar锟斤拷锟斤，锟结供锟斤拷锟斤拷要锟矫碉拷微锟斤拷锟斤拷
 org.springframework.cloud.bootstrap.BootstrapConfiguration=\
 cn.com.kun.component.scc.configcache.SpringCloudConfigCacheInitializer

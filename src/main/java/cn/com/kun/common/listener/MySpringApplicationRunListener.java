@@ -28,17 +28,17 @@ public class MySpringApplicationRunListener implements SpringApplicationRunListe
 
     @Override
     public void environmentPrepared(ConfigurableBootstrapContext bootstrapContext, ConfigurableEnvironment environment) {
-
+        LOGGER.info("MySpringApplicationRunListener environmentPrepared");
     }
 
     @Override
     public void contextPrepared(ConfigurableApplicationContext context) {
-
+        LOGGER.info("MySpringApplicationRunListener contextPrepared");
     }
 
     @Override
     public void contextLoaded(ConfigurableApplicationContext context) {
-
+        LOGGER.info("MySpringApplicationRunListener contextLoaded");
     }
 
     @Override

@@ -24,8 +24,13 @@ public class SpringPublishEventDemoController {
 
     @GetMapping("/publishEvent2")
     public void publishEvent2() {
-        applicationContext.publishEvent(new BaseEvent<PersonEventVo>(new PersonEventVo("why"), "add"));
-        applicationContext.publishEvent(new BaseEvent<OrderEventVo>(new OrderEventVo("why2"), "add2"));
 
+//        SpringContextUtil.getContext().publishEvent(new BaseEvent<PersonEventVo>(new PersonEventVo("why"), "add"));
+//        SpringContextUtil.getContext().publishEvent(new BaseEvent<OrderEventVo>(new OrderEventVo("why2"), "add2"));
+
+        SpringEventUtil.publishEvent(new BaseEvent<PersonEventVo>(new PersonEventVo("why"), "add"));
+        SpringEventUtil.publishEvent(new BaseEvent<OrderEventVo>(new OrderEventVo("why2"), "add2"));
     }
+
+
 }

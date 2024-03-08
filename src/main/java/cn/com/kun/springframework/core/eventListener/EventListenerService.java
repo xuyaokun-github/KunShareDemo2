@@ -38,6 +38,11 @@ public class EventListenerService {
     /**
      * 下面两个方法会有泛型擦除问题
      * 用 BaseEvent  implements ResolvableTypeProvider解决问题
+     *
+     * 最佳实践：一个事件就定义一个@EventListener，不用放在同一个类，
+     * 假如放在同一个类，会注入太多Service
+     * 在发布事件的时候用SpringContext工具类进行发布，就不用注入事件Service了
+     *
      * @param personEvent
      */
     @EventListener

@@ -2,8 +2,8 @@ package cn.com.kun.springframework.batch;
 
 import cn.com.kun.common.utils.SpringContextUtil;
 import cn.com.kun.common.utils.ThreadUtils;
+import cn.com.kun.springframework.batch.common.BatchDemoUtils;
 import cn.com.kun.springframework.batch.common.BatchJobOperator;
-import cn.com.kun.springframework.batch.common.BatchRateLimitDynamicCheckScheduler;
 import cn.com.kun.springframework.batch.common.BatchRateLimiterHolder;
 import cn.com.kun.springframework.batch.common.SimpleStopHelper;
 import org.slf4j.Logger;
@@ -18,10 +18,10 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.dao.DeadlockLoserDataAccessException;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.annotation.Resource;
 import java.util.List;
 import java.util.UUID;
 
@@ -32,9 +32,10 @@ import java.util.UUID;
  * desc:
 */
 @RestController
-public class BatchDemoController {
+@RequestMapping("/spring-batch")
+public class SpringBatchDemoController {
 
-    private final static Logger LOGGER = LoggerFactory.getLogger(BatchDemoController.class);
+    private final static Logger LOGGER = LoggerFactory.getLogger(SpringBatchDemoController.class);
 
 
     @Autowired
@@ -77,6 +78,7 @@ public class BatchDemoController {
     @GetMapping("/testBatchJob1")
     public String testBatchJob1() throws Exception {
 
+        BatchDemoUtils.init();
         SimpleStopHelper.removeStopFlag("myFirstJob");
         /*
             可以用手动的方式，触发Job运行
@@ -86,7 +88,8 @@ public class BatchDemoController {
         JobParameters jobParameters = new JobParametersBuilder()
                 .addLong("time", System.currentTimeMillis())
                 .addString("jobName", "myFirstJob")
-                .addString("sourceFilePath", "D:\\home\\kunghsu\\big-file-test\\batchDemoOne-big-file.txt")
+//                .addString("sourceFilePath", "D:\\home\\kunghsu\\big-file-test\\batchDemoOne-big-file.txt")
+                .addString("sourceFilePath", "D:\\GithubDesktop\\projects\\KunShareDemo27\\src\\main\\resources\\demoData\\batch\\batchDemoOne2.txt")
                 .addString("jobId", jobId)
                 .toJobParameters();
 

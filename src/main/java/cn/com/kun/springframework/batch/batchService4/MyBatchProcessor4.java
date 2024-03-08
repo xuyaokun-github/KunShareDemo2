@@ -60,8 +60,8 @@ public class MyBatchProcessor4 implements ItemProcessor<User, User> {
             throw new RatioSkippableException("出现可跳过的异常", getReadTotalCount(stepExecution));
         }
 
-        //记录成功次数(随机)
         BatchExecCounter.countSuccess();
+        //记录成功次数(随机)
 //        if (System.currentTimeMillis() % 2 == 0){
 //            BatchExecCounter.countSuccess();
 //        }else {

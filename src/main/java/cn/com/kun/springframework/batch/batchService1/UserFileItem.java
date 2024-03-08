@@ -13,6 +13,7 @@ public class UserFileItem {
     private Long uid;
     private String tag;
     private Integer type;
+    private int lineNumber;
 
     public Long getUid() {
         return uid;
@@ -36,5 +37,13 @@ public class UserFileItem {
 
     public void setType(Integer type) {
         this.type = type;
+    }
+
+    public int getLineNumber() {
+        return lineNumber;
+    }
+
+    public void setLineNumber(int lineNumber) {
+        this.lineNumber = lineNumber;
     }
 }

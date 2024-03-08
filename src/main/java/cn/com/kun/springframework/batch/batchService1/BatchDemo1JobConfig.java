@@ -74,9 +74,9 @@ public class BatchDemo1JobConfig {
          */
         return stepBuilderFactory.get("importStep")
 //                .<UserFileItem, User>chunk(5000)
-                .<UserFileItem, User>chunk(3)
+                .<UserFileItem, User>chunk(50)
                 .reader(reader(null)) //这里为了避免编译报错，需要传个null
-                .processor(processor(null)) //这里为了避免编译报错，需要传个null
+                .processor(processor(null, null)) //这里为了避免编译报错，需要传个null
 //                .writer(myBatisBatchItemWriter()) //写DB
                 .writer(customSendItemWriter(null)) //自定义写操作
                 .taskExecutor(myFirstBatchJobExecutor()) //用线程池
@@ -120,6 +120,7 @@ public class BatchDemo1JobConfig {
                     item.setUid(Long.parseLong(strArr[0]));
                     item.setTag(strArr[1]);
                     item.setType(Integer.parseInt(strArr[2]));
+                    item.setLineNumber(lineNumber);
                     return item;
                 }
                 return null;
@@ -136,8 +137,8 @@ public class BatchDemo1JobConfig {
      */
     @Bean
     @StepScope
-    public UserFileItemItemProcessor processor(@Value("#{jobParameters[jobName]}") String jobName) {
-        return new UserFileItemItemProcessor(jobName);
+    public UserFileItemItemProcessor processor(@Value("#{stepExecution}") StepExecution stepExecution, @Value("#{jobParameters[jobName]}") String jobName) {
+        return new UserFileItemItemProcessor(stepExecution, jobName);
     }
 
 
@@ -166,7 +167,7 @@ public class BatchDemo1JobConfig {
 
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
         executor.setCorePoolSize(10);
-        executor.setMaxPoolSize(10);
+        executor.setMaxPoolSize(31);
         executor.setThreadNamePrefix("myFirstBatchJobExecutor-Thread-");
         //默认是LinkedBlockingQueue
         executor.setQueueCapacity(20);

@@ -1,5 +1,6 @@
 package cn.com.kun.springframework.batch.batchService1;
 
+import cn.com.kun.springframework.batch.common.BatchDemoUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.batch.core.ExitStatus;
@@ -16,6 +17,10 @@ public class MyStepExecutionListener extends StepExecutionListenerSupport {
     public ExitStatus afterStep(StepExecution stepExecution) {
 
         LOGGER.info("Step监听器里获取ReadCount：{} ", stepExecution.getReadCount());
+
+        //验证batch框架并发下的bug 输出重复的行号
+        BatchDemoUtils.showLineCompare();
+
         return super.afterStep(stepExecution);
     }
 

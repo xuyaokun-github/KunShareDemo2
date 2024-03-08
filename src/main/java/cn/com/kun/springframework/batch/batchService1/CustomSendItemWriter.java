@@ -1,9 +1,9 @@
 package cn.com.kun.springframework.batch.batchService1;
 
 import cn.com.kun.bean.entity.User;
-import cn.com.kun.common.utils.JacksonUtils;
 import cn.com.kun.common.utils.TraceIDUtils;
 import cn.com.kun.service.mybatis.UserService;
+import cn.com.kun.springframework.batch.common.BatchExecCounter;
 import cn.com.kun.springframework.batch.common.BatchProgressRateCounter;
 import cn.com.kun.springframework.batch.common.BatchRateLimiterHolder;
 import com.google.common.util.concurrent.RateLimiter;
@@ -32,7 +32,15 @@ public class CustomSendItemWriter implements ItemWriter<User> {
     @Override
     public void write(List<? extends User> items) throws Exception {
 
+        //已读总数
+        int readCount = stepExecution.getReadCount();//不是准确的数据
+        //已读总数（自定义计数器统计）
         String jobInstanceId = String.valueOf(stepExecution.getJobExecution().getJobInstance().getInstanceId());
+        BatchExecCounter.CountData countData = BatchExecCounter.getCountData(jobInstanceId);
+        //文件总行数
+        long fileLineCount = stepExecution.getJobExecution().getExecutionContext().getLong("fileLineCount");
+        LOGGER.info("写操作，当前readCount：{} 总行数：{}", countData.getSuccessNum().get(), fileLineCount);
+
         //通过一个ID找到限流器
         String jobName = String.valueOf(stepExecution.getJobExecution().getJobInstance().getJobName());
         String jobId = stepExecution.getJobExecution().getJobParameters().getString("jobId");
@@ -40,17 +48,18 @@ public class CustomSendItemWriter implements ItemWriter<User> {
         for(User user : items){
 
             //处理的时候，先判断是否限速
-            rateLimit(jobId);
+//            rateLimit(jobId);
 
             if (MDC.get(TraceIDUtils.LOG_TRACE_ID) == null) {
-                LOGGER.info("不存在traceId");
+//                LOGGER.info("不存在traceId");
 //                MDC.put(TraceIDUtils.LOG_TRACE_ID, TraceIDUtils.getTraceId());
             }else {
                 //
-                LOGGER.info("已存在traceId：{}", MDC.get(TraceIDUtils.LOG_TRACE_ID));
+//                LOGGER.info("已存在traceId：{}", MDC.get(TraceIDUtils.LOG_TRACE_ID));
             }
 
-            LOGGER.info("写操作阶段处理：{}", JacksonUtils.toJSONString(user));
+//            LOGGER.info("写操作阶段处理：{}", JacksonUtils.toJSONString(user));
+
             //模拟一个耗时，验证 续跑场景
             //验证限速时，临时关闭
 //            ThreadUtils.sleep(3000);

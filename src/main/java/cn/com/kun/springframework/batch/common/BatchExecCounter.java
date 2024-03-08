@@ -7,7 +7,10 @@ import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * 批处理执行情况统计器
- * 注意：放在process阶段，好像并不是
+ * 注意：
+ *
+ * 使用场景：
+ * 1.判断是否处理到最后一行
  *
  * Created by xuyaokun On 2020/10/20 22:28
  * @desc:
@@ -21,9 +24,9 @@ public class BatchExecCounter {
     /**
      * 初始化统计ID(job的一次执行拥有一个唯一ID)
      */
-    public static void initCountId(){
+    public static void initCountId(String... jobinstanceId){
 
-        String countId = UUID.randomUUID().toString();
+        String countId = getCountId(jobinstanceId);
         if (null == countIdThreadLocal.get()){
             countIdThreadLocal.set(countId);
         }
@@ -31,24 +34,43 @@ public class BatchExecCounter {
         countMap.put(countId, countData);
     }
 
+    private static String getCountId(String[] jobinstanceId) {
+
+        return jobinstanceId != null && jobinstanceId.length > 0? jobinstanceId[0] : UUID.randomUUID().toString();
+    }
+
     /**
      * 成功+1
+     * @return
      */
-    public static void countSuccess(){
-        String countId = countIdThreadLocal.get();
-        CountData countData = countMap.get(countId);
-        //加一
-        countData.getSuccessNum().incrementAndGet();
+    public static long countSuccess(String... jobinstanceId){
+
+        String countId = jobinstanceId != null && jobinstanceId.length > 0? jobinstanceId[0] : countIdThreadLocal.get();
+        if (countId != null){
+            CountData countData = countMap.get(countId);
+
+            if (countData != null){
+                //加一
+                long res = countData.getSuccessNum().incrementAndGet();
+                return res;
+            }
+        }
+        return 0;
     }
 
     /**
      * 失败+1
      */
-    public static void countFail(){
-        String countId = countIdThreadLocal.get();
-        CountData countData = countMap.get(countId);
-        //加一
-        countData.getFailNum().incrementAndGet();
+    public static void countFail(String... jobinstanceId){
+        String countId = jobinstanceId != null && jobinstanceId.length > 0? jobinstanceId[0] : countIdThreadLocal.get();
+        if (countId != null) {
+            CountData countData = countMap.get(countId);
+            if (countData != null){
+                //加一
+                countData.getFailNum().incrementAndGet();
+            }
+        }
+
     }
 
     /**
@@ -63,17 +85,20 @@ public class BatchExecCounter {
         }
     }
 
-    public static CountData getCountData(){
-        String countId = countIdThreadLocal.get();
-        CountData countData = countMap.get(countId);
+    public static CountData getCountData(String... jobinstanceId){
+        String countId = jobinstanceId != null && jobinstanceId.length > 0? jobinstanceId[0] : countIdThreadLocal.get();
+        CountData countData = null;
+        if (countId != null){
+            countData = countMap.get(countId);
+        }
         return countData;
     }
 
     /**
      * 移除统计ID
      */
-    public static void removeCountId(){
-        String countId = countIdThreadLocal.get();
+    public static void removeCountId(String... jobinstanceId){
+        String countId = jobinstanceId != null && jobinstanceId.length > 0? jobinstanceId[0] : countIdThreadLocal.get();
         countMap.remove(countId);
         countIdThreadLocal.remove();
     }

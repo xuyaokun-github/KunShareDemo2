@@ -22,6 +22,9 @@ public class TwiceAccessRedisAccessor implements InitializingBean {
         return redisAccessor;
     }
 
+    /**
+     * 这种做法的缺点：不够通用，限定了使用方必须使用RedisTemplate，没有给使用方灵活选择Redis框架的权利
+     */
     @Autowired(required = false)
     private RedisTemplate redisTemplate;
 

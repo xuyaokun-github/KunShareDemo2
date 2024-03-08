@@ -1,7 +1,7 @@
 package cn.com.kun.controller;
 
-import cn.com.kun.common.utils.SpringContextUtil;
 import cn.com.kun.bean.model.people.People;
+import cn.com.kun.common.utils.SpringContextUtil;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.io.Resource;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
@@ -19,6 +18,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
+import java.util.Set;
 
 @RestController
 public class HelloController {
@@ -28,18 +28,26 @@ public class HelloController {
     @Autowired
     private RestTemplate restTemplate;
 
-    @Value("${nexusdemo:123}")
-    private String nexusdemo;
+    @Value("#{'${test.set:}'.empty? null: '${test.set:}'.split(',')}")
+    private Set<String> testSet;
+
+    @Value("#{'${test.set2:A;B;C}'.split(';')}")
+    private Set<String> testSet2;
 
     @PostConstruct
     public void init() throws IOException {
-        logger.info(nexusdemo);
         ApplicationContext applicationContext = SpringContextUtil.getContext();
         Resource resource = applicationContext.getResource("classpath:config.txt");
         File file = resource.getFile();
         InputStream inputStream = resource.getInputStream();
         logger.info(IOUtils.toString(inputStream, Charset.forName("UTF-8")));
         logger.info(applicationContext.getApplicationName());
+        if(testSet != null){
+            testSet.size();
+        }
+        if(testSet2 != null){
+            testSet2.size();
+        }
     }
 
     @GetMapping("/hello")

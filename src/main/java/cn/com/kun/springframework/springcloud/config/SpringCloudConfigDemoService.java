@@ -1,6 +1,5 @@
 package cn.com.kun.springframework.springcloud.config;
 
-import cn.com.kun.controller.spring.SpringCloudConfigDemoController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;

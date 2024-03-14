@@ -61,6 +61,13 @@ public class ThreadMdcUtil {
         };
     }
 
+    /**
+     * 假如仅仅启用skywalking的日志格式，这个封装将不再支持输出traceId,
+     * 取而代之应该用 org.apache.skywalking.apm.toolkit.trace.RunnableWrapper
+     *
+     * @param runnable
+     * @return
+     */
     public static Runnable wrap(Runnable runnable) {
 
         Map<String, String> context = MDC.getCopyOfContextMap();

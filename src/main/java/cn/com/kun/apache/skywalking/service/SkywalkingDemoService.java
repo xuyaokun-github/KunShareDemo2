@@ -23,8 +23,8 @@ public class SkywalkingDemoService {
     @Autowired
     private RedisTemplate redisTemplate;
 
-    @Autowired
-    SkywalkingDemoService2 skywalkingDemoService2;
+//    @Autowired
+//    SkywalkingDemoService2 skywalkingDemoService2;
 
     @Autowired
     SkywalkingDemoService22 skywalkingDemoService22;
@@ -39,10 +39,10 @@ public class SkywalkingDemoService {
         //例如org.springframework.data.redis.core.DefaultValueOperations.get(java.lang.Object) 可以写插件去抓耗时
         redisTemplate.opsForValue().get("kunghsu");
         //访问数据库
-        skywalkingDemoService2.method1();
-        skywalkingDemoService2.method2();
-        skywalkingDemoService2.method3();
-        skywalkingDemoService2.method4();
+//        skywalkingDemoService2.method1();
+//        skywalkingDemoService2.method2();
+//        skywalkingDemoService2.method3();
+//        skywalkingDemoService2.method4();
         skywalkingDemoService22.method4();
     }
 }

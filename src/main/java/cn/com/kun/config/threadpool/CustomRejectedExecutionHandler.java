@@ -1,6 +1,6 @@
 package cn.com.kun.config.threadpool;
 
-import cn.com.kun.controller.spring.SpringDemoController;
+import cn.com.kun.springframework.SpringDemoController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;

@@ -540,11 +540,11 @@
 <!--            <version>1.12</version>-->
 <!--        </dependency>-->
 
-        <!-- skywalking -->
+        <!-- Apache Skywalking start -->
         <dependency>
             <groupId>org.apache.skywalking</groupId>
             <artifactId>apm-toolkit-trace</artifactId>
-            <!-- 和sw的版本一致即可 -->
+            <!-- 和Skywalking的版本一致即可 -->
             <version>8.8.0</version>
         </dependency>
 
@@ -552,8 +552,9 @@
         <dependency>
             <groupId>org.apache.skywalking</groupId>
             <artifactId>apm-toolkit-log4j-2.x</artifactId>
-            <version>8.16.0</version>
+            <version>8.8.0</version>
         </dependency>
+        <!-- Apache Skywalking end -->
 
         <!-- JDBC工具类 -->
         <dependency>

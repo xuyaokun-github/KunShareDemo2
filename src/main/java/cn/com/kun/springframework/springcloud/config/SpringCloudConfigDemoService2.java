@@ -2,7 +2,6 @@ package cn.com.kun.springframework.springcloud.config;
 
 import cn.com.kun.common.utils.JacksonUtils;
 import cn.com.kun.config.threadpool.CustomThreadPoolProperties;
-import cn.com.kun.controller.spring.SpringCloudConfigDemoController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

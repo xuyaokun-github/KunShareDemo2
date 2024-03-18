@@ -6,6 +6,8 @@ public class TestStringValueOf {
 
     public static void main(String[] args) {
 
+        //注意，contains函数会抛空指针
+        System.out.println("kunghsu".contains(null));
         Object obj = null;
         //输出"null"
         System.out.println(String.valueOf(obj));

@@ -167,7 +167,12 @@ public class SentinelFlowDemoController {
         return "OK";
     }
 
-
+    /**
+     * 动态限流
+     *
+     * @return
+     * @throws Exception
+     */
     @GetMapping("/testRefresher")
     public String testRefresher() throws Exception {
 

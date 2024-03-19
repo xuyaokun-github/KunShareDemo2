@@ -55,4 +55,22 @@ public interface KunwebdemoFeign {
     @GetMapping("/kunwebdemo/feign-demo/test-jackson")
     ResultVo<FeignJacksonResVO> testJackson();
 
+    /**
+     * 在不引入openfeign的情况下，假如服务端是Post类型，feign定义用了Get类型，假如加了@RequestBody注解，get请求就会被自动转为Post请求
+     * @RequestBody
+     *
+     * @param req
+     * @return
+     */
+    @GetMapping("/kunwebdemo/feign-demo/post-method")
+    ResultVo postMethod( ResultVo req);
+
+
+    @GetMapping("/kunwebdemo/feign-demo/post-method2")
+    ResultVo postMethod2();
+
+
+    @GetMapping("/kunwebdemo/feign-demo/get-method")
+    ResultVo getMethod();
+
 }

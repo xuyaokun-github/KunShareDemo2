@@ -15,6 +15,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -170,4 +171,55 @@ public class FeignDemoController {
         return ResultVo.valueOfSuccess();
     }
 
+    /**
+     * 供kunwebdemo调用
+     *
+     * @param req
+     * @return
+     */
+    @PostMapping("/post-method")
+    public ResultVo postMethod(ResultVo req){
+
+        logger.info("post-method in kunsharedemo, receive:{}", JacksonUtils.toJSONString(req));
+        return ResultVo.valueOfSuccess("I am kunsharedemo post-method");
+    }
+
+    /**
+     * get方法带参数
+     * @return
+     */
+    @GetMapping("/testPostProblem")
+    public ResultVo testPostProblem(){
+
+        //请求2.7版本的服务端
+        ResultVo resultVo = kunwebdemoFeign.postMethod(ResultVo.valueOfSuccess("req"));
+//        ResultVo resultVo = kunwebdemoFeign.postMethod2();
+        logger.info("result:{}", resultVo);
+        return ResultVo.valueOfSuccess();
+    }
+
+    /**
+     * get方法不带参数
+     *
+     * @return
+     */
+    @GetMapping("/testPostProblemNoParam")
+    public ResultVo testPostProblemNoParam(){
+
+        //请求2.7版本的服务端
+//        ResultVo resultVo = kunwebdemoFeign.postMethod(ResultVo.valueOfSuccess());
+        ResultVo resultVo = kunwebdemoFeign.postMethod2();
+        logger.info("result:{}", resultVo);
+        return ResultVo.valueOfSuccess();
+    }
+
+    @GetMapping("/testGetProblem")
+    public ResultVo testGetProblem(){
+
+        //请求2.7版本的服务端
+//        ResultVo resultVo = kunwebdemoFeign.postMethod(ResultVo.valueOfSuccess());
+        ResultVo resultVo = kunwebdemoFeign.getMethod();
+        logger.info("result:{}", resultVo);
+        return ResultVo.valueOfSuccess();
+    }
 }

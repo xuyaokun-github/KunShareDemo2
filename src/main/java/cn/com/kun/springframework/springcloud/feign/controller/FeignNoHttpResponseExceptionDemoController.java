@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.annotation.PostConstruct;
 import java.util.concurrent.atomic.AtomicLong;
 
 @RequestMapping("/feign-NoHttpResponseException")
@@ -24,10 +23,10 @@ public class FeignNoHttpResponseExceptionDemoController {
     @Autowired
     KunwebdemoFeign kunwebdemoFeign;
 
-    @Autowired
+//    @Autowired //临时注释
     PoolingHttpClientConnectionManager connectionManager;
 
-    @PostConstruct
+//    @PostConstruct
     public void init(){
         //为了更容易观察归还连接的过程，可以先将连接校验的过程设置久一点
         connectionManager.setValidateAfterInactivity(1000 * 2000);

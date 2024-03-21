@@ -1,4 +1,4 @@
-package cn.com.kun.apache.skywalking.service;
+package cn.com.kun.framework.apache.skywalking.service;
 
 import org.springframework.stereotype.Service;
 

@@ -1,4 +1,4 @@
-package cn.com.kun.apache.skywalking.extend;
+package cn.com.kun.framework.apache.skywalking.extend;
 
 import org.apache.logging.log4j.core.LogEvent;
 import org.apache.logging.log4j.core.config.plugins.Plugin;

@@ -1,11 +1,27 @@
 package cn.com.kun.foo.javacommon.collections.map;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class TestHashMap {
 
     public static void main(String[] args) {
 
 //        main1();
-        main2();
+//        main2();
+
+
+        Map<String, Object> map = new HashMap<>();
+//        map.put("kunghsu", 555);
+        map.put("kunghsu", "");
+
+        Integer integer = (Integer) map.get("kunghsu");
+        System.out.println(integer);
+        if (999 > integer){
+            System.out.println("大于");
+        }else {
+            System.out.println("小于");
+        }
     }
 
     private static void main1() {

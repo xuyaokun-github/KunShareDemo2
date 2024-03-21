@@ -1,4 +1,4 @@
-package cn.com.kun.apache.io;
+package cn.com.kun.framework.apache.io;
 
 import java.io.FileInputStream;
 import java.io.IOException;

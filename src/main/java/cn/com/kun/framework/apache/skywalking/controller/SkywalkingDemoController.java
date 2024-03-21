@@ -1,6 +1,6 @@
-package cn.com.kun.apache.skywalking.controller;
+package cn.com.kun.framework.apache.skywalking.controller;
 
-import cn.com.kun.apache.skywalking.service.SkywalkingDemoService;
+import cn.com.kun.framework.apache.skywalking.service.SkywalkingDemoService;
 import cn.com.kun.common.utils.ThreadUtils;
 import org.apache.skywalking.apm.toolkit.trace.RunnableWrapper;
 import org.slf4j.Logger;
@@ -742,7 +742,14 @@ public class SkywalkingDemoController {
             }
         };
 
-        new Thread(RunnableWrapper.of(runnable), "start-sync-thread").start();
+//        new Thread(RunnableWrapper.of(runnable), "start-sync-thread").start();
+
+        /*
+         * 使用apm-jdk-threading-plugin插件也可以让异步线程的链路接上
+         * 要在agent.config配置中加配置：plugin.jdkthreading.threading_class_prefixes=cn.com.kun
+         *
+         */
+        new Thread(runnable, "start-sync-thread").start();
         return "kunghsu";
     }
 }

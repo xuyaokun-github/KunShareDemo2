@@ -1,4 +1,4 @@
-package cn.com.kun.apache.shardingsphere.algorithm;
+package cn.com.kun.framework.apache.shardingsphere.algorithm;
 
 import org.apache.shardingsphere.api.sharding.standard.PreciseShardingAlgorithm;
 import org.apache.shardingsphere.api.sharding.standard.PreciseShardingValue;

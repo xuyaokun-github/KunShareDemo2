@@ -1,4 +1,4 @@
-package cn.com.kun.apache.shardingsphere.controller;
+package cn.com.kun.framework.apache.shardingsphere.controller;
 
 import cn.com.kun.bean.entity.Student;
 import cn.com.kun.bean.entity.User;

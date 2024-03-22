@@ -1,23 +1,10 @@
-package cn.com.kun.framework.apache.skywalking.controller;
+package cn.com.kun.framework.apache.skywalking.extend.blacktechnology;
 
-import cn.com.kun.common.utils.ThreadUtils;
-import cn.com.kun.framework.apache.skywalking.extend.blacktechnology.SwExtendRunnable;
-import cn.com.kun.framework.apache.skywalking.extend.blacktechnology.SwExtendRunnableHolder;
-import cn.com.kun.framework.apache.skywalking.extend.blacktechnology.SwExtendRunnableWrapper;
-import cn.com.kun.framework.apache.skywalking.service.SkywalkingDemoService;
-import org.apache.skywalking.apm.toolkit.trace.RunnableWrapper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.server.PathContainer;
 import org.springframework.http.server.RequestPath;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.method.HandlerMethod;
-import org.springframework.web.servlet.DispatcherServlet;
 import org.springframework.web.servlet.HandlerExecutionChain;
 import org.springframework.web.servlet.HandlerMapping;
 
@@ -32,100 +19,60 @@ import java.lang.reflect.Method;
 import java.security.Principal;
 import java.util.*;
 
-@RequestMapping("/skywalking")
-@RestController
-public class SkywalkingDemoController {
+/**
+ * skywalking黑科技
+ *
+ * author:xuyaokun_kzx
+ * date:2024/3/21
+ * desc:
+*/
+public class SwExtendRunnable implements Runnable{
 
-    private final static Logger LOGGER = LoggerFactory.getLogger(SkywalkingDemoController.class);
+    private Runnable runnable;
 
-
-    @Autowired
-    private SkywalkingDemoService skywalkingDemoService;
-
-    @Autowired
-    private DispatcherServlet dispatcherServlet;
-
-
-    /**
-     * 验证异步线程输出traceId
-     */
-//    @PostConstruct
-    public void init(){
-
-        new Thread(RunnableWrapper.of(() ->{
-            while (true){
-                LOGGER.info("我是异步线程");
-                ThreadUtils.sleep(3000);
-            }
-        }), "start-sync-thread").start();
+    public SwExtendRunnable(Runnable runnable) {
+        this.runnable = runnable;
     }
 
-    @GetMapping("/test")
-    public String testString() throws InterruptedException {
+    @Override
+    public void run() {
 
-        LOGGER.info("method1");
-        Thread.currentThread().getName();
-//        skywalkingDemoService.method1();
-        return "kunghsu";
-    }
+        SwExtendRunnableHolder.set(runnable);
 
-
-    @GetMapping("/start-thread")
-    public String startThread() throws InterruptedException {
-
-        new Thread(()->{
-            while (true){
-                ThreadUtils.sleep(30 * 1000);
-                try {
-                    doStartThread();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
+        //模拟一个web环境
+        HttpServletRequest mockRequest = buildMockRequest();
+        mockRequest.setAttribute("org.springframework.web.util.UrlPathHelper.PATH", "/skywalking-extend/entry-method");
+        mockRequest.setAttribute("org.springframework.web.util.ServletRequestPathUtils.PATH", new RequestPath() {
+            @Override
+            public PathContainer contextPath() {
+                return null;
             }
 
-        }).start();
+            @Override
+            public PathContainer pathWithinApplication() {
+                return null;
+            }
 
-        return "kunghsu";
-    }
+            @Override
+            public RequestPath modifyContextPath(String contextPath) {
+                return null;
+            }
 
-    private String doStartThread() throws InterruptedException {
+            @Override
+            public String value() {
+                return null;
+            }
 
-        new Thread(()->{
-
-            //模拟一个web环境
-            HttpServletRequest mockRequest = buildMockRequest();
-            mockRequest.setAttribute("org.springframework.web.util.UrlPathHelper.PATH", "/skywalking/test");
-            mockRequest.setAttribute("org.springframework.web.util.ServletRequestPathUtils.PATH", new RequestPath() {
-                @Override
-                public PathContainer contextPath() {
-                    return null;
-                }
-
-                @Override
-                public PathContainer pathWithinApplication() {
-                    return null;
-                }
-
-                @Override
-                public RequestPath modifyContextPath(String contextPath) {
-                    return null;
-                }
-
-                @Override
-                public String value() {
-                    return null;
-                }
-
-                @Override
-                public List<Element> elements() {
-                    return null;
-                }
-            });
-            HttpServletResponse mockResponse = buildMockResponse();
-            //必须要放HttpServletResponse，否则skywalking拦截器会抛空指针
-            ServletRequestAttributes servletRequestAttributes = new ServletRequestAttributes(mockRequest, mockResponse);
-            RequestContextHolder.setRequestAttributes(servletRequestAttributes);
-            //随便调用一个controller的方法
+            @Override
+            public List<Element> elements() {
+                return null;
+            }
+        });
+        HttpServletResponse mockResponse = buildMockResponse();
+        //必须要放HttpServletResponse，否则skywalking拦截器会抛空指针
+        ServletRequestAttributes servletRequestAttributes = new ServletRequestAttributes(mockRequest, mockResponse);
+        RequestContextHolder.setRequestAttributes(servletRequestAttributes);
+        //随便调用一个controller的方法
 //            SkywalkingDemoController controller = SpringContextUtil.getBean("skywalkingDemoController");
 //            try {
 //                controller.emptyMethod();
@@ -139,50 +86,37 @@ public class SkywalkingDemoController {
 //                e.printStackTrace();
 //            }
 
-            HandlerExecutionChain handler = null;
-            List<HandlerMapping>  handlerMappings = dispatcherServlet.getHandlerMappings();
-            if (handlerMappings != null) {
-                for (HandlerMapping mapping : handlerMappings) {
-                    try {
-                        handler = mapping.getHandler(mockRequest);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                    if (handler != null) {
-                        Object obj = handler.getHandler();
-                        if (obj instanceof HandlerMethod){
-                            HandlerMethod handlerMethod = (HandlerMethod) obj;
-                            Object bean = handlerMethod.getBean();
+        HandlerExecutionChain handler = null;
+        List<HandlerMapping>  handlerMappings = DispatcherServletAccessor.getDispatcherServletAccessor().getDispatcherServlet().getHandlerMappings();
+        if (handlerMappings != null) {
+            for (HandlerMapping mapping : handlerMappings) {
+                try {
+                    handler = mapping.getHandler(mockRequest);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                if (handler != null) {
+                    Object obj = handler.getHandler();
+                    if (obj instanceof HandlerMethod){
+                        HandlerMethod handlerMethod = (HandlerMethod) obj;
+                        Object bean = handlerMethod.getBean();
 //                            LOGGER.info("触发getBean方法");
-                            Method method = handlerMethod.getMethod();
-                            try {
-                                Object result = method.invoke(bean, null);
-                                System.out.println("方法执行结果：" + result);
-                            } catch (IllegalAccessException e) {
-                                e.printStackTrace();
-                            } catch (InvocationTargetException e) {
-                                e.printStackTrace();
-                            }
+                        Method method = handlerMethod.getMethod();
+                        try {
+                            Object result = method.invoke(bean, null);
+                        } catch (IllegalAccessException e) {
+                            e.printStackTrace();
+                        } catch (InvocationTargetException e) {
+                            e.printStackTrace();
                         }
                     }
                 }
             }
+        }
 
-            //打印日志
-            int count = 1;
-            while (true){
-                ThreadUtils.sleep(1000);
-                LOGGER.info("syncthread");
-                if (count < 0){
-                    break;
-                }
-                count--;
-            }
-
-        }, "SkywalkingDemo-Thread" ).start();
-
-        return "kunghsu";
     }
+
+
 
     private HttpServletResponse buildMockResponse() {
 
@@ -648,12 +582,12 @@ public class SkywalkingDemoController {
 
             @Override
             public String getRequestURI() {
-                return "/kunsharedemo27/skywalking/empty-method";
+                return "/kunsharedemo27/skywalking-extend/entry-method";
             }
 
             @Override
             public StringBuffer getRequestURL() {
-                return new StringBuffer("/kunsharedemo27/skywalking/empty-method");
+                return new StringBuffer("/kunsharedemo27/skywalking-extend/entry-method");
             }
 
             @Override
@@ -728,71 +662,5 @@ public class SkywalkingDemoController {
         };
     }
 
-    /**
-     * 黑科技方法
-     *
-     * @return
-     * @throws InterruptedException
-     */
-    @GetMapping("/black-tech-extend")
-    public String blackTechExtend() throws InterruptedException {
 
-        new Thread(new SwExtendRunnable(()->{
-            int count = 5;
-            while (true){
-                ThreadUtils.sleep(1000);
-                LOGGER.info("async thread");
-                if (count < 0){
-                    break;
-                }
-                count--;
-            }
-        }), "black-tech-extend-thread").start();
-
-        return "kunghsu";
-    }
-
-    /**
-     * 供黑科技调用
-     *
-     * @return
-     * @throws InterruptedException
-     */
-    @GetMapping("/empty-method")
-    public String emptyMethod() throws InterruptedException {
-
-        //从线程副本里取出runnable执行
-        Runnable runnable = SwExtendRunnableHolder.get();
-        if (runnable != null){
-            runnable.run();
-        }
-
-        return "kunghsu";
-    }
-
-    @GetMapping("/start-sync-thread")
-    public String startSyncThread() throws InterruptedException {
-
-        LOGGER.info("我是主线程");
-        Runnable runnable = new Runnable() {
-            @Override
-            public void run() {
-                LOGGER.info("我是异步线程");
-            }
-        };
-
-//        new Thread(RunnableWrapper.of(runnable), "start-sync-thread").start();
-
-        /*
-         * 使用apm-jdk-threading-plugin插件也可以让异步线程的链路接上
-         * 要在agent.config配置中加配置：plugin.jdkthreading.threading_class_prefixes=cn.com.kun
-         *
-         */
-//        new Thread(runnable, "start-sync-thread").start();
-
-        //使用黑科技
-        new Thread(SwExtendRunnableWrapper.of(runnable), "start-sync-thread").start();
-
-        return "kunghsu";
-    }
 }

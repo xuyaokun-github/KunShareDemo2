@@ -41,8 +41,11 @@ public class DesensitizationLogger {
             if (arguments != null && arguments.length > 0){
                 newArguments = new Object[arguments.length];
                 for (int i = 0; i < arguments.length; i++) {
-                    newArguments[i] = arguments[i] instanceof String ?
-                            LogDesensitizationUtils.encrypt(String.valueOf(arguments[i])) : LogDesensitizationUtils.encrypt(arguments[i].toString()) ;
+                    Object arg = arguments[i];
+                    if (arg == null){
+                        arg = "";
+                    }
+                    newArguments[i] = arg instanceof String ? LogDesensitizationUtils.encrypt(String.valueOf(arg)) : LogDesensitizationUtils.encrypt(arg.toString()) ;
                 }
             }else {
                 newArguments = arguments;

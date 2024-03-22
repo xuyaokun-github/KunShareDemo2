@@ -48,12 +48,18 @@ public class Log4j2DemoController {
     @GetMapping("/desensitization")
     public ResultVo desensitization(){
 
+        DLOGGER.infoByDst("kunghsu:{}", null);
+
+        String str = "kunghsu";
+        DLOGGER.infoByDst("kunghsu:{} kunghsu2:{}", null, str);
+
+
         //常规用法
-        DLOGGER.info("kunghsu");
-        DLOGGER.info("kunghsu:{}", System.currentTimeMillis());
+//        DLOGGER.info("kunghsu");
+//        DLOGGER.info("kunghsu:{}", System.currentTimeMillis());
         //脱敏用法
-        DLOGGER.infoDesensitize("kunghsu:{}", System.currentTimeMillis());
-        DLOGGER.infoDesensitize("kunghsu");
+//        DLOGGER.infoDesensitize("kunghsu:{}", System.currentTimeMillis());
+//        DLOGGER.infoDesensitize("kunghsu");
 
         return ResultVo.valueOfSuccess();
     }

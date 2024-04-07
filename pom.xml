@@ -120,11 +120,6 @@
 
 
         <!-- 分布式服务跟踪 -->
-        <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-sleuth</artifactId>
-        </dependency>
-
         <!-- zipkin
             springboot2.1.6版本中，无需指定version
             高版本springboot2.7.12需要主动指定version(高版本已经移除该module，建议不要再引入) 应该用 spring-cloud-sleuth-zipkin-->

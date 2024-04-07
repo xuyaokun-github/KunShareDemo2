@@ -1,5 +1,6 @@
 package cn.com.kun.springframework.springcloud.feign.controller;
 
+import cn.com.kun.common.utils.HttpVisitUtil;
 import cn.com.kun.common.utils.JacksonUtils;
 import cn.com.kun.common.vo.ResultVo;
 import cn.com.kun.springframework.springcloud.feign.client.KunShareDemo2Feign;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
@@ -180,7 +182,7 @@ public class FeignDemoController {
     @PostMapping("/post-method")
     public ResultVo postMethod(ResultVo req){
 
-        logger.info("post-method in kunsharedemo, receive:{}", JacksonUtils.toJSONString(req));
+        logger.info("=========================================================post-method in kunsharedemo, receive:{}", JacksonUtils.toJSONString(req));
         return ResultVo.valueOfSuccess("I am kunsharedemo post-method");
     }
 
@@ -220,6 +222,51 @@ public class FeignDemoController {
 //        ResultVo resultVo = kunwebdemoFeign.postMethod(ResultVo.valueOfSuccess());
         ResultVo resultVo = kunwebdemoFeign.getMethod();
         logger.info("result:{}", resultVo);
+        return ResultVo.valueOfSuccess();
+    }
+
+    /**
+     * 没法复现Broken Pipe异常
+     * （强制关停服务，能复现）
+     * @return
+     */
+    @GetMapping("/testBrokenPipeProblem")
+    public ResultVo testBrokenPipeProblem(){
+
+        //请求2.7版本的服务端
+        logger.info("testBrokenPipeProblem开始调用");
+        ResultVo resultVo = kunwebdemoFeign.getMethod();
+        logger.info("result:{}", resultVo);
+        return ResultVo.valueOfSuccess();
+    }
+
+    /**
+     * 使用HttpURLConnection 也没法复现BrokenPipe异常
+     * （强制关停服务，能复现）
+     * @return
+     */
+    @GetMapping("/testBrokenPipeProblem2")
+    public ResultVo testBrokenPipeProblem2(){
+
+        //请求2.7版本的服务端
+        logger.info("testBrokenPipeProblem开始调用");
+        HttpVisitUtil.doByGet("http://localhost:8091/kunwebdemo/feign-demo/get-method", new HashMap<>());
+        logger.info("result:{}", "");
+        return ResultVo.valueOfSuccess();
+    }
+
+    /**
+     * 加了网关进来，也没法复现BrokenPipe异常
+     * （强制关停服务，能复现）
+     * @return
+     */
+    @GetMapping("/testBrokenPipeProblem2WithGateway")
+    public ResultVo testBrokenPipeProblem2WithGateway(){
+
+        //请求2.7版本的服务端
+        logger.info("testBrokenPipeProblem开始调用");
+        HttpVisitUtil.doByGet("http://localhost:8089/kunshare-zuul/kunwebdemo/kunwebdemo/feign-demo/get-method", new HashMap<>());
+        logger.info("result:{}", "");
         return ResultVo.valueOfSuccess();
     }
 }

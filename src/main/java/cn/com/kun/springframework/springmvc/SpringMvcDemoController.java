@@ -4,9 +4,6 @@ import cn.com.kun.bean.model.FileUploadReqVO;
 import cn.com.kun.common.utils.SpringContextUtil;
 import cn.com.kun.common.vo.ResultVo;
 import cn.com.kun.foo.javacommon.io.FileStringUtils;
-//import io.swagger.annotations.ApiParam;
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.enums.ParameterStyle;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -285,6 +282,13 @@ public class SpringMvcDemoController {
             //输出的将是类似这种：cn.com.kun.springframework.springmvc.SpringMvcDemoController$$EnhancerBySpringCGLIB$$6a2feee9
             LOGGER.info(beanObj.getClass().getTypeName());
         }
+        return ResultVo.valueOfSuccess();
+    }
+
+    @GetMapping("/testRequestParam")
+    public ResultVo testRequestParam(HttpServletRequest request, @RequestParam(name = "name") String name){
+
+        LOGGER.info("testRequestParam");
         return ResultVo.valueOfSuccess();
     }
 

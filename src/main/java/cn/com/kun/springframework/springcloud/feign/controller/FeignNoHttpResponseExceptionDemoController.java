@@ -1,5 +1,6 @@
 package cn.com.kun.springframework.springcloud.feign.controller;
 
+import cn.com.kun.common.utils.JacksonUtils;
 import cn.com.kun.common.utils.ThreadUtils;
 import cn.com.kun.common.vo.ResultVo;
 import cn.com.kun.springframework.springcloud.feign.client.KunwebdemoFeign;
@@ -11,7 +12,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.RestTemplate;
 
+import javax.annotation.PostConstruct;
 import java.util.concurrent.atomic.AtomicLong;
 
 @RequestMapping("/feign-NoHttpResponseException")
@@ -21,15 +24,23 @@ public class FeignNoHttpResponseExceptionDemoController {
     private final static Logger LOGGER = LoggerFactory.getLogger(FeignNoHttpResponseExceptionDemoController.class);
 
     @Autowired
-    KunwebdemoFeign kunwebdemoFeign;
+    private KunwebdemoFeign kunwebdemoFeign;
 
-//    @Autowired //临时注释
-    PoolingHttpClientConnectionManager connectionManager;
+    @Autowired
+    private RestTemplate restTemplate;
 
-//    @PostConstruct
+    @Autowired //临时注释
+    private PoolingHttpClientConnectionManager connectionManager;
+
+    @PostConstruct
     public void init(){
         //为了更容易观察归还连接的过程，可以先将连接校验的过程设置久一点
+        /*
+            为了方便在单线程环境下复现NoHttpResponseException，
+            ValidateAfterInactivity(默认是2000)尽量设置大一点，至少大于服务端的keep-alive
+         */
         connectionManager.setValidateAfterInactivity(1000 * 2000);
+
     }
 
     @GetMapping("/test")
@@ -37,11 +48,82 @@ public class FeignNoHttpResponseExceptionDemoController {
 
         //请求第三方系统
         ResultVo resultVo = kunwebdemoFeign.result();
-
-        ResultVo res = ResultVo.valueOfSuccess();
         return resultVo;
     }
 
+
+    /**
+     * 百分百几率复现NoHttpResponseException异常
+     * Feign版
+     *
+     * @return
+     */
+    @GetMapping("/testInvokeForever")
+    public ResultVo testInvokeForever(){
+
+        new Thread(()->{
+
+            int count = 0;
+            while (true){
+                //请求第三方系统
+                ResultVo resultVo = kunwebdemoFeign.result();
+                LOGGER.info("第{}次 resultVo:{}", ++count, JacksonUtils.toJSONString(resultVo));
+                try {
+//                    Thread.sleep(3000);
+//                    Thread.sleep(4000);//当服务端设置为3000时
+                    Thread.sleep(1910);//当服务端设置为1900时
+
+//                    Thread.sleep(400);
+
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+
+        }).start();
+
+        return ResultVo.valueOfSuccess();
+    }
+
+    /**
+     * 百分百几率复现NoHttpResponseException异常
+     * Feign版
+     *
+     * @return
+     */
+    @GetMapping("/testInvokeForeverForRestTemplate")
+    public ResultVo testInvokeForeverForRestTemplate(){
+
+        new Thread(()->{
+
+            int count = 0;
+            while (true){
+                //请求第三方系统
+//                ResultVo resultVo = restTemplate.getForObject("http://127.0.0.1:8091/kunwebdemo/feigndemo/test", ResultVo.class);
+                ResultVo resultVo = restTemplate.postForObject("http://127.0.0.1:8091/kunwebdemo/feigndemo/test-by-post", ResultVo.valueOfSuccess(), ResultVo.class);
+                LOGGER.info("第{}次 resultVo:{}", ++count, JacksonUtils.toJSONString(resultVo));
+                try {
+//                    Thread.sleep(3000);
+                    Thread.sleep(400);
+//                    Thread.sleep(600);//当服务端设置为300时
+//                    Thread.sleep(400);
+
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+
+        }).start();
+
+        return ResultVo.valueOfSuccess();
+    }
+
+
+
+    /**
+     * 同一个线程内，多次请求
+     * @return
+     */
     @GetMapping("/test2")
     public ResultVo test2(){
 

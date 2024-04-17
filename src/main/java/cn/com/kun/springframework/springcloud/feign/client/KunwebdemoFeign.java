@@ -25,6 +25,9 @@ public interface KunwebdemoFeign {
     @GetMapping("/kunwebdemo/feigndemo/test")
     ResultVo result();
 
+    @GetMapping("/kunwebdemo/feigndemo/test-by-post")
+    ResultVo resultByPost();
+
     /**
      * Get请求-带参数
      * @param name

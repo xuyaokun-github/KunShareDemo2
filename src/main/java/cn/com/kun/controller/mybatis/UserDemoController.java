@@ -1,6 +1,8 @@
 package cn.com.kun.controller.mybatis;
 
 import cn.com.kun.bean.entity.User;
+import cn.com.kun.bean.model.user.UserQueryParam;
+import cn.com.kun.common.utils.JacksonUtils;
 import cn.com.kun.mapper.UserMapper;
 import cn.com.kun.service.mybatis.UserService;
 import cn.com.kun.service.mybatis.multiThreadTranscation.MultiThreadTranscationService;
@@ -24,13 +26,13 @@ import java.util.concurrent.ThreadLocalRandom;
 @RestController
 public class UserDemoController {
 
-    private final static Logger logger = LoggerFactory.getLogger(UserDemoController.class);
+    private final static Logger LOGGER = LoggerFactory.getLogger(UserDemoController.class);
 
     @Autowired
     private UserMapper userMapper;
 
     @Autowired
-    UserService userService;
+    private UserService userService;
 
     @Autowired
     private MultiThreadTranscationService multiThreadTranscationService;
@@ -39,6 +41,35 @@ public class UserDemoController {
     public String test(){
 
         List<User> userList = userMapper.selectAllByMoreResultMap(0);
+        return "OK";
+    }
+
+    @GetMapping("/select")
+    public String select(){
+
+        List<User> userList = userMapper.selectAllByMoreResultMap(0);
+        return "OK";
+    }
+    @GetMapping("/update")
+    public String update(){
+
+        int res = userMapper.update(new User());
+        return "OK";
+    }
+    @GetMapping("/delete")
+    public String delete(){
+
+        int userList = userMapper.deleteById(0L);
+        return "OK";
+    }
+
+    @GetMapping("/insert")
+    public String insert(){
+
+        User user = new User();
+        user.setFirstname("333");
+        user.setLastname("444");
+        int userList = userMapper.insert(user);
         return "OK";
     }
 
@@ -189,6 +220,15 @@ public class UserDemoController {
             }).start();
         }
 
+        return "OK";
+    }
+
+
+    @GetMapping("/testSelectByValid")
+    public String testSelectByValid(){
+
+        List<User> userList = userMapper.selectByValid(new UserQueryParam());
+        LOGGER.info(JacksonUtils.toJSONString(userList));
         return "OK";
     }
 }

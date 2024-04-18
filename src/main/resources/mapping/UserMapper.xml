@@ -162,4 +162,18 @@
         UPDATE tbl_user SET order_count = order_count + #{times}
         WHERE id=#{id}
     </update>
+
+    <select id="selectByValid" parameterType="UserQueryParam" resultType="User">
+        SELECT
+        a.firstname firstname,
+        a.lastname lastname,
+        a.phone phone,
+        a.email email,
+        a.create_time createTime,
+        a.valid valid
+        FROM
+        tbl_user a
+        WHERE a.valid = 1
+    </select>
+
 </mapper>

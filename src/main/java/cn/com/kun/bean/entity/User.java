@@ -31,6 +31,11 @@ public class User /*implements Serializable*/ {
     @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
     private Date createTime;
 
+    /**
+     * 验证bit类型索引导致查询失效问题
+     */
+    private Boolean valid;
+
     public String getFirstname() {
         return firstname;
     }
@@ -118,5 +123,13 @@ public class User /*implements Serializable*/ {
 
     public void setOrderCount(Integer orderCount) {
         this.orderCount = orderCount;
+    }
+
+    public Boolean getValid() {
+        return valid;
+    }
+
+    public void setValid(Boolean valid) {
+        this.valid = valid;
     }
 }

@@ -46,4 +46,13 @@ public interface UserMapper {
 
     int updateOrderCount2(Long id, Integer times);
 
+
+    /**
+     * 验证bit索引导致查询失效问题
+     *
+     * @param userQueryParam
+     * @return
+     */
+    List<User> selectByValid(UserQueryParam userQueryParam);
+
 }

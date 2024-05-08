@@ -75,6 +75,7 @@ public class NbaPlayerElasticServiceImpl implements INbaPlayerElasticService {
     public void save(NbaPlayerDocBean docBean) {
 
         NbaPlayerDocBean result = elasticRepository.save(docBean);
+
         /*
             插入后拿到的对象是插入前的实体，是相同对象（自动生成的id不会回写）
             同一个实体，即使id相同也能调用保存多次

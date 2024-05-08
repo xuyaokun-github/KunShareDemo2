@@ -116,10 +116,16 @@ public class LockExceptionRetryInterceptor implements Interceptor {
         if (e instanceof java.lang.reflect.InvocationTargetException){
             InvocationTargetException targetException = (InvocationTargetException) e;
             Throwable target = targetException.getTargetException();
-            if (target instanceof com.mysql.jdbc.exceptions.jdbc4.MySQLTransactionRollbackException && target.getMessage() != null &&
+            //8.0.33版驱动
+            if (target instanceof com.mysql.cj.jdbc.exceptions.MySQLTransactionRollbackException  && target.getMessage() != null &&
                     target.getMessage().contains("Deadlock found when trying to get lock")){
                 return true;
             }
+            //5.1.47版MySQL驱动
+//            if (target instanceof com.mysql.jdbc.exceptions.jdbc4.MySQLTransactionRollbackException && target.getMessage() != null &&
+//                    target.getMessage().contains("Deadlock found when trying to get lock")){
+//                return true;
+//            }
         }
 
         return false;
@@ -160,10 +166,16 @@ public class LockExceptionRetryInterceptor implements Interceptor {
         if (e instanceof java.lang.reflect.InvocationTargetException){
             InvocationTargetException targetException = (InvocationTargetException) e;
             Throwable target = targetException.getTargetException();
-            if (target instanceof com.mysql.jdbc.exceptions.jdbc4.MySQLTransactionRollbackException && target.getMessage() != null &&
+            //8.0.33版驱动
+            if (target instanceof com.mysql.cj.jdbc.exceptions.MySQLTransactionRollbackException && target.getMessage() != null &&
                 target.getMessage().contains("Lock wait timeout exceeded")){
                 return true;
             }
+            //5.1.47版MySQL驱动
+//            if (target instanceof com.mysql.jdbc.exceptions.jdbc4.MySQLTransactionRollbackException && target.getMessage() != null &&
+//                target.getMessage().contains("Lock wait timeout exceeded")){
+//                return true;
+//            }
         }
 
         return false;

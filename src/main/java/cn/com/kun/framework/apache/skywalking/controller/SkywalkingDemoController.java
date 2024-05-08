@@ -3,7 +3,6 @@ package cn.com.kun.framework.apache.skywalking.controller;
 import cn.com.kun.common.utils.ThreadUtils;
 import cn.com.kun.framework.apache.skywalking.extend.blacktechnology.SwExtendRunnable;
 import cn.com.kun.framework.apache.skywalking.extend.blacktechnology.SwExtendRunnableHolder;
-import cn.com.kun.framework.apache.skywalking.extend.blacktechnology.SwExtendRunnableWrapper;
 import cn.com.kun.framework.apache.skywalking.service.SkywalkingDemoService;
 import org.apache.skywalking.apm.toolkit.trace.RunnableWrapper;
 import org.slf4j.Logger;
@@ -781,7 +780,8 @@ public class SkywalkingDemoController {
             }
         };
 
-//        new Thread(RunnableWrapper.of(runnable), "start-sync-thread").start();
+        new Thread(RunnableWrapper.of(runnable), "start-sync-thread").start();
+//        new Thread(runnable, "start-sync-thread").start();
 
         /*
          * 使用apm-jdk-threading-plugin插件也可以让异步线程的链路接上
@@ -791,7 +791,7 @@ public class SkywalkingDemoController {
 //        new Thread(runnable, "start-sync-thread").start();
 
         //使用黑科技
-        new Thread(SwExtendRunnableWrapper.of(runnable), "start-sync-thread").start();
+//        new Thread(SwExtendRunnableWrapper.of(runnable), "start-sync-thread").start();
 
         return "kunghsu";
     }

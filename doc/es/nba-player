@@ -1,0 +1,31 @@
+#创建索引
+PUT /nba-player
+{
+  "settings": {
+    "number_of_shards": 1,
+    "number_of_replicas": 1
+  },
+  "mappings": {
+    "_doc": {
+      "properties": {
+        "content": {
+          "type": "text"
+        },
+        "firstCode": {
+          "type": "keyword"
+        },
+        "secordCode": {
+          "type": "keyword"
+        },
+        "type": {
+          "type": "long"
+        }
+      }
+    }
+  }
+}
+
+
+
+
+

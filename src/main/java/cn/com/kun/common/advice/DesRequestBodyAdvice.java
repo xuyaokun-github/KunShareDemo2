@@ -1,6 +1,5 @@
 package cn.com.kun.common.advice;
 
-import com.alibaba.fastjson.JSON;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.MethodParameter;
@@ -55,7 +54,7 @@ public class DesRequestBodyAdvice implements RequestBodyAdvice {
     @Override
     public Object afterBodyRead(Object o, HttpInputMessage httpInputMessage, MethodParameter methodParameter, Type type, Class<? extends HttpMessageConverter<?>> aClass) {
         Method method = methodParameter.getMethod();
-        logger.info("{}.{}:{}",method.getDeclaringClass().getSimpleName(),method.getName(), JSON.toJSONString(o));
+//        logger.info("{}.{}:{}",method.getDeclaringClass().getSimpleName(),method.getName(), JSON.toJSONString(o));
         //这个就是参数值，在这里可以做一些额外的操作，例如加解密，这里return之后，具体的controller层就会收到return后的值
         return o;
     }
@@ -75,7 +74,7 @@ public class DesRequestBodyAdvice implements RequestBodyAdvice {
     @Override
     public Object handleEmptyBody(Object o, HttpInputMessage httpInputMessage, MethodParameter methodParameter, Type type, Class<? extends HttpMessageConverter<?>> aClass) {
         Method method=methodParameter.getMethod();
-        logger.info("{}.{}",method.getDeclaringClass().getSimpleName(),method.getName());
+//        logger.info("{}.{}",method.getDeclaringClass().getSimpleName(),method.getName());
         return o;
     }
 }

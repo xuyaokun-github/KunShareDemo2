@@ -1,5 +1,7 @@
 package cn.com.kun.foo.javacommon.collections.list;
 
+import cn.com.kun.common.utils.JacksonUtils;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,6 +13,8 @@ public class TestList {
         List<String> stringList = null;
         stringList = method(stringList);
         System.out.println(stringList.size());
+        System.out.println(JacksonUtils.toJSONString(stringList));
+
     }
 
     private static List<String> method(List<String> stringList) {

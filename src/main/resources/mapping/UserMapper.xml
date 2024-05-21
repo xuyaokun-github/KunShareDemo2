@@ -98,7 +98,7 @@
         </if>
     </select>
 
-    <select id="getUserByFirstname" parameterType="long" resultType="User">
+    <select id="getUserByFirstname" parameterType="String" resultType="User">
         SELECT
         a.firstname firstname,
         a.lastname lastname,

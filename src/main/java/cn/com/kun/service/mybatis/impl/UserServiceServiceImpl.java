@@ -12,24 +12,42 @@ import org.apache.ibatis.session.SqlSessionFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.support.TransactionSynchronization;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
 
+import javax.annotation.PostConstruct;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import static cn.com.kun.common.constants.MemoryCacheConfigConstants.MEMORY_CACHE_CONFIG_NAME_USER;
 
 @Service
 public class UserServiceServiceImpl implements UserService {
 
     private final static Logger LOGGER = LoggerFactory.getLogger(UserServiceServiceImpl.class);
 
+    private Map<String, User> userMap = new HashMap<>();
+
     @Autowired
     private UserMapper userMapper;
 
     @Autowired
     private SqlSessionFactory sqlSessionFactory;
+
+
+    @PostConstruct
+    public void init(){
+
+        User user = new User();
+        user.setFirstname("kunghsu");
+        userMap.put("AAA", user);
+    }
+
     /**
      * 非分页查询
      * @param userQueryParam
@@ -220,6 +238,14 @@ public class UserServiceServiceImpl implements UserService {
         ThreadUtils.sleep(60 * 1000);
         User user = userMapper.getUserByFirstname("");
         LOGGER.info(DateUtils.now());
+        return user;
+    }
+
+    @Cacheable(value = MEMORY_CACHE_CONFIG_NAME_USER, key = "#firstname", cacheManager = "caffeineCacheManager")
+    @Override
+    public User queryUserByFirstName(String firstname) {
+
+        User user = userMap.get(firstname);
         return user;
     }
 

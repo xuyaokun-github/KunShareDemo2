@@ -4,6 +4,8 @@ import cn.com.kun.common.vo.ResultVo;
 import cn.com.kun.springframework.springcloud.feign.vo.FeignJacksonResVO;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
 /**
  * 展示一个不走注册中心的例子
@@ -27,6 +29,10 @@ public interface KunShareDemo2Feign {
 
     @GetMapping("/kunsharedemo27/feign-demo/test-jackson")
     ResultVo<FeignJacksonResVO> testJackson();
+
+
+    @PostMapping("/kunsharedemo27/user-demo/testBomEncodingForPost")
+    ResultVo<String> testBomEncodingForPost(@RequestBody String firstname);
 
 
 }

@@ -15,5 +15,6 @@ public class MemoryCacheConfigConstants {
 
     public static final String MEMORY_CACHE_CONFIG_NAME_STUDENT_3 = "memorycache-student-service-3";
 
+    public static final String MEMORY_CACHE_CONFIG_NAME_USER = "memorycache-user-service";
 
 }

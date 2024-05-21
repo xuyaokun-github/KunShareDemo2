@@ -24,4 +24,6 @@ public interface UserService extends BaseService<UserQueryParam, User> {
 
     User getUserByFirstname2(String s);
 
+    User queryUserByFirstName(String firstname);
+
 }

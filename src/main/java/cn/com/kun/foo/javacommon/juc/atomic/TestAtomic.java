@@ -7,7 +7,11 @@ public class TestAtomic {
     public static void main(String[] args) {
 
 
-        AtomicLong atomicLong = new AtomicLong(1000);
+        AtomicLong atomicLong = new AtomicLong();
+
+        System.out.println(atomicLong.get());
+
+//        AtomicLong atomicLong = new AtomicLong(1000);
 
         long res = atomicLong.getAndSet(-500);
         System.out.println(res);

@@ -75,8 +75,8 @@ public class SpringBatchDemoController {
      * 测试job1
      * @return
      */
-    @GetMapping("/testBatchJob1")
-    public String testBatchJob1() throws Exception {
+    @GetMapping("/startMyFirstJob")
+    public String startMyFirstJob() throws Exception {
 
         BatchDemoUtils.init();
         SimpleStopHelper.removeStopFlag("myFirstJob");
@@ -115,7 +115,7 @@ public class SpringBatchDemoController {
             while (true){
                 ThreadUtils.sleep(15*1000);
                 try {
-                    testBatchJob1();
+                    startMyFirstJob();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

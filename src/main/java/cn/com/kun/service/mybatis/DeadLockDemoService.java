@@ -12,4 +12,9 @@ public interface DeadLockDemoService {
     void updateByIdCard(String finalIdCard, String finalIdCard2);
 
     void saveBatch(Student student, Student student2);
+
+    void deleteLimit();
+
+    void insertMany();
+
 }

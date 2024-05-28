@@ -331,4 +331,34 @@ public class DeadLockDemoController {
 
         return "OK";
     }
+
+
+    @GetMapping("/testDeadlockCase11")
+    public String testDeadlockCase11(){
+
+        new Thread(()->{
+
+            while (true){
+                //该方法有事务
+                deadLockDemoService.insertMany();
+            }
+
+        }, "insert").start();
+
+
+        new Thread(()->{
+
+            while (true){
+                //该方法有事务
+                deadLockDemoService.deleteLimit();
+            }
+
+        }, "delete").start();
+
+
+        return "OK";
+    }
+
+
+
 }

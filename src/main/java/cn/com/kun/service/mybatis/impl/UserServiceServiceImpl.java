@@ -249,4 +249,10 @@ public class UserServiceServiceImpl implements UserService {
         return user;
     }
 
+    @Override
+    public void save(User user) {
+        userMapper.insert(user);
+    }
+
+
 }

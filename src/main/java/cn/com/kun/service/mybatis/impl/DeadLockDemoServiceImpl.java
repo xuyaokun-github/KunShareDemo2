@@ -100,4 +100,43 @@ public class DeadLockDemoServiceImpl implements DeadLockDemoService {
 
     }
 
+    @Transactional
+    @Override
+    public void deleteLimit() {
+
+        deadLockDemoMapper.deleteLimit("kunghsu");
+        try {
+            Thread.sleep(500);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Transactional
+    @Override
+    public void insertMany() {
+
+
+        DeadLockDemoDO deadLockDemoDO = new DeadLockDemoDO();
+        deadLockDemoDO.setVersion("1");
+        deadLockDemoDO.setDemoName("kunghsu");
+        deadLockDemoDO.setDemoKey(UUID.randomUUID().toString());
+        DeadLockDemoDO deadLockDemoDO2 = new DeadLockDemoDO();
+        deadLockDemoDO2.setVersion("1");
+        deadLockDemoDO2.setDemoName("kunghsu2");
+        deadLockDemoDO2.setDemoKey(UUID.randomUUID().toString());
+
+        //保存db
+        for (int i = 0; i < 1000; i++) {
+            deadLockDemoDO.setDemoKey(UUID.randomUUID().toString());
+            deadLockDemoDO2.setDemoKey(UUID.randomUUID().toString());
+            deadLockDemoMapper.insert(deadLockDemoDO);
+            deadLockDemoMapper.insert(deadLockDemoDO2);
+        }
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
 }

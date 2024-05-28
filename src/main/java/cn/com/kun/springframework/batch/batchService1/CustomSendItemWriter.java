@@ -69,7 +69,13 @@ public class CustomSendItemWriter implements ItemWriter<User> {
 //            userService.updateOrderCount(888L, 1);
 //            userService.updateOrderCount2(888L, 1);
 
+
+
+            //验证死锁问题：write阶段是否处于同一个事务中？
+            userService.save(user);
         }
+
+
 
         //并行流
 //        items.stream().parallel().forEach(item->{

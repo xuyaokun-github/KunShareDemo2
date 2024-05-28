@@ -21,4 +21,8 @@ public interface DeadLockDemoMapper {
     @Delete("delete from tbl_deadlock_demo")
     void deleteAll();
 
+    @Delete("delete from tbl_deadlock_demo where DEMO_NAME = #{demoName} limit 100")
+    void deleteLimit(String demoName);
+
+
 }

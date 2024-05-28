@@ -86,3 +86,11 @@ Owner : 分区创建在哪个broker
 
 #查看分区数、副本数
 ./kafka-topics.bat --zookeeper localhost:2181 --describe --topic test0804-1
+
+
+14.精准测试
+-javaagent:D:\skywalking\apache-skywalking-java-agent-9.0.0\apache-skywalking-java-agent-9.0\skywalking-agent\skywalking-agent.jar
+-DSW_AGENT_NAME=kunsharedemo
+-DWS_AGENT_COLLECTOR_BACKEND_SERVICES=127.0.0.1:11800
+-javaagent:D:\soft\jacoco-0.8.6\lib\jacocoagent.jar=includes=*,output=tcpserver,port=6300,address=localhost,append=true
+

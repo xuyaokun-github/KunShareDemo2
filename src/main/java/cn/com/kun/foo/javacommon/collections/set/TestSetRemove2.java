@@ -2,6 +2,7 @@ package cn.com.kun.foo.javacommon.collections.set;
 
 import cn.com.kun.common.utils.JacksonUtils;
 
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -16,6 +17,9 @@ public class TestSetRemove2 {
         map.put("333", "");
 
         Set set = map.keySet();
+
+        Set copySet = new HashSet();
+        copySet.addAll(set);
 
         //模拟一个异步线程，在set开始遍历之后，尝试往set中添加新内容
         new Thread(()->{
@@ -42,7 +46,8 @@ public class TestSetRemove2 {
             System.out.println("添加：" + "888");
         }).start();
 
-        set.stream().forEach(str->{
+
+        copySet.stream().forEach(str->{
             try {
                 Thread.sleep(500);
             } catch (InterruptedException e) {

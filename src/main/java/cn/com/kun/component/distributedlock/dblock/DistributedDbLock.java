@@ -130,7 +130,7 @@ public class DistributedDbLock implements DistributedLock {
         long millis = unit.toMillis(time);
         long start = System.currentTimeMillis();
         while (true){
-            if (tryLock(resourceName)){
+            if (getProxy().tryLock(resourceName)){
                 return true;
             }
             if (System.currentTimeMillis() - start > millis){

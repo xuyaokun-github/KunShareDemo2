@@ -243,4 +243,23 @@ public class MybatisDemoController {
 
         return ResultVo.valueOfSuccess();
     }
+
+
+    @GetMapping("/testInsertResult")
+    public ResultVo testInsertResult(){
+
+        User user = new User();
+        user.setFirstname("333");
+        user.setLastname("444");
+        try {
+            int res = userMapper.insert(user);
+            logger.info("执行结果：{}", res);
+        }catch (Exception e){
+            logger.error("异常", e);
+        }
+
+        return ResultVo.valueOfSuccess();
+    }
+
+
 }

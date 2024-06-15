@@ -5,6 +5,7 @@ import cn.com.kun.bean.entity.Student;
 import cn.com.kun.common.utils.ThreadUtils;
 import cn.com.kun.mapper.DeadLockDemoMapper;
 import cn.com.kun.mapper.StudentMapper;
+import cn.com.kun.service.StudentService;
 import cn.com.kun.service.mybatis.DeadLockDemoService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,6 +15,7 @@ import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -27,6 +29,9 @@ public class DeadLockDemoServiceImpl implements DeadLockDemoService {
 
     @Autowired
     private StudentMapper studentMapper;
+
+    @Autowired
+    private StudentService studentService;
 
 //    @Transactional(rollbackFor = Exception.class,isolation = Isolation.REPEATABLE_READ) //用可重复读，不会有死锁
     @Transactional(rollbackFor = Exception.class,isolation = Isolation.SERIALIZABLE) //用串行化，会出现死锁
@@ -104,6 +109,10 @@ public class DeadLockDemoServiceImpl implements DeadLockDemoService {
     @Override
     public void deleteLimit() {
 
+        //加一个操作，验证普通的插入操作是否会被死锁的事务回滚影响？
+//        saveStudent();
+        studentService.saveStudentByIndependentTrx();
+
         deadLockDemoMapper.deleteLimit("kunghsu");
         try {
             Thread.sleep(500);
@@ -112,10 +121,23 @@ public class DeadLockDemoServiceImpl implements DeadLockDemoService {
         }
     }
 
+    private void saveStudent() {
+
+        Student student1 = new Student();
+        student1.setIdCard("idCard-0615");
+        student1.setAddress(UUID.randomUUID().toString());
+        student1.setStudentName("kunghsu-" + "0615demo");
+        student1.setCreateTime(new Date());
+        int res = studentMapper.insert(student1);
+        LOGGER.info("insert操作执行成功,res:{} address:{}", res, student1.getAddress());
+    }
+
     @Transactional
     @Override
     public void insertMany() {
 
+        //加一个操作，验证普通的插入操作是否会被死锁的事务回滚影响？
+        saveStudent();
 
         DeadLockDemoDO deadLockDemoDO = new DeadLockDemoDO();
         deadLockDemoDO.setVersion("1");

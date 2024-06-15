@@ -9,7 +9,7 @@ import java.lang.annotation.RetentionPolicy;
 
 @Retention(RetentionPolicy.RUNTIME)
 @JacksonAnnotationsInside
-@JsonSerialize(using = SensitiveSerialize.class)
+@JsonSerialize(using = SensitiveSerializer.class)
 public @interface SensitiveWrapped {
 
 

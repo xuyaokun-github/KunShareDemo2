@@ -16,7 +16,7 @@ import java.lang.annotation.RetentionPolicy;
 */
 @Retention(RetentionPolicy.RUNTIME)
 @JacksonAnnotationsInside
-@JsonSerialize(using = CustomStatusSerialize.class)
+@JsonSerialize(using = CustomStatusSerializer.class)
 public @interface StatusWrapped {
 
 }

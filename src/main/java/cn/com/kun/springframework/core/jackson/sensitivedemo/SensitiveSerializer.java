@@ -10,16 +10,16 @@ import com.fasterxml.jackson.databind.ser.ContextualSerializer;
 import java.io.IOException;
 import java.util.Objects;
 
-public class SensitiveSerialize extends JsonSerializer<String> implements ContextualSerializer {
+public class SensitiveSerializer extends JsonSerializer<String> implements ContextualSerializer {
 
     /**
      * 脱敏类型
      */
     private SensitiveEnum type;
 
-    public SensitiveSerialize() {}
+    public SensitiveSerializer() {}
 
-    public SensitiveSerialize(final SensitiveEnum type) {
+    public SensitiveSerializer(final SensitiveEnum type) {
         this.type = type;
     }
 
@@ -82,7 +82,7 @@ public class SensitiveSerialize extends JsonSerializer<String> implements Contex
                 }
                 if (sensitiveWrapped != null) {
                     // 如果能得到注解，就将注解的 value 传入 SensitiveSerialize
-                    return new SensitiveSerialize(sensitiveWrapped.value());
+                    return new SensitiveSerializer(sensitiveWrapped.value());
                 }
             }
             return serializerProvider.findValueSerializer(beanProperty.getType(), beanProperty);

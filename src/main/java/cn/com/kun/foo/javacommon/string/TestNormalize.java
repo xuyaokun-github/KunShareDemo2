@@ -5,7 +5,11 @@ public class TestNormalize {
 
     public static void main(String[] args) {
 
-        //
+        String a = null;
+        String b = null;
+        System.out.println(method1(a, b));
+
+        ///-*
         int index = "key_kkkk".lastIndexOf("_");
         System.out.println("key_kkkk".substring(0, index));
 
@@ -18,4 +22,10 @@ public class TestNormalize {
         System.out.println(str2 == str3);
         System.out.println(str1 == str3);
     }
+
+    private static String method1(String a, String b) {
+        return a + "-" + b;
+    }
+
+
 }

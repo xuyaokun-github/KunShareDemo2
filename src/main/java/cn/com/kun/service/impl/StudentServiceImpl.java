@@ -360,5 +360,19 @@ public class StudentServiceImpl implements StudentService {
         return res;
     }
 
+    /**
+     * 单独起一个事务执行insert操作
+     */
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    @Override
+    public void saveStudentByIndependentTrx() {
+        Student student1 = new Student();
+        student1.setIdCard("idCard-0615");
+        student1.setAddress(UUID.randomUUID().toString());
+        student1.setStudentName("kunghsu-" + "0615demo");
+        student1.setCreateTime(new Date());
+        int res = studentMapper.insert(student1);
+        LOGGER.info("insert操作执行成功,res:{} address:{}", res, student1.getAddress());
+    }
 
 }

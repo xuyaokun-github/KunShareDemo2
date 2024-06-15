@@ -332,7 +332,11 @@ public class DeadLockDemoController {
         return "OK";
     }
 
-
+    /**
+     * 死锁案例11
+     *
+     * @return
+     */
     @GetMapping("/testDeadlockCase11")
     public String testDeadlockCase11(){
 

@@ -44,7 +44,7 @@ public class NbaPlayerElasticServiceImpl implements INbaPlayerElasticService {
     @Autowired(required = false)
     private NbaPlayerElasticRepository elasticRepository;
 
-    ElasticsearchTemplate elasticsearchTemplate2;
+    private ElasticsearchTemplate elasticsearchTemplate2;
 
     private Pageable pageable = PageRequest.of(0, 10);//页码、每页条数
 

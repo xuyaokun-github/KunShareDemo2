@@ -17,9 +17,9 @@ import java.util.Objects;
  * date:2021/12/16
  * desc:
 */
-public class CustomStatusSerialize extends JsonSerializer<String> implements ContextualSerializer {
+public class CustomStatusSerializer extends JsonSerializer<String> implements ContextualSerializer {
 
-    public CustomStatusSerialize() {}
+    public CustomStatusSerializer() {}
 
     @Override
     public void serialize(String value, JsonGenerator jsonGenerator, SerializerProvider serializerProvider) throws IOException {
@@ -58,7 +58,7 @@ public class CustomStatusSerialize extends JsonSerializer<String> implements Con
                     statusWrapped = beanProperty.getContextAnnotation(StatusWrapped.class);
                 }
                 if (statusWrapped != null) {
-                    return new CustomStatusSerialize();
+                    return new CustomStatusSerializer();
                 }
             }
             return serializerProvider.findValueSerializer(beanProperty.getType(), beanProperty);

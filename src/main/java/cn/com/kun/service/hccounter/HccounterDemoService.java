@@ -30,7 +30,7 @@ public class HccounterDemoService {
         });
         counter.setUpdateIntervalMs(2000);
         //必须调用start
-        counter.start();
+//        counter.start();*
     }
 
     public void init(String uuid){

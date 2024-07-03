@@ -24,6 +24,8 @@ import java.util.*;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
+import static cn.com.kun.common.utils.DateUtils.PATTERN_YYYY_MM_DD_HH_MM_SS;
+
 /**
  * Created by xuyaokun On 2020/10/14 22:56
  * @desc: 
@@ -558,6 +560,111 @@ public class SpringRedisDemoController {
         }
         countDownLatch.await();
         LOGGER.info("multiGet操作耗时：{}ms", System.currentTimeMillis() - endTime);
+
+        return ResultVo.valueOfSuccess();
+    }
+
+
+    @GetMapping(value = "/delete")
+    public ResultVo delete(HttpServletRequest request){
+
+        redisTemplate.delete("kunghsu");
+        List<String> list = new ArrayList<>();
+        list.add("kunghsu1");
+        list.add("kunghsu2");
+        redisTemplate.delete(list);
+
+        return ResultVo.valueOfSuccess();
+    }
+
+    @GetMapping(value = "/setMaxInt")
+    public ResultVo setMaxInt(HttpServletRequest request){
+
+        String key = "kunghsu-setMaxInt";
+
+        redisTemplate.delete(key);
+
+        Date date = DateUtils.toDate("2999-12-30 00:00:00", PATTERN_YYYY_MM_DD_HH_MM_SS);
+        long timeout = date.getTime() - System.currentTimeMillis();
+
+//        long timeout = Integer.MAX_VALUE;
+        timeout = timeout - 1;
+        TimeUnit timeUnit = TimeUnit.SECONDS;
+
+//        if (timeout > Integer.MAX_VALUE){
+//            timeout = timeout/(24 * 3600 * 1000);
+//            timeUnit = TimeUnit.DAYS;
+//        }
+
+        redisTemplate.opsForValue().set(key, UUID.randomUUID().toString());
+
+        timeout= Long.MAX_VALUE/1000;
+        LOGGER.info("设置的是{}秒", timeout);
+        redisTemplate.expire(key, timeout, timeUnit);
+
+        //单位是秒
+        Long seconds = redisTemplate.getExpire(key);
+        LOGGER.info("获取到的是{}秒", seconds);
+
+        //9223370236854770
+        //9223372036854770
+        timeout = 9223370318517780L;
+        while (true){
+            timeout = timeout - 1L;
+            redisTemplate.opsForValue().set(key, UUID.randomUUID().toString());
+            redisTemplate.expire(key, timeout, timeUnit);
+            seconds = redisTemplate.getExpire(key);
+            if (seconds > 0){
+                LOGGER.info("最终能设置成功的是{}秒", seconds);
+                break;
+            }else {
+                LOGGER.info("设置失败的是{}秒", timeout);
+            }
+        }
+
+
+//        timeout =  9223320368547700L;
+//        while (true){
+//            timeout = timeout + 10000000000L;
+//            redisTemplate.opsForValue().set(key, UUID.randomUUID().toString());
+//            redisTemplate.expire(key, timeout, timeUnit);
+//            seconds = redisTemplate.getExpire(key);
+//            if (seconds < 0){
+//                LOGGER.info("最终能设置失败的是{}秒，timeout：{}", seconds, timeout);
+//                break;
+//            }
+//        }
+
+        return ResultVo.valueOfSuccess();
+    }
+
+
+    @GetMapping(value = "/setMaxInt2")
+    public ResultVo setMaxInt2(HttpServletRequest request){
+
+        Long timeout = 9223370318517900L;
+        TimeUnit timeUnit = TimeUnit.SECONDS;
+        String key = "kunghsu-setMaxInt";
+        redisTemplate.delete(key);
+        redisTemplate.opsForValue().set(key, UUID.randomUUID().toString());
+        redisTemplate.expire(key, timeout, timeUnit);
+        long seconds = redisTemplate.getExpire(key);
+        LOGGER.info("最终能设置是{}秒", seconds);
+
+
+        timeout = 9223370318517714L;
+        redisTemplate.delete(key);
+        redisTemplate.opsForValue().set(key, UUID.randomUUID().toString());
+        redisTemplate.expire(key, timeout, timeUnit);
+        seconds = redisTemplate.getExpire(key);
+        LOGGER.info("最终能设置是{}秒", seconds);
+
+        timeout = 9223370318017216L;
+        redisTemplate.delete(key);
+        redisTemplate.opsForValue().set(key, UUID.randomUUID().toString());
+        redisTemplate.expire(key, timeout, timeUnit);
+        seconds = redisTemplate.getExpire(key);
+        LOGGER.info("最终能设置是{}秒", seconds);
 
         return ResultVo.valueOfSuccess();
     }

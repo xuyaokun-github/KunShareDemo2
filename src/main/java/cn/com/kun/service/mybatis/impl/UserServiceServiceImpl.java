@@ -210,7 +210,7 @@ public class UserServiceServiceImpl implements UserService {
     public User getUserByFirstname(String s) {
 
         LOGGER.info(DateUtils.now());
-        User user = userMapper.getUserByFirstname("");
+        User user = userMapper.getUserByFirstname(s);
         /*
             虽然这里有长耗时，也超过了timeout设定的阈值，但是不会抛异常
             因为后面没有再执行SQL语句了

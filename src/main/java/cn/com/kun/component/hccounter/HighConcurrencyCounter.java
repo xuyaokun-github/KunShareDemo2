@@ -8,7 +8,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
 
 /**
- * 高并发增量计数器V1.0
+ * 高并发增量计数器V1.1
  *
  * author:xuyaokun_kzx
  * date:2024/5/19
@@ -135,10 +135,9 @@ public class HighConcurrencyCounter {
                 //创建下一个版本的计数器（确保主线程一定能拿到计数器，主线程无需判断是否需要创建计数器，省下了主线程之间的锁竞争）
                 long currentMaxVersion = atomicLong.get();
                 String key = buildVersionKey(countKey, currentMaxVersion+1);
-                AtomicLong counter = counterMap.put(key, new AtomicLong(0));
-                if (counter != null){//避免编译器重排序
-                    //最大版本加1
-                    atomicLong.incrementAndGet();
+                counterMap.put(key, new AtomicLong(0));
+                if (counterMap.get(key) != null){//避免编译器重排序
+                    atomicLong.incrementAndGet();//最大版本加1
                 }
             }
         });
@@ -241,6 +240,7 @@ public class HighConcurrencyCounter {
                 builder.append(String.format("统计key:%s 当前版本号：%s;", countKey, version.get()));
             });
             LOGGER.info(builder.toString());
+            heartBeatTime = System.currentTimeMillis();
         }
 
     }
@@ -310,15 +310,18 @@ public class HighConcurrencyCounter {
                 atomicLong = countKeyVersionMap.get(countKey);
                 if (atomicLong == null){
                     atomicLong = new AtomicLong(0);
-                    countKeyVersionMap.put(countKey, atomicLong);
                     //初始化第一个计数器
-                    counterMap.put(buildVersionKey(countKey, atomicLong.get()), new AtomicLong());
+                    String versionKey = buildVersionKey(countKey, atomicLong.get());
+                    counterMap.put(versionKey, new AtomicLong());
+                    if (counterMap.get(versionKey) != null){//避免重排序
+                        countKeyVersionMap.put(countKey, atomicLong);
+                    }
                 }
             }
         }
 
         long maxVersion = atomicLong.get();
-
+//        System.out.println("当前最大版本：" + maxVersion);
         //根据最大版本号获取当前的计数器
         String key = buildVersionKey(countKey, maxVersion);
         AtomicLong counter = counterMap.get(key);

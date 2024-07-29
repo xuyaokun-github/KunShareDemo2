@@ -31,8 +31,8 @@ public class SpringAopDemoController {
     private SpringAopTimeLogDemoService springAopTimeLogDemoService;
 
 
-    @Autowired
-    @Qualifier("proxyFactoryBeanDemoServiceProxy")
+//    @Autowired
+//    @Qualifier("proxyFactoryBeanDemoServiceProxy")
     ProxyFactoryBeanDemoService proxyFactoryBeanDemoService;
 
     @Autowired

@@ -2,7 +2,6 @@ package cn.com.kun.controller;
 
 import cn.com.kun.bean.model.people.People;
 import cn.com.kun.common.utils.SpringContextUtil;
-import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +16,6 @@ import javax.annotation.PostConstruct;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.charset.Charset;
 import java.util.Set;
 
 @RestController
@@ -40,8 +38,8 @@ public class HelloController {
         Resource resource = applicationContext.getResource("classpath:config.txt");
         File file = resource.getFile();
         InputStream inputStream = resource.getInputStream();
-        logger.info(IOUtils.toString(inputStream, Charset.forName("UTF-8")));
-        logger.info(applicationContext.getApplicationName());
+//        logger.info(IOUtils.toString(inputStream, Charset.forName("UTF-8")));
+//        logger.info(applicationContext.getApplicationName());
         if(testSet != null){
             testSet.size();
         }

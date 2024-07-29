@@ -1,6 +1,7 @@
 package cn.com.kun.framework.schedule.xxljob;
 
 import cn.com.kun.framework.schedule.xxljob.annotation.XxlJobClass;
+import cn.com.kun.framework.schedule.xxljob.extend.ReturnTHelper;
 import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.job.core.handler.IJobHandler;
 import com.xxl.job.core.handler.annotation.XxlJob;
@@ -15,6 +16,7 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -38,19 +40,23 @@ public class SampleXxlJob {
      */
     @XxlJob("demoJobHandler")
     public ReturnT<String> demoJobHandler(String param) throws Exception {
+
+        String uuid = UUID.randomUUID().toString();
+
         XxlJobLogger.log("XXL-JOB, Hello World.");
         logger.info("进入demoJobHandler，by @XxlJob!!");
 
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < 1; i++) {
             /**
-             * 注意，这个不会输出日志到控制台，它与log4j日志输出有区别
+             * 注意，这个不会输出日志到控制台，它与log4j日志输出有区别（这个日志会输出到本地文件，最终展示到管理界面上）
              */
-            XxlJobLogger.log("beat at:" + i);
+            XxlJobLogger.log(uuid + " beat at:" + i);
             TimeUnit.SECONDS.sleep(2);
         }
-        return ReturnT.SUCCESS;
-    }
 
+        logger.info("业务执行结果:{}", uuid);
+        return ReturnTHelper.buildSuccess("业务执行结果" + uuid);
+    }
 
     /**
      * 2、分片广播任务
@@ -183,7 +189,7 @@ public class SampleXxlJob {
     /**
      * 5、生命周期任务示例：任务初始化与销毁时，支持自定义相关逻辑；
      */
-    @XxlJob(value = "demoJobHandler2", init = "init", destroy = "destroy")
+    @XxlJob(value = "demoJobHandler22", init = "init", destroy = "destroy")
     public ReturnT<String> demoJobHandler2(String param) throws Exception {
         XxlJobLogger.log("XXL-JOB, Hello World.");
         return ReturnT.SUCCESS;

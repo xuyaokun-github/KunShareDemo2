@@ -1,4 +1,4 @@
-package cn.com.kun.springframework.core.jackson;
+package cn.com.kun.springframework.core.jackson.deserializationProblem;
 
 import cn.com.kun.common.utils.JacksonUtils;
 

@@ -1,4 +1,4 @@
-package cn.com.kun.springframework.core.jackson;
+package cn.com.kun.springframework.core.jackson.deserializationProblem;
 
 import cn.com.kun.bean.model.people.People;
 import cn.com.kun.common.utils.JacksonUtils;
@@ -42,8 +42,22 @@ D:\home\json\1.txt在文件里放入：
 
 
 //        testMethod3();
-        testMethod4();
+//        testMethod4();
 //        testMethod5();
+
+        testMethod6();
+
+    }
+
+    private static void testMethod6() throws IOException {
+
+        String source = FileUtils.readFileToString(new File("D:\\home\\json\\6.txt"), Charset.forName("UTF-8"));
+        System.out.println(source);
+        Map<String, Object> map = JacksonUtils.toMapSupportSpecialChar(source);
+        System.out.println("输出结果Map内容：");
+        System.out.println(map);
+        System.out.println("输出结果Map内容转json后：");
+        System.out.println(JacksonUtils.toJSONString(map));
 
     }
 
@@ -73,7 +87,10 @@ D:\home\json\1.txt在文件里放入：
 //        People people2 = JacksonUtils.toJavaObject(source, People.class);
 //        System.out.println(people2);
         Map<String, Object> map = JacksonUtils.toMapSupportSpecialChar(source);
+        System.out.println("输出结果Map内容：");
         System.out.println(map);
+        System.out.println("输出结果Map内容转json后：");
+        System.out.println(JacksonUtils.toJSONString(map));
     }
 
     private static void testMethod3() {

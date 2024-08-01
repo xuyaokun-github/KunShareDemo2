@@ -228,7 +228,7 @@ public class JacksonUtils {
     }
 
     /**
-     * 支持value中有多余的未转义的双引号（简而言之，支持非法的json串）
+     * 支持value中有多余的未转义的双引号（简而言之，支持非法的js·on串）
      * @param value
      * @return
      */
@@ -236,7 +236,7 @@ public class JacksonUtils {
 
         Map<String, Object> res = null;
         String source = value;
-        int loopCount = 1;//非法字符出现的次数，默认支持最多100次，超过100次不做处理
+        int loopCount = 100;//非法字符出现的次数，默认支持最多100次，超过100次不做处理
         while (true){
             try {
                 //字符串转为Java对象
@@ -250,8 +250,16 @@ public class JacksonUtils {
                     if (isDoubleQuotesParseException){
                         //假如是出现在第一行，才做处理，有时候双引号可能会出现在第二行，这样的处理就会比较复杂，先不考虑这种情况
                         log.warn("出现双引号解析异常，进行替换处理,源串：{}", value);
+                        System.out.println(String.format("出现双引号解析异常，进行替换处理,源串：%s", value));
                         //替换有问题的双引号（多余的双引号，改成单引号）
                         source = replaceForDoubleQuotes(source);
+
+                        //假如替换过之后，内容没有发生变化，说明代码已经没法解决问题了，尽快结束循环
+                        if (value.equals(source)){
+                            loopCount = loopCount > 1 ? 1 : loopCount;
+                        }else {
+                            System.out.println(String.format("双引号替换处理成功,源串：%s 新串：%s", value, source));
+                        }
                         //这里有可能陷入死循环，设置一个固定的循环次数，到次数不再continue
                         if (loopCount-- > 0){
                             continue;
@@ -259,6 +267,7 @@ public class JacksonUtils {
                     } if (isBackslashParseException(e)) {
 //                        e.printStackTrace();//调试时用
                         log.warn("出现反斜杠解析异常，进行替换处理,源串：{}", value);
+                        System.out.println(String.format("出现反斜杠解析异常，进行替换处理,源串：%s", value));
                         //反斜杠替换处理
                         source = replaceForBackslash(e, source);
                         if (loopCount-- > 0){
@@ -267,9 +276,12 @@ public class JacksonUtils {
                     }else {
                         //出现无法处理的异常
                         log.warn("出现无法处理的json解析异常，错误信息：{}", errorMsg);
+                        System.out.println(String.format("出现无法处理的json解析异常，错误信息：%s", errorMsg));
+
                     }
                 }else {
                     log.warn("json反序列化异常", e);
+                    e.printStackTrace();
                 }
             }
             break;
@@ -298,7 +310,15 @@ public class JacksonUtils {
                 //问题行
                 String targetLine = strings[jsonlocation.getLineNr() - 1];
                 //补多一个\到问题行
+                //注意，这里可能会把  \" 误处理了，其实\"是正常的转义，假如此时仍然替换它，会发生新的错误
+                //所以，在这里替换的时候，需要将 \" 先屏蔽
+
+                targetLine = targetLine.replace("\\", "\\\\");
+
                 String newTargetLine = targetLine.replace("\\", "\\\\");
+
+
+
                 strings[jsonlocation.getLineNr() - 1] = newTargetLine;
                 newSource = source.replace(targetLine, newTargetLine);
             }
@@ -349,21 +369,31 @@ public class JacksonUtils {
 
         char[] charArr = source.toCharArray();
         List<Integer> extraDoubleQuotesIndexList = new ArrayList<>();
-        List<Integer> indexList = new ArrayList<>();
+        List<Integer> indexList = new ArrayList<>();//装载双引号的集合
+        boolean meetFirstColon = false;//是否遇到了第一个冒号
+        //遍历每一个字符
         for (int i = 0; i < charArr.length; i++) {
+
+            //value里可能也含有:号
             if (Integer.valueOf(charArr[i]).equals(Integer.valueOf((":".charAt(0))))){
-                //识别到:
                 //只识别value部分（默认key部分是合法的，所以不处理key部分）
-                indexList = new ArrayList<>();
+                //识别到第一个:时，就创建一个集合
+                if (!meetFirstColon){
+                    indexList = new ArrayList<>();
+                    meetFirstColon = true;
+                }
             }
+
+            //识别到双引号
             if (Integer.valueOf(charArr[i]) == 34){
-                //识别到双引号
                 indexList.add(i);
             }
+
+            //来到value的末尾
             if (Integer.valueOf(charArr[i]).equals(Integer.valueOf(",".charAt(0)))
                 || Integer.valueOf(charArr[i]).equals(Integer.valueOf("}".charAt(0)))){
                 //开始校验indexList，是不是大于2
-                //大于2的，都是问题字符
+                //假如双引号个数大于2的，是问题字符
                 if (indexList.size() > 2){
                     //保留第一个和最后一个，其他的多余的双引号
                     indexList.remove(0);
@@ -374,11 +404,12 @@ public class JacksonUtils {
                     //例如：{"a1":"v1","a3":"v3kkkk"888888"","a2":"v2","url":"ctrl://ffffffff{\"aaa\":\"dddd\"}"}
                     indexList = new ArrayList<>();
                 }
+                meetFirstColon = false;
             }
 
         }
 
-        //替换双引号字符，改成单引号
+        //替换多余的双引号字符，改成单引号
         if (extraDoubleQuotesIndexList.size() > 0){
             StringBuilder builder = new StringBuilder(source);
             for (Integer index : extraDoubleQuotesIndexList){
@@ -454,4 +485,220 @@ public class JacksonUtils {
         return toList(toJSONString(value), defaultSuppler);
     }
 
+    /**
+     * 反序列化加强版
+     *
+     * @param value
+     * @return
+     */
+    public static Map<String, Object> toMapEnhancedVersion(String value) {
+
+        Map<String, Object> res = null;
+        String source = value;
+        int loopCount = 100;//非法字符出现的次数，默认支持最多100次，超过100次不做处理
+        while (true){
+            try {
+                //字符串转为Java对象
+                return mapper.readValue(source, LinkedHashMap.class);
+            } catch (Throwable e) {
+                if (e instanceof com.fasterxml.jackson.core.JsonParseException){
+                    String errorMsg = e.getMessage();
+                    //有些时候，堆栈不一定含有关键字code 34
+//                    boolean isDoubleQuotesParseException = errorMsg.contains("(code 34)): was expecting comma to separate Object entries");
+                    boolean isDoubleQuotesParseException = errorMsg.contains("was expecting comma to separate Object entries");
+                    if (isDoubleQuotesParseException){
+                        //假如是出现在第一行，才做处理，有时候双引号可能会出现在第二行，这样的处理就会比较复杂，先不考虑这种情况
+                        log.warn("出现双引号解析异常，进行替换处理,源串：{}", value);
+                        System.out.println(String.format("出现双引号解析异常，进行替换处理,源串：%s", value));
+                        //替换有问题的双引号（多余的双引号，改成单引号）
+                        source = replaceByBackslashDoubleQuotes(source);
+
+                        //假如替换过之后，内容没有发生变化，说明代码已经没法解决问题了，尽快结束循环
+                        if (value.equals(source)){
+                            loopCount = loopCount > 1 ? 1 : loopCount;
+                        }else {
+                            System.out.println(String.format("双引号替换处理成功,源串：%s 新串：%s", value, source));
+                        }
+                        //这里有可能陷入死循环，设置一个固定的循环次数，到次数不再continue
+                        if (loopCount-- > 0){
+                            continue;
+                        }
+                    } if (isBackslashParseException(e)) {
+//                        e.printStackTrace();//调试时用
+                        log.warn("出现反斜杠解析异常，进行替换处理,源串：{}", value);
+                        //反斜杠替换处理
+                        String oldSource = source;
+                        source = replaceForSingleBackslash(e, source);
+                        System.out.println(String.format("出现反斜杠解析异常，进行替换处理,源串：%s 新串：%s", oldSource, source));
+
+                        //假如替换过之后，内容没有发生变化，说明代码已经没法解决问题了，尽快结束循环
+                        if (oldSource.equals(source)){
+                            loopCount = loopCount > 1 ? 1 : loopCount;
+                        }else {
+                            System.out.println(String.format("反斜杠替换处理成功,源串：%s 新串：%s", oldSource, source));
+                        }
+
+                        if (loopCount-- > 0){
+                            continue;
+                        }
+                    }else {
+                        //出现无法处理的异常
+                        log.warn("出现无法处理的json解析异常，错误信息：{}", errorMsg);
+                        System.out.println(String.format("出现无法处理的json解析异常，错误信息：%s", errorMsg));
+
+                    }
+                }else {
+                    log.warn("json反序列化异常", e);
+                    e.printStackTrace();
+                }
+            }
+            break;
+        }
+
+        return res;
+    }
+
+    private static String replaceForSingleBackslash(Throwable e, String source) {
+
+        String newSource = source;
+        try {
+            JsonProcessingException jsonProcessingException = (JsonProcessingException)e;
+            JsonLocation jsonlocation = jsonProcessingException.getLocation();
+            String sourceRef = (String) jsonlocation.getSourceRef();
+            if (StringUtils.isNotEmpty(sourceRef)){
+                String[] strings = sourceRef.split("\n");
+                //问题行
+                String sourceTargetLine = strings[jsonlocation.getLineNr() - 1];
+                //补多一个\到问题行
+                //注意，这里可能会把  \" 误处理了，其实\"是正常的转义，假如此时仍然替换它，会发生新的错误
+                //所以，在这里替换的时候，需要将 \" 先屏蔽
+                String replaceStr = new String(new byte[]{0x03});
+                //先将所有的 \" 转成 0x03
+                String targetLine = sourceTargetLine.replaceAll("\\\\\"", replaceStr);
+                //再将所有单反斜杠，替换成 双反斜杠
+                targetLine = targetLine.replace("\\", "\\\\");
+                //最后，将所有 0x03 再次替换成 \"
+                String newTargetLine = targetLine.replaceAll(replaceStr, "\\\\\"");
+
+                strings[jsonlocation.getLineNr() - 1] = newTargetLine;
+                newSource = source.replace(sourceTargetLine, newTargetLine);
+            }
+        }catch (Exception exception){
+            log.warn("replaceForBackslash函数异常", exception);
+        }
+        return newSource;
+    }
+
+    private static String replaceByBackslashDoubleQuotes(String source) {
+
+        char[] charArr = source.toCharArray();
+        List<Integer> extraDoubleQuotesIndexList = new ArrayList<>();
+        List<Integer> indexList = new ArrayList<>();//装载双引号的集合
+        boolean meetFirstColon = false;//是否遇到了第一个冒号
+        //遍历每一个字符
+        for (int i = 0; i < charArr.length; i++) {
+
+            //value里可能也含有:号
+            if (Integer.valueOf(charArr[i]).equals(Integer.valueOf((":".charAt(0))))){
+                //只识别value部分（默认key部分是合法的，所以不处理key部分）
+                //识别到第一个:时，就创建一个集合
+                if (!meetFirstColon){
+                    indexList = new ArrayList<>();
+                    meetFirstColon = true;
+                }
+            }
+
+            //识别到双引号
+            if (Integer.valueOf(charArr[i]) == 34){
+                indexList.add(i);
+            }
+
+            //来到value的末尾
+            /*
+                注意：此时value里也可能会有英文逗号，可能会误判已经到了末尾
+                例如{"address":"shenzhen","goodDesc":"aaasj"""""klss123,45678999999","name":"kunghsu"}
+                如何识别一个逗号是真正的结束语义的逗号呢？
+                一个正常的逗号附近一定没有其他内容，它的前和后一定是空格或者"
+                但是万一上游送的值里 恰好就含有  ","怎么办呢？
+                好像没办法完全规避。
+             */
+            if (isRealComma(charArr, i)
+                    || Integer.valueOf(charArr[i]).equals(Integer.valueOf("}".charAt(0)))){
+                //开始校验indexList，是不是大于2
+                //假如双引号个数大于2的，是问题字符
+                if (indexList.size() > 2){
+                    //保留第一个和最后一个，其他的多余的双引号
+                    indexList.remove(0);
+                    indexList.remove(indexList.size()-1);
+                    extraDoubleQuotesIndexList.addAll(indexList);
+                }else {
+                    //修复bug:遇到} 应该重新计数，有一类报文，可能在value里又是一个独立的json字符串
+                    //例如：{"a1":"v1","a3":"v3kkkk"888888"","a2":"v2","url":"ctrl://ffffffff{\"aaa\":\"dddd\"}"}
+                    indexList = new ArrayList<>();
+                }
+                meetFirstColon = false;
+            }
+
+        }
+
+        //替换多余的双引号字符，改成单引号
+        String replaceStr = new String(new byte[]{0x03});
+        if (extraDoubleQuotesIndexList.size() > 0){
+            StringBuilder builder = new StringBuilder(source);
+            for (Integer index : extraDoubleQuotesIndexList){
+                //将多余的双引号改成 0x03
+                builder.setCharAt(index, replaceStr.charAt(0));
+            }
+
+            String resultString = builder.toString();
+            //再次替换
+            resultString = resultString.replace(replaceStr, "\\\"");
+//            resultString = resultString.replaceAll(replaceStr, "\\\\\"");
+            return resultString;
+        }
+
+        return source;
+    }
+
+    private static boolean isRealComma(char[] charArr, int i) {
+
+        int length = charArr.length;
+
+        //i前面一个是双引号
+        boolean beforeFlag = false;
+        int index = i;
+        while (index > 0){
+            index = index - 1;
+            if (Integer.valueOf(charArr[index]).equals(Integer.valueOf(" ".charAt(0)))){
+                continue;
+            }else {
+                if (Integer.valueOf(charArr[index]) == 34){
+                    beforeFlag = true;
+                    break;
+                } else {
+                    break;
+                }
+            }
+        }
+
+        //i后面的是双引号
+        boolean afterFlag = false;
+        index = i;
+        while (index < length-1){
+            index = index + 1;
+            if (Integer.valueOf(charArr[index]).equals(Integer.valueOf(" ".charAt(0)))){
+                continue;
+            }else {
+                if (Integer.valueOf(charArr[index]) == 34){
+                    afterFlag = true;
+                    break;
+                } else {
+                    break;
+                }
+            }
+        }
+
+        return Integer.valueOf(charArr[i]).equals(Integer.valueOf(",".charAt(0)))
+                && beforeFlag && afterFlag;
+    }
 }

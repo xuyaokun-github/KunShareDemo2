@@ -25,13 +25,6 @@ public class HighConcurrencyCounter {
     private String bizType;
 
     /**
-     * 最大版本集合
-     * key: 统计key
-     * value: 最大版本记录器
-     */
-    private Map<String, AtomicLong> countKeyVersionMap = new ConcurrentHashMap<>();
-
-    /**
      * 时间戳集合
      * key: 统计key
      * value: 最近一次发现计数为0的时间戳
@@ -43,7 +36,15 @@ public class HighConcurrencyCounter {
      * key: 统计key+版本号
      * value: 计数器
      */
-    private Map<String, AtomicLong> counterMap = new ConcurrentHashMap<>();
+    private volatile Map<String, AtomicLong> counterMap = new ConcurrentHashMap<>();
+
+
+    /**
+     * 最大版本集合
+     * key: 统计key
+     * value: 最大版本记录器
+     */
+    private volatile Map<String, AtomicLong> countKeyVersionMap = new ConcurrentHashMap<>();
 
     /**
      * 待移除的统计key
@@ -313,9 +314,11 @@ public class HighConcurrencyCounter {
                     //初始化第一个计数器
                     String versionKey = buildVersionKey(countKey, atomicLong.get());
                     counterMap.put(versionKey, new AtomicLong());
-                    if (counterMap.get(versionKey) != null){//避免重排序
-                        countKeyVersionMap.put(countKey, atomicLong);
-                    }
+//                    //避免重排序
+//                    if (counterMap.get(versionKey) != null){
+//                        countKeyVersionMap.put(countKey, atomicLong);
+//                    }
+                    countKeyVersionMap.put(countKey, atomicLong);
                 }
             }
         }

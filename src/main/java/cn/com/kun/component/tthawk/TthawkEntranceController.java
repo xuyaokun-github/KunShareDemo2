@@ -1,6 +1,7 @@
 package cn.com.kun.component.tthawk;
 
 import cn.com.kun.component.tthawk.bean.TthawkReq;
+import cn.com.kun.component.tthawk.dynamicaspect.DynamicAspectProcessor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

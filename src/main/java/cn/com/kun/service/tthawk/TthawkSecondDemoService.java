@@ -16,4 +16,16 @@ public class TthawkSecondDemoService {
     }
 
 
+    public void doWork1() {
+        LOGGER.info("This is TthawkSecondDemoService doWork1111111.");
+    }
+
+
+    public void doWork2() {
+        LOGGER.info("This is TthawkSecondDemoService doWork22222222.");
+    }
+
+    public void doWork3() {
+        LOGGER.info("This is TthawkSecondDemoService doWork22222222.");
+    }
 }

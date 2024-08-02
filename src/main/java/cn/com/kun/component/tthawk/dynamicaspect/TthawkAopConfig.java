@@ -1,4 +1,4 @@
-package cn.com.kun.component.tthawk;
+package cn.com.kun.component.tthawk.dynamicaspect;
 
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Configuration;

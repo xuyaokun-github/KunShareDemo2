@@ -1,6 +1,7 @@
 package cn.com.kun.service.tthawk;
 
 import cn.com.kun.service.switchcheck.SwitchCheckerDemoService;
+import cn.com.kun.springframework.springcloud.feign.client.KunwebdemoFeign2;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,9 @@ public class TthawkDemoService {
 
     @Autowired
     private TthawkSecondDemoService tthawkSecondDemoService;
+
+    @Autowired
+    private KunwebdemoFeign2 kunwebdemoFeign2;
 
     public void test() {
 
@@ -34,7 +38,30 @@ public class TthawkDemoService {
             LOGGER.info("tthawkDemoVO1：{}", tthawkDemoVO1.getName());
         }
 
+        try {
+            tthawkSecondDemoService.doWork1();
+            tthawkSecondDemoService.doWork2();
+        }catch (Exception e){
+            LOGGER.error("调用TthawkSecondDemoService执行异常", e);
+        }
+
     }
+
+
+    public void test3() {
+
+        try {
+            //调用feign
+//            kunwebdemoFeign2.result1("");
+
+            tthawkSecondDemoService.doWork3();
+
+        }catch (Exception e){
+            LOGGER.error("调用TthawkSecondDemoService执行异常", e);
+        }
+
+    }
+
 
     private void exceptionRecord() {
         LOGGER.info("执行异常现场记录动作");

@@ -1,4 +1,4 @@
-package cn.com.kun.component.tthawk;
+package cn.com.kun.component.tthawk.dynamicaspect;
 
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;

@@ -11,6 +11,12 @@ import org.springframework.aop.framework.adapter.AdvisorAdapter;
 
 import java.lang.reflect.Method;
 
+/**
+ *
+ * author:xuyaokun_kzx
+ * date:2024/8/1
+ * desc:
+*/
 public class TthawkBeforeAdvice extends TthawkInterceptor implements MethodBeforeAdvice, AfterReturningAdvice, AdvisorAdapter {
 
     private final static Logger LOGGER = LoggerFactory.getLogger(TthawkBeforeAdvice.class);

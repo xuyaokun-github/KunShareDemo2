@@ -5,6 +5,13 @@ import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Field;
 
+/**
+ * 为11.10版feign设计
+ *
+ * author:xuyaokun_kzx
+ * date:2024/8/2
+ * desc:
+*/
 public class FeignHelper {
 
     private final static Logger LOGGER = LoggerFactory.getLogger(FeignHelper.class);

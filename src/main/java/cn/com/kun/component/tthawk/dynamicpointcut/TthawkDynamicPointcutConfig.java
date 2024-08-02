@@ -7,6 +7,12 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+/**
+ *
+ * author:xuyaokun_kzx
+ * date:2024/8/1
+ * desc:
+*/
 @ConditionalOnProperty(prefix = "tthawk", value = {"enabled"}, havingValue = "true", matchIfMissing = false)
 @Configuration
 public class TthawkDynamicPointcutConfig {

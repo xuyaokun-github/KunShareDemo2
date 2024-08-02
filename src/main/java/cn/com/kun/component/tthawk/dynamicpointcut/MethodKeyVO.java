@@ -1,5 +1,11 @@
 package cn.com.kun.component.tthawk.dynamicpointcut;
 
+/**
+ *
+ * author:xuyaokun_kzx
+ * date:2024/8/1
+ * desc:
+*/
 public class MethodKeyVO {
 
     private String methodKey;

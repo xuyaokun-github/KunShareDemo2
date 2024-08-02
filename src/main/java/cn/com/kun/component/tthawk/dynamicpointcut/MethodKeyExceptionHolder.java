@@ -3,6 +3,12 @@ package cn.com.kun.component.tthawk.dynamicpointcut;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+/**
+ *
+ * author:xuyaokun_kzx
+ * date:2024/8/1
+ * desc:
+*/
 public class MethodKeyExceptionHolder {
 
     private static Map<String, String> exceptionClassMap = new ConcurrentHashMap<>();

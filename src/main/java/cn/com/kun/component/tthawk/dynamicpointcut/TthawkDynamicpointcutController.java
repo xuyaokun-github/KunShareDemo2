@@ -10,6 +10,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
 
+/**
+ *
+ * author:xuyaokun_kzx
+ * date:2024/8/1
+ * desc:
+*/
 @ConditionalOnProperty(prefix = "tthawk", value = {"enabled"}, havingValue = "true", matchIfMissing = false)
 @RequestMapping("/tthawk-dynamicpointcut")
 @RestController

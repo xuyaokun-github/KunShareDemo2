@@ -28,7 +28,7 @@ public class TthawkDemoAspect1 {
 
     private final static Logger LOGGER = LoggerFactory.getLogger(TthawkDemoAspect1.class);
 
-    @Pointcut("execution(public * cn.com.kun.springframework.springcloud.feign.client.KunwebdemoFeign2.result1(..))")
+    @Pointcut("execution(public * cn.com.kun.service.tthawk.TthawkSecondDemoService.doWork3(..))")
     public void pointCut(){
 
     }

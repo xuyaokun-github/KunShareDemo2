@@ -28,4 +28,9 @@ public class TthawkSecondDemoService {
     public void doWork3() {
         LOGGER.info("This is TthawkSecondDemoService doWork22222222.");
     }
+
+    public void doWork4() {
+
+        LOGGER.info("This is TthawkSecondDemoService doWork44444444.");
+    }
 }

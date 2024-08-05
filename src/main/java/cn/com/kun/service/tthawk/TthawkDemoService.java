@@ -67,4 +67,15 @@ public class TthawkDemoService {
         LOGGER.info("执行异常现场记录动作");
     }
 
+    public void test4() {
+
+
+        try {
+
+            tthawkSecondDemoService.doWork4();
+        }catch (Exception e){
+            LOGGER.error("调用TthawkSecondDemoService执行异常", e);
+        }
+
+    }
 }

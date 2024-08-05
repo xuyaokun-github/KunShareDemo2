@@ -42,9 +42,7 @@ public class TthawkDynamicPointcutConfig {
     @Bean
     public DefaultPointcutAdvisor defaultPointcutAdvisor() {
 
-        DefaultPointcutAdvisor defaultPointcutAdvisor = new
-                        DefaultPointcutAdvisor();
-
+        DefaultPointcutAdvisor defaultPointcutAdvisor = new DefaultPointcutAdvisor();
         defaultPointcutAdvisor.setPointcut(customPointCut());
         defaultPointcutAdvisor.setAdvice(getAdvice());
         return defaultPointcutAdvisor;

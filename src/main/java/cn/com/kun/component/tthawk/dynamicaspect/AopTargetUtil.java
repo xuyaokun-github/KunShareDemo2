@@ -1,4 +1,4 @@
-package cn.com.kun.component.tthawk.dynamicpointcut;
+package cn.com.kun.component.tthawk.dynamicaspect;
 
 import org.springframework.aop.framework.AdvisedSupport;
 import org.springframework.aop.framework.AopProxy;

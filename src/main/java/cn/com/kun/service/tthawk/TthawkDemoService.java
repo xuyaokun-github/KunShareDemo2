@@ -7,6 +7,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
+
 @Service
 public class TthawkDemoService {
 
@@ -14,6 +16,11 @@ public class TthawkDemoService {
 
     @Autowired
     private TthawkSecondDemoService tthawkSecondDemoService;
+
+    @Resource
+//    @Autowired
+    private TthawkThirdDemoService tthawkThirdDemoService;
+
 
     @Autowired
     private KunwebdemoFeign2 kunwebdemoFeign2;
@@ -77,5 +84,27 @@ public class TthawkDemoService {
             LOGGER.error("调用TthawkSecondDemoService执行异常", e);
         }
 
+    }
+
+    public void test5() {
+
+        try {
+            System.out.println(tthawkThirdDemoService);
+            tthawkThirdDemoService.doWork5();
+        }catch (Exception e){
+            LOGGER.error("调用TthawkSecondDemoService执行异常", e);
+        }
+    }
+
+    public void test6() {
+
+        try {
+//            ResultVo resultVo = kunwebdemoFeign2.result1("");
+//            LOGGER.info("kunweb返回:{}", JacksonUtils.toJSONString(resultVo));
+
+            tthawkThirdDemoService.doWork6();
+        }catch (Exception e){
+            LOGGER.error("调用tthawkThirdDemoService业务层执行异常", e);
+        }
     }
 }

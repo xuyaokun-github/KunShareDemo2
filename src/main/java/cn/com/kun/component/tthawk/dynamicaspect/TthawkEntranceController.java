@@ -1,9 +1,11 @@
 package cn.com.kun.component.tthawk.dynamicaspect;
 
+import cn.com.kun.service.tthawk.TthawkThirdDemoService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.context.ApplicationContext;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
@@ -17,6 +19,9 @@ public class TthawkEntranceController {
 
     @Autowired
     private DynamicAspectProcessor dynamicAspectProcessor;
+
+    @Autowired
+    private ApplicationContext context;
 
     @PostMapping("/aop")
     public String aop(@RequestBody TthawkReq tthawkReq) throws IOException {
@@ -43,6 +48,13 @@ public class TthawkEntranceController {
         dynamicAspectProcessor.unregisterAspect("tthawkSecondDemoService");
         dynamicAspectProcessor.unregisterAspect("tthawkDemoService");
 
+        return "tthawk ok";
+    }
+
+    @GetMapping("/modify")
+    public String modify() throws Exception {
+
+        AspectModifier.modifyAspect(context, TthawkThirdDemoService.class, TthawkDynamicAspect.class);
         return "tthawk ok";
     }
 

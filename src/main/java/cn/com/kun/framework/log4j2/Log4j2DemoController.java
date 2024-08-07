@@ -1,5 +1,6 @@
 package cn.com.kun.framework.log4j2;
 
+import cn.com.kun.common.exception.BizException;
 import cn.com.kun.common.utils.LogUtils;
 import cn.com.kun.common.vo.ResultVo;
 import cn.com.kun.component.logDesensitization.DesensitizationLogger;
@@ -136,6 +137,33 @@ public class Log4j2DemoController {
 
     private LoggerConfig getLoggerConfig(String loggerName) {
         return getLoggerContext().getConfiguration().getLoggers().get(loggerName);
+    }
+
+
+    @GetMapping("/test-exception")
+    public ResultVo testException(){
+
+        try {
+            runExceptionMethod();
+        } catch (Exception e){
+            LOGGER.info("异常的toString：{}", e.toString());
+            LOGGER.info("异常的getMessage：{}", e.getMessage());
+            LOGGER.error("出现异常", e);
+        }
+
+        return ResultVo.valueOfSuccess();
+    }
+
+    private void runExceptionMethod() {
+
+        try {
+            int a = 1/0;
+        }catch (Exception e){
+            BizException bizException = new BizException("我是异常的message内容");
+            bizException.initCause(e);
+            throw bizException;
+        }
+
     }
 
 

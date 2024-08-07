@@ -2,6 +2,7 @@ package cn.com.kun.component.tthawk.reflect;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.Map;
 
 public class ReflectInvokeUtils {
 
@@ -16,7 +17,12 @@ public class ReflectInvokeUtils {
         for (int i = 0; i < reflectVO.getMethodParamSize(); i++) {
             String index = String.valueOf(i + 1);
             if (reflectVO.getParamClassMap() != null && reflectVO.getParamClassMap().containsKey(index)){
-                args[i] = buildParamObject(reflectVO.getParamClassMap().get(index));
+                String paramClass = reflectVO.getParamClassMap().get(index);
+                if (needNestedException(index, reflectVO.getNestedExceptionClassMap())){
+                    args[i] = NestedExceptionHelper.buildNestedException(reflectVO.getNestedExceptionClassMap().get(index));
+                } else {
+                    args[i] = buildParamObject(paramClass);
+                }
             }else {
                 args[i] = null;
             }
@@ -29,6 +35,7 @@ public class ReflectInvokeUtils {
             clazz = Class.forName(className);
             Object sourceBean = clazz.newInstance();
             Method method = sourceBean.getClass().getDeclaredMethod(methodName, methodParams);
+            method.setAccessible(true);
             method.invoke(sourceBean, args);
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
@@ -42,6 +49,11 @@ public class ReflectInvokeUtils {
             e.printStackTrace();
         }
 
+    }
+
+    private static boolean needNestedException(String index, Map<String, String> nestedExceptionClassMap) {
+
+        return nestedExceptionClassMap != null && nestedExceptionClassMap.containsKey(index);
     }
 
     private static Class getMethodClass(String methodParamClassName) {

@@ -50,4 +50,19 @@ public class TthawkDemoController {
         tthawkDemoService.test4();
         return ResultVo.valueOfSuccess("OK");
     }
+
+    @GetMapping("/test5")
+    public ResultVo test5() throws IOException {
+
+        tthawkDemoService.test5();
+        return ResultVo.valueOfSuccess("OK");
+    }
+
+
+    @GetMapping("/test6")
+    public ResultVo test6() throws IOException {
+
+        tthawkDemoService.test6();
+        return ResultVo.valueOfSuccess("OK");
+    }
 }

@@ -28,7 +28,7 @@ public class TthawkDemoAspect3 {
 
     private final static Logger LOGGER = LoggerFactory.getLogger(TthawkDemoAspect3.class);
 
-    @Pointcut("execution(public * cn.com.kun.service.tthawk.TthawkSecondDemoService.doWork3(..))")
+    @Pointcut("execution(public * cn.com.kun.service.tthawk.TthawkThirdDemoService.doWork6(..))")
     public void pointCut(){
 
     }

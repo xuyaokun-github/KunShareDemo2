@@ -14,6 +14,8 @@ public class ReflectVO {
 
     private Map<String, String> methodClassMap;
 
+    private Map<String, String> nestedExceptionClassMap;
+
     public String getClassName() {
         return className;
     }
@@ -53,4 +55,13 @@ public class ReflectVO {
     public void setMethodClassMap(Map<String, String> methodClassMap) {
         this.methodClassMap = methodClassMap;
     }
+
+    public Map<String, String> getNestedExceptionClassMap() {
+        return nestedExceptionClassMap;
+    }
+
+    public void setNestedExceptionClassMap(Map<String, String> nestedExceptionClassMap) {
+        this.nestedExceptionClassMap = nestedExceptionClassMap;
+    }
+
 }

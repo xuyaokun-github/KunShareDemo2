@@ -27,11 +27,9 @@ public class TthawkDynamicAspect {
 
     private final static Logger LOGGER = LoggerFactory.getLogger(TthawkDynamicAspect.class);
 
-//    @Pointcut("execution(* cn.com.kun..*.*(..))")
-
     //方法1：大范围拦截
 //    @Pointcut("execution(* cn.com.kun.service..*.*(..))")
-    @Pointcut("execution(* cn.com.kun..*.*(..))")
+    @Pointcut("execution(* cn.com.kun.component.tthawk.dynamicaspect..*.*(..))")
     public void pointCut(){
 
 
@@ -40,6 +38,7 @@ public class TthawkDynamicAspect {
     @Around(value = "pointCut()")
     public Object around(ProceedingJoinPoint pjp) throws Throwable {
 
+        LOGGER.info("进入TthawkDynamicAspect");
         MethodSignature methodSignature = (MethodSignature) pjp.getSignature();
         Method method = methodSignature.getMethod();
 

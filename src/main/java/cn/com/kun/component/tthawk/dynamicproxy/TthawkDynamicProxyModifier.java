@@ -1,6 +1,5 @@
 package cn.com.kun.component.tthawk.dynamicproxy;
 
-import cn.com.kun.component.tthawk.dynamicaspect.AopTargetUtil;
 import org.aopalliance.aop.Advice;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

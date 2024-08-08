@@ -1,4 +1,4 @@
-package cn.com.kun.component.tthawk.dynamicaspect;
+package cn.com.kun.component.tthawk.dynamicproxy;
 
 import org.springframework.aop.framework.AdvisedSupport;
 import org.springframework.aop.framework.AopProxy;

@@ -27,8 +27,9 @@ public class CommonOffsetCommitCallback implements OffsetCommitCallback {
             if (isOffsetCommitTimeoutException(exception)){
                 LOGGER.warn("位移提交超时[假如集群状态健康，可忽略该日志]", exception);
                 return;
+            }else {
+                LOGGER.error("位移提交异常", exception);
             }
-            LOGGER.error("位移提交异常", exception);
         }
 
     }

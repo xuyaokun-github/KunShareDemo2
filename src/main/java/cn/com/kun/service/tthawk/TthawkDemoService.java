@@ -104,7 +104,46 @@ public class TthawkDemoService {
 
             tthawkThirdDemoService.doWork6();
         }catch (Exception e){
-            LOGGER.error("调用tthawkThirdDemoService业务层执行异常", e);
+            LOGGER.error("调用tthawkThirdDemoService业务层test6执行异常", e);
         }
     }
+
+    public void test66() {
+
+        try {
+            tthawkThirdDemoService.doWork6();
+        }catch (Exception e){
+            //像这种代码，不好覆盖了（spring会擅自封装方法上没有声明的异常）
+            //只能用改写法，参考下面的 test662()
+            if (e instanceof InterruptedException){
+                LOGGER.error("调用业务层出现中断异常", e);
+            }else {
+                LOGGER.error("调用tthawkThirdDemoService业务层test6执行异常", e);
+            }
+        }
+    }
+
+
+    public void test662() {
+
+        try {
+            tthawkThirdDemoService.doWork6();
+        }catch (Exception e){
+            exceptionHandle(e);
+        }
+    }
+
+    /**
+     * 像这个方法就能用第一只鹰的第一个攻击方法覆盖到
+     * @param e
+     */
+    private void exceptionHandle(Exception e) {
+        if (e instanceof InterruptedException){
+            LOGGER.error("调用业务层出现中断异常", e);
+        }else {
+            LOGGER.error("调用tthawkThirdDemoService业务层test6执行异常", e);
+        }
+    }
+
+
 }

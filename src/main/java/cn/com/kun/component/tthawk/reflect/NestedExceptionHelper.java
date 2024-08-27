@@ -2,9 +2,7 @@ package cn.com.kun.component.tthawk.reflect;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class NestedExceptionHelper {
@@ -18,7 +16,6 @@ public class NestedExceptionHelper {
                 exceptionList: 1,2,3
                 1的cause是2,2的cause是3,3的cause为null
              */
-            List<Throwable> throwableList = new ArrayList<>();
             Map<String, Throwable> throwableMap = new HashMap<>();
             int index = exceptionArr.length - 1;
             while (index >= 0){
@@ -26,8 +23,10 @@ public class NestedExceptionHelper {
                 Throwable current = null;
                 try {
                     current = buildException(currentExpName);
-                    Throwable theLatterExp = throwableMap.get(String.valueOf(index + 1));
-                    current.initCause(theLatterExp);
+                    if (current != null){
+                        Throwable theLatterExp = throwableMap.get(String.valueOf(index + 1));
+                        current.initCause(theLatterExp);
+                    }
                 } catch (InstantiationException e) {
                     current = buildOneThrowableParamException(currentExpName, throwableMap.get(String.valueOf(index + 1)));
                 }

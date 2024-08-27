@@ -39,6 +39,6 @@ public class TthawkDynamicProxyController {
 
         DynamicProxyKeyHolder.remove(proxyKeyVO.getMethodKey());
         TthawkDynamicProxyModifier.removeProxy(context, proxyKeyVO.getBeanClassName());
-        return "tthawk cancel attack ok";
+        return "tthawk dynamicproxy cancel attack ok";
     }
 }

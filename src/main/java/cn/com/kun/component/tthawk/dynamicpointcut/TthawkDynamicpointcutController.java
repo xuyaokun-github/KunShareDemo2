@@ -37,7 +37,7 @@ public class TthawkDynamicpointcutController {
 
 
         MethodKeyExceptionHolder.remove(methodKeyVO.getMethodKey());
-        return "tthawk dynamicpointcut attack ok";
+        return "tthawk dynamicpointcut cancel attack ok";
     }
 
 }

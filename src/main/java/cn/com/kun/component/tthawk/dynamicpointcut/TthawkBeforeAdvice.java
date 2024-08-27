@@ -39,8 +39,10 @@ public class TthawkBeforeAdvice extends TthawkInterceptor implements MethodBefor
         //是否需要主动抛出异常
         if(MethodKeyExceptionHolder.contains(methodKey)){
             Object obj = buildException(MethodKeyExceptionHolder.getExceptionClass(methodKey));
-            LOGGER.info("抛出异常：{}", obj.getClass().getName());
-            throw (Throwable) obj;
+            if (obj != null){
+                LOGGER.info("抛出异常：{}", obj.getClass().getName());
+                throw (Throwable) obj;
+            }
         }
     }
 

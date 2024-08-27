@@ -120,7 +120,7 @@ public class UserServiceServiceImpl implements UserService {
         UserMapper mapper = session.getMapper(UserMapper.class);
         for (int i = 0; i < userList.size(); i++) {
             mapper.insert(userList.get(i));
-            if(i%1000==999){
+            if(i % 1000 == 999){
                 //每1000条提交一次防止内存溢出
                 session.commit();
                 session.clearCache();

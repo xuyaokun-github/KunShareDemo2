@@ -17,6 +17,7 @@ clean deploy -Dmaven.test.skip=true
 6.springcloud体系规划
 注册中心：KunShare-EurekaServer
 网关：KunShare-Zuul
+配置中心：KunShare-Config-Server
 
 7.本地启动windows redis
  .\redis-server.exe .\redis.windows.conf

@@ -15,7 +15,7 @@ public class TthawkThirdDemoService {
         LOGGER.info("This is TthawkThirdDemoService doWork55555555.");
     }
 
-    public void doWork6() {
+    public void doWork6() /*throws InterruptedException*/{
 
         LOGGER.info("This is TthawkThirdDemoService doWork66666666.");
     }

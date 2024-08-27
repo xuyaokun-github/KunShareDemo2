@@ -9,6 +9,7 @@ import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 import org.springframework.context.ApplicationContext;
 
 /**
+ * 基于spring aop创建代理
  *
  * author:xuyaokun_kzx
  * date:2024/8/5
@@ -50,12 +51,20 @@ public class TthawkDynamicProxyModifier {
                 LOGGER.info("识别到ProxyFactory对象");
             }else if(bean.getClass().getName().contains("EnhancerBySpringCGLIB")){
                 LOGGER.info("源对象是cglib代理对象");
+                //第一版生成代理逻辑
                 //因为是重新生成代理对象，这样做会丢失一些植入逻辑(注意，用完之后需要重启应用，将原有的增强逻辑还原)
                 Object source = AopTargetUtil.getTarget(bean);
                 ProxyFactory proxyFactory = new ProxyFactory(source);
                 proxyFactory.addAdvice(beforeAdvice());
-                //重新创建代理对象
                 newProxy = proxyFactory.getProxy(classLoader);
+
+//                Object source = AopTargetUtil.getTarget(bean);
+//                ProxyFactory proxyFactory = new ProxyFactory(bean);
+//                  //proxyFactory.setInterfaces(source.getClass());//假如source不是基于接口的，这里用setInterfaces会报错
+//                proxyFactory.setTargetClass(source.getClass());
+//                proxyFactory.addAdvice(beforeAdvice());
+//                newProxy = proxyFactory.getProxy(classLoader);
+
             }else {
                 ProxyFactory proxyFactory = new ProxyFactory(bean);
                 proxyFactory.addAdvice(beforeAdvice());
@@ -66,10 +75,14 @@ public class TthawkDynamicProxyModifier {
             if (newProxy != null){
                 //替换原有的代理对象
                 beanFactory.destroySingleton(beanName);
-                try {
-                    beanFactory.removeBeanDefinition(beanName);
-                }catch (Exception e){
-                    e.printStackTrace();
+
+                boolean containsBeanDefinition = beanFactory.containsBeanDefinition(beanName);
+                if (containsBeanDefinition){
+                    try {
+                        beanFactory.removeBeanDefinition(beanName);
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }
                 }
                 beanFactory.registerSingleton(beanName, newProxy);
             }

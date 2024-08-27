@@ -26,8 +26,16 @@ public class SpringCloudConfigDemoService {
     @Value("${nbaplay.level}")
     private String nbaplayLevel;
 
+    @Value("${black.wukong}")
+    private String blackWukong;
+
+
     @PostConstruct
     public void init() throws IOException {
+        /*
+            D:\Ideaworkspaces\KunShare-Config\kunsharedemo27
+            D:/Ideaworkspaces/KunShare-Config/kunsharedemo27
+         */
         int a = 0;
     }
 

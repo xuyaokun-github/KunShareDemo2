@@ -40,8 +40,10 @@ public class TthawkDynamicMethodMatchBeforeAdvice implements MethodBeforeAdvice,
         //是否需要主动抛出异常
         if(DynamicMethodMatchHolder.contains(methodKey)){
             Object obj = buildException(DynamicMethodMatchHolder.getExceptionClass(methodKey));
-            LOGGER.info("抛出异常：{}", obj.getClass().getName());
-            throw (Throwable) obj;
+            if(obj != null){
+                LOGGER.info("抛出异常：{}", obj.getClass().getName());
+                throw (Throwable) obj;
+            }
         }
     }
 

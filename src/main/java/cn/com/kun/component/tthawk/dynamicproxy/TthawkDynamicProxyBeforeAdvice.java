@@ -20,6 +20,7 @@ public class TthawkDynamicProxyBeforeAdvice implements MethodBeforeAdvice{
     @Override
     public void before(Method method, Object[] args, Object target) throws Throwable {
 
+        LOGGER.info("进入TthawkDynamicProxyBeforeAdvice， method:{}", method.getName());
         // 输出切点
         String methodKey = target.getClass().getName() + "." + method.getName();
 
@@ -35,8 +36,10 @@ public class TthawkDynamicProxyBeforeAdvice implements MethodBeforeAdvice{
         //是否需要主动抛出异常
         if(DynamicProxyKeyHolder.contains(methodKey)){
             Object obj = buildException(DynamicProxyKeyHolder.getExceptionClass(methodKey));
-            LOGGER.info("主动抛出异常：{}", obj.getClass().getName());
-            throw (Throwable) obj;
+            if (obj != null){
+                LOGGER.info("主动抛出异常：{}", obj.getClass().getName());
+                throw (Throwable) obj;
+            }
         }
     }
 

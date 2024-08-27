@@ -65,4 +65,12 @@ public class TthawkDemoController {
         tthawkDemoService.test6();
         return ResultVo.valueOfSuccess("OK");
     }
+
+
+    @GetMapping("/test66")
+    public ResultVo test66() throws IOException {
+
+        tthawkDemoService.test66();
+        return ResultVo.valueOfSuccess("OK");
+    }
 }

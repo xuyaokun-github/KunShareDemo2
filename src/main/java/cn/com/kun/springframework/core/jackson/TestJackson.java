@@ -3,11 +3,18 @@ package cn.com.kun.springframework.core.jackson;
 import cn.com.kun.common.utils.DateUtils;
 import cn.com.kun.common.utils.JacksonUtils;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class TestJackson {
 
     public static void main(String[] args) {
+
+        List<String> list = new ArrayList<>();
+        list.add("1");
+
+        System.out.println(JacksonUtils.toJSONString(list));
 
         String source = JacksonUtils.toJSONString("kunghsu");
         System.out.println(source);//"kunghsu"

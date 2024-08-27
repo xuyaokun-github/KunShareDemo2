@@ -11,10 +11,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Supplier;
 
 /**
@@ -421,9 +418,22 @@ public class JacksonUtils {
         return source;
     }
 
+    /**
+     * 对于可能会有问题的源串，希望不打印error日志，就可以调用该方法
+     * 先尝试性进行反序列化，假如失败就会拿到空。假如成功，则拿到具体的Map对象
+     *
+     * @param value
+     * @return
+     */
+    public static Map<String, Object> tryToMap(String value) {
 
-    public static Map<String, Object> toMap(Object value) {
-        return value != null ? toMap(value, () -> null) : null;
+        Map<String, Object> res = null;
+        try {
+            return mapper.readValue(value, HashMap.class);
+        } catch (Throwable e) {
+            log.warn("尝试反序列化为Map出现异常，源串：{}", value, e);
+        }
+        return res;
     }
 
     public static Map<String, Object> toMap(Object value, Supplier<Map<String, Object>> defaultSupplier) {

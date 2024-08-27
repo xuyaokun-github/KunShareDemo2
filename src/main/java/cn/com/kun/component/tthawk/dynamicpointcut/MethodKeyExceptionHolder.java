@@ -40,6 +40,7 @@ public class MethodKeyExceptionHolder {
     public static void remove(String methodKey) {
 
         exceptionClassMap.remove(methodKey);
+        nestedExceptionClassMap.remove(methodKey);
     }
 
 

@@ -13,9 +13,16 @@ public class MethodKeyExceptionHolder {
 
     private static Map<String, String> exceptionClassMap = new ConcurrentHashMap<>();
 
+    private static Map<String, String> nestedExceptionClassMap = new ConcurrentHashMap<>();
+
     public static String getExceptionClass(String methodKey) {
 
         return exceptionClassMap.get(methodKey);
+    }
+
+    public static String getNestedExceptionClass(String methodKey) {
+
+        return nestedExceptionClassMap.get(methodKey);
     }
 
     public static boolean contains(String methodKey) {
@@ -35,5 +42,10 @@ public class MethodKeyExceptionHolder {
         exceptionClassMap.remove(methodKey);
     }
 
+
+    public static void addNestedException(String methodKey, String nestedExceptionClass) {
+
+        nestedExceptionClassMap.put(methodKey, nestedExceptionClass);
+    }
 
 }

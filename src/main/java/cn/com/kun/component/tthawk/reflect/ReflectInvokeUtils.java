@@ -57,7 +57,11 @@ public class ReflectInvokeUtils {
                     && reflectVO.getJsonParamValueMap().containsKey(index)){
                 String className = reflectVO.getJsonParamClassMap().get(index);
                 String json = reflectVO.getJsonParamValueMap().get(index);
-                args[i] = toJavaObj(reflectVO, json, className);
+                if (className.equals(String.class.getName())){
+                    args[i] = TthawkBase64Utils.decrypt(json);
+                }else {
+                    args[i] = toJavaObj(reflectVO, json, className);
+                }
             } else {
                 args[i] = null;
             }

@@ -28,6 +28,10 @@ public class TthawkDynamicpointcutController {
 
 
         MethodKeyExceptionHolder.add(methodKeyVO.getMethodKey(), methodKeyVO.getExceptionClass());
+        if (methodKeyVO.getNestedExceptionClass() != null && methodKeyVO.getNestedExceptionClass().length() > 0){
+            MethodKeyExceptionHolder.addNestedException(methodKeyVO.getMethodKey(), methodKeyVO.getNestedExceptionClass());
+        }
+
         return "tthawk dynamicpointcut attack ok";
     }
 

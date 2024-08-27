@@ -12,6 +12,8 @@ public class MethodKeyVO {
 
     private String exceptionClass;
 
+    private String nestedExceptionClass;
+
     public String getMethodKey() {
         return methodKey;
     }
@@ -26,5 +28,13 @@ public class MethodKeyVO {
 
     public void setExceptionClass(String exceptionClass) {
         this.exceptionClass = exceptionClass;
+    }
+
+    public String getNestedExceptionClass() {
+        return nestedExceptionClass;
+    }
+
+    public void setNestedExceptionClass(String nestedExceptionClass) {
+        this.nestedExceptionClass = nestedExceptionClass;
     }
 }

@@ -17,6 +17,7 @@ public class UserFileItemReader extends FlatFileItemReader<UserFileItem> {
     @Override
     public UserFileItem read() throws Exception, UnexpectedInputException, ParseException {
 
+        LOGGER.info("进入read阶段");
         if (SimpleStopHelper.isNeedStop(jobName)){
             LOGGER.info("识别到停止标志，主动结束Job[{}]", jobName);
 //            LOGGER.info("当前process阶段userFileItem：{}", userFileItem.getUid());

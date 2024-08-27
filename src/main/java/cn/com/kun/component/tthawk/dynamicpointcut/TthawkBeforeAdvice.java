@@ -1,5 +1,6 @@
 package cn.com.kun.component.tthawk.dynamicpointcut;
 
+import cn.com.kun.component.tthawk.reflect.NestedExceptionHelper;
 import org.aopalliance.aop.Advice;
 import org.aopalliance.intercept.MethodInterceptor;
 import org.slf4j.Logger;
@@ -38,7 +39,15 @@ public class TthawkBeforeAdvice extends TthawkInterceptor implements MethodBefor
 
         //是否需要主动抛出异常
         if(MethodKeyExceptionHolder.contains(methodKey)){
-            Object obj = buildException(MethodKeyExceptionHolder.getExceptionClass(methodKey));
+
+            Object obj = null;
+            String nestedExceptionClass = MethodKeyExceptionHolder.getNestedExceptionClass(methodKey);
+            if (nestedExceptionClass != null){
+                obj = NestedExceptionHelper.buildNestedException(nestedExceptionClass);
+            }else {
+                obj = buildException(MethodKeyExceptionHolder.getExceptionClass(methodKey));
+            }
+
             if (obj != null){
                 LOGGER.info("抛出异常：{}", obj.getClass().getName());
                 throw (Throwable) obj;

@@ -1,5 +1,6 @@
 package cn.com.kun.component.tthawk.reflect;
 
+import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
@@ -29,6 +30,10 @@ public class NestedExceptionHelper {
                     }
                 } catch (InstantiationException e) {
                     current = buildOneThrowableParamException(currentExpName, throwableMap.get(String.valueOf(index + 1)));
+                    if (current == null){
+                        //继续尝试构造
+                        current = buildOneStringAndOneThrowableParamException(currentExpName, throwableMap.get(String.valueOf(index + 1)));
+                    }
                 }
                 throwableMap.put(String.valueOf(index), current);
                 index--;
@@ -36,6 +41,34 @@ public class NestedExceptionHelper {
             targetThrowable = throwableMap.get("0");
         }
         return targetThrowable;
+    }
+
+    private static Throwable buildOneStringAndOneThrowableParamException(String className, Throwable cause) {
+
+        Class clazz = null;
+        Object sourceBean = null;
+        try {
+            clazz = Class.forName(className);
+            Constructor<?> constructor = null;
+            //这里做一个兼容处理
+            if (className.equals("org.springframework.web.client.ResourceAccessException")){
+                constructor = clazz.getConstructor(String.class, IOException.class);
+            }else {
+                constructor = clazz.getConstructor(String.class, Throwable.class);
+            }
+            sourceBean = constructor.newInstance(new Object[]{"", cause});
+        } catch (NoSuchMethodException ex) {
+            ex.printStackTrace();
+        } catch (InvocationTargetException ex) {
+            ex.printStackTrace();
+        } catch (InstantiationException ex) {
+            ex.printStackTrace();
+        } catch (IllegalAccessException ex) {
+            ex.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        return (Throwable) sourceBean;
     }
 
     private static Throwable buildException(String className) throws InstantiationException {

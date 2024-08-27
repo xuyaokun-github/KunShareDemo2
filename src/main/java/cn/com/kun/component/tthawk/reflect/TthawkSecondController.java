@@ -2,9 +2,7 @@ package cn.com.kun.component.tthawk.reflect;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.context.ApplicationContext;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,9 +16,6 @@ import java.io.IOException;
 public class TthawkSecondController {
 
     private final static Logger LOGGER = LoggerFactory.getLogger(TthawkSecondController.class);
-
-    @Autowired
-    private ApplicationContext context;
 
     @PostMapping("/attack")
     public String attack(@RequestBody ReflectVO reflectVO) throws IOException {

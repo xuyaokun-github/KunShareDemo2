@@ -101,7 +101,7 @@ public class BatchDemo1JobConfig {
 //        reader.setResource(new FileSystemResource(sourceFilePath));
         //读取classpath下的文件
 //        reader.setResource(new ClassPathResource("demoData/batch/batchDemoOne.txt"));
-        reader.setResource(new ClassPathResource("demoData/batch/batchDemoOne2.txt"));
+        reader.setResource(new ClassPathResource("demoData/batch/batchDemoOne2-600.txt"));
         reader.setLineMapper(new DefaultLineMapper<UserFileItem>() {{
             setLineTokenizer(new DelimitedLineTokenizer("|") {{
                 setNames(new String[]{"uid", "tag", "type"});

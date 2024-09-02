@@ -1,4 +1,4 @@
-package cn.com.kun.service.tthawk;
+package cn.com.kun.service.tthawk.aspect;
 
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -24,9 +24,9 @@ import java.lang.reflect.Method;
 @Aspect
 @Component
 @Order(Ordered.HIGHEST_PRECEDENCE + 1)
-public class TthawkDemoAspect2 {
+public class TthawkDemoAspect1 {
 
-    private final static Logger LOGGER = LoggerFactory.getLogger(TthawkDemoAspect2.class);
+    private final static Logger LOGGER = LoggerFactory.getLogger(TthawkDemoAspect1.class);
 
     @Pointcut("execution(public * cn.com.kun.service.tthawk.TthawkSecondDemoService.doWork3(..))")
     public void pointCut(){
@@ -38,7 +38,7 @@ public class TthawkDemoAspect2 {
 
         MethodSignature methodSignature = (MethodSignature) pjp.getSignature();
         Method method = methodSignature.getMethod();
-        LOGGER.info("进入TthawkDemoAspect2");
+        LOGGER.info("进入TthawkDemoAspect1");
         //原逻辑
         Object obj = pjp.proceed();
         return obj;

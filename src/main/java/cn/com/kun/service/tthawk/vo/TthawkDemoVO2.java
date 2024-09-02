@@ -1,6 +1,6 @@
-package cn.com.kun.service.tthawk;
+package cn.com.kun.service.tthawk.vo;
 
-public class TthawkDemoVO1 {
+public class TthawkDemoVO2 {
 
     private String name;
 

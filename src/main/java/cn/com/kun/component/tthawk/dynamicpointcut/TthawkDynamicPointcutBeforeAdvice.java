@@ -18,9 +18,9 @@ import java.lang.reflect.Method;
  * date:2024/8/1
  * desc:
 */
-public class TthawkBeforeAdvice extends TthawkInterceptor implements MethodBeforeAdvice, AfterReturningAdvice, AdvisorAdapter {
+public class TthawkDynamicPointcutBeforeAdvice extends TthawkInterceptor implements MethodBeforeAdvice, AfterReturningAdvice, AdvisorAdapter {
 
-    private final static Logger LOGGER = LoggerFactory.getLogger(TthawkBeforeAdvice.class);
+    private final static Logger LOGGER = LoggerFactory.getLogger(TthawkDynamicPointcutBeforeAdvice.class);
 
     @Override
     public void before(Method method, Object[] args, Object target) throws Throwable {

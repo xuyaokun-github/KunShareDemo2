@@ -1,6 +1,8 @@
 package cn.com.kun.service.tthawk;
 
 import cn.com.kun.service.switchcheck.SwitchCheckerDemoService;
+import cn.com.kun.service.tthawk.vo.TthawkDemoVO1;
+import cn.com.kun.service.tthawk.vo.TthawkDemoVO2;
 import cn.com.kun.springframework.springcloud.feign.client.KunwebdemoFeign2;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

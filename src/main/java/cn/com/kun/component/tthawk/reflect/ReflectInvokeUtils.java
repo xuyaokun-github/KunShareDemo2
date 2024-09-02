@@ -3,6 +3,7 @@ package cn.com.kun.component.tthawk.reflect;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Map;
@@ -46,6 +47,7 @@ public class ReflectInvokeUtils {
         for (int i = 0; i < reflectVO.getMethodParamSize(); i++) {
             String index = String.valueOf(i + 1);
             if (reflectVO.getParamClassMap() != null && reflectVO.getParamClassMap().containsKey(index)){
+                //便捷模式创建参数
                 String paramClass = reflectVO.getParamClassMap().get(index);
                 if (needNestedException(index, reflectVO.getNestedExceptionClassMap())){
                     args[i] = NestedExceptionHelper.buildNestedException(reflectVO.getNestedExceptionClassMap().get(index));
@@ -58,6 +60,7 @@ public class ReflectInvokeUtils {
                 String className = reflectVO.getJsonParamClassMap().get(index);
                 String json = reflectVO.getJsonParamValueMap().get(index);
                 if (className.equals(String.class.getName())){
+                    //已经是字符串类型了，无需再反序列化
                     args[i] = TthawkBase64Utils.decrypt(json);
                 }else {
                     args[i] = toJavaObj(reflectVO, json, className);
@@ -134,19 +137,45 @@ public class ReflectInvokeUtils {
     private static Class getMethodClass(String methodParamClassName) {
         Class clazz = null;
         try {
-            clazz = Class.forName(methodParamClassName);
+            if (PrimitiveClassUtils.isPrimitive(methodParamClassName)){
+                clazz = PrimitiveClassUtils.getClassByPrimitive(methodParamClassName);
+            }else {
+                clazz = Class.forName(methodParamClassName);
+            }
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
         return clazz;
     }
 
+
+    /**
+     *
+     * @param className
+     * @return
+     */
     private static Object buildParamObject(String className) {
         Class clazz = null;
         Object sourceBean = null;
         try {
             clazz = Class.forName(className);
-            sourceBean = clazz.newInstance();
+            if (clazz.isEnum()){
+                LOGGER.info("参数class类型是枚举类");
+                sourceBean = buildParamObjectForEnum(clazz);
+            }else {
+                Constructor<?>[] constructors = clazz.getConstructors();
+                boolean existsVoidParamConstructor = existsVoidParamConstructor(constructors);
+                if (existsVoidParamConstructor){
+                    //有些类假如没有空的构造函数，将会出问题(例如java.lang.Integer)
+                    sourceBean = clazz.newInstance();
+                }else {
+                    //没有无参构造函数
+                    //递归创建
+                    LOGGER.info("没有无参构造函数");
+                    sourceBean = buildParamObjectForFixedParamConstructor(clazz, constructors[0]);
+                }
+
+            }
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         } catch (InstantiationException e) {
@@ -155,6 +184,64 @@ public class ReflectInvokeUtils {
             e.printStackTrace();
         }
         return sourceBean;
+    }
+
+
+    private static Object buildParamObjectForFixedParamConstructor(Class clazz, Constructor<?> constructor) {
+
+        Class<?>[] constructorParameterTypesClasses = constructor.getParameterTypes();
+        Object[] args = new Object[constructorParameterTypesClasses.length];
+        Object sourceBean = null;
+        try {
+            for (int i = 0; i < constructorParameterTypesClasses.length; i++) {
+                Class constructorParameterTypesClass = constructorParameterTypesClasses[i];
+                args[i] = buildParamObject(constructorParameterTypesClass.getName());
+            }
+            sourceBean = constructor.newInstance(args);
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        }
+        return sourceBean;
+    }
+
+    private static boolean existsVoidParamConstructor(Constructor<?>[] constructors) {
+
+        for (Constructor constructor : constructors){
+
+            Class<?>[] classes = constructor.getParameterTypes();
+            if (classes.length == 0){
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private static Object buildParamObjectForEnum(Class clazz) {
+
+        Method valuesMethod = null;
+        try {
+            valuesMethod = clazz.getMethod("values");
+            Object allEnumObj = valuesMethod.invoke(null);
+            System.out.println(allEnumObj);
+            if (allEnumObj instanceof Object[]){
+                Object[] objectsj = (Object[]) allEnumObj;
+                //拿到第一个元素
+                return objectsj[0];
+            }
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+
+        return null;
     }
 
 }

@@ -16,13 +16,22 @@ public class ReflectVO {
 
     private Map<String, String> nestedExceptionClassMap;
 
+    /**
+     * 假如用了jsonParamClassMap，就不要用paramClassMap
+     * paramClassMap会优先.
+     *
+     * 假如方法参数是int类型，可以使用包装类型java.lang.Integer作为反序列化的接收对象(最终传入方法执行时会自动拆箱)
+     */
     private Map<String, String> jsonParamClassMap;
 
+    /**
+     * 支持基本类型、包装类型、普通Java实体类类型
+     */
     private Map<String, String> jsonParamValueMap;
 
     /**
      * reflect
-     *
+     * spring
      */
     private String acquireBeanMode = "reflect";
 

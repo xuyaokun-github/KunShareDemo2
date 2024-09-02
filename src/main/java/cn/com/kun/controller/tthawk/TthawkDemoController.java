@@ -2,8 +2,8 @@ package cn.com.kun.controller.tthawk;
 
 import cn.com.kun.common.vo.ResultVo;
 import cn.com.kun.service.tthawk.TthawkDemoService;
-import cn.com.kun.service.tthawk.TthawkDemoVO1;
-import cn.com.kun.service.tthawk.TthawkDemoVO2;
+import cn.com.kun.service.tthawk.vo.TthawkDemoVO1;
+import cn.com.kun.service.tthawk.vo.TthawkDemoVO2;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

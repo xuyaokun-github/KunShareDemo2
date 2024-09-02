@@ -34,9 +34,9 @@ public class TthawkDynamicPointcutConfig {
     }
 
     @Bean
-    public TthawkBeforeAdvice getAdvice() {
+    public TthawkDynamicPointcutBeforeAdvice getAdvice() {
 
-        return new TthawkBeforeAdvice();
+        return new TthawkDynamicPointcutBeforeAdvice();
     }
 
     @Bean

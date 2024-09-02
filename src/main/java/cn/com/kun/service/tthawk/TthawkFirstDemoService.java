@@ -1,5 +1,7 @@
 package cn.com.kun.service.tthawk;
 
+import cn.com.kun.service.tthawk.vo.TthawkDemoVO1;
+import cn.com.kun.service.tthawk.vo.TthawkDemoVO2;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

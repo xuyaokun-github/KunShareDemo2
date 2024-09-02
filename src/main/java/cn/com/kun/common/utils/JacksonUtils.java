@@ -1,5 +1,6 @@
 package cn.com.kun.common.utils;
 
+import cn.com.kun.springframework.core.jackson.jacksonModuleParameterNamesDemo.JacksonMixinModule;
 import com.fasterxml.jackson.core.JsonLocation;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -48,6 +49,10 @@ public class JacksonUtils {
         //全局设置：属性为NULL 不序列化
 //        mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
 
+        //不可变类的反序列化
+        //mapper.registerModule(new ParameterNamesModule());
+        //Jackson mixins机制 例子
+        mapper.registerModule(new JacksonMixinModule());
     }
 
     /**

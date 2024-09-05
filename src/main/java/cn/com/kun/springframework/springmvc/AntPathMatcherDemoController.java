@@ -1,5 +1,7 @@
 package cn.com.kun.springframework.springmvc;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -9,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class AntPathMatcherDemoController {
 
+    private final static Logger LOGGER = LoggerFactory.getLogger(AntPathMatcherDemoController.class);
 
 //    @GetMapping("/hello/**/hello") //升到springboot2.7.12之后不支持 ** 这种语法
     @GetMapping("/hello/*/hello")

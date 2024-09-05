@@ -2,6 +2,8 @@ package cn.com.kun.springframework.springmvc;
 
 import cn.com.kun.bean.model.StudentReqVO;
 import cn.com.kun.common.utils.JacksonUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
@@ -12,6 +14,8 @@ import org.springframework.web.client.RestTemplate;
 @RequestMapping("/restTemplate-demo")
 @RestController
 public class RestTemplateDemoController {
+
+    private final static Logger LOGGER = LoggerFactory.getLogger(RestTemplateDemoController.class);
 
     @Autowired
     private RestTemplate restTemplate;

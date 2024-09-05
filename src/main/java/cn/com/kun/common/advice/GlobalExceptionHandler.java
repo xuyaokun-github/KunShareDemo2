@@ -6,6 +6,8 @@ import cn.com.kun.common.vo.ResultVo;
 import cn.com.kun.component.ratelimiter.exception.RateLimitException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.validation.ObjectError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -15,6 +17,8 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 统一的异常处理器
@@ -107,6 +111,21 @@ public class GlobalExceptionHandler {
         logRequestInfo();
 
         return ResultVo.error(CommonEnum.INTERNAL_SERVER_ERROR);
+    }
+
+    @ExceptionHandler(value = MethodArgumentNotValidException.class)
+    @ResponseBody
+    public ResultVo methodArgumentNotValidException(MethodArgumentNotValidException e){
+
+        LOGGER.error("出现MethodArgumentNotValidException:", e);
+        logRequestInfo();
+
+        List<ObjectError> allErrors = e.getBindingResult().getAllErrors();
+        List<String> errorMessages = allErrors.stream()
+                .map(ObjectError::getDefaultMessage)
+                .collect(Collectors.toList());
+
+        return ResultVo.error(CommonEnum.METHOD_PARAM_ERROR.getResultCode(), errorMessages.toString());
     }
 
     private void logRequestInfo() {

@@ -283,8 +283,11 @@ public class HighConcurrencyCounter {
             if (atomicLong != null){
                 long newValue = atomicLong.getAndAdd(count);
                 if (newValue < 0){
+                    LOGGER.warn("计数之后出现负数(线程等待导致累计失效，属于现象)，尝试继续累加");
                     //假如累加之后仍是负数，说明出现GC影响，导致线程顺序延迟，则继续尝试获取最大版本号，继续累加
-                    add(countKey, count);
+                    //假如组件本身有bug，可能会陷入死循环
+//                    add(countKey, count);
+                    addRetry(countKey, count);
                 }
             }else {
                 LOGGER.error("计数器组件异常，获取不到计数器");
@@ -295,6 +298,22 @@ public class HighConcurrencyCounter {
         }
 
 
+    }
+
+    private void addRetry(String countKey, long count) {
+
+        for (int i = 0; i < 1000; i++) {
+            //最多尝试一千次
+            AtomicLong atomicLong = getMaxVerionCounter(countKey);
+            if (atomicLong != null){
+                long newValue = atomicLong.getAndAdd(count);
+                if (newValue < 0){
+                    LOGGER.warn("累计重试，计数仍出现负数，继续累加，次数：{}", i);
+                }else {
+                    break;
+                }
+            }
+        }
     }
 
     /**

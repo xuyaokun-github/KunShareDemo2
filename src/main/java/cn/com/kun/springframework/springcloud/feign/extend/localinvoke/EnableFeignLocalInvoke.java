@@ -1,4 +1,4 @@
-package cn.com.kun.springframework.springcloud.feign.config;
+package cn.com.kun.springframework.springcloud.feign.extend.localinvoke;
 
 import org.springframework.context.annotation.Import;
 

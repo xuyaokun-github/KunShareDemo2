@@ -103,6 +103,23 @@ public class GlobalExceptionHandler {
         return ResultVo.error(CommonEnum.INTERNAL_SERVER_ERROR);
     }
 
+    /**
+     * 定义Throwable也能生效
+     *
+     * @param e
+     * @return
+     */
+//    @ExceptionHandler(value = Throwable.class)
+//    @ResponseBody
+//    public ResultVo exceptionHandler3(Throwable e){
+//
+//        LOGGER.error("未知异常！异常堆栈:", e);
+//        logRequestInfo();
+//
+//        return ResultVo.error(CommonEnum.INTERNAL_SERVER_ERROR);
+//    }
+
+
     @ExceptionHandler(value = MissingServletRequestParameterException.class)
     @ResponseBody
     public ResultVo missingServletRequestParameterException(Exception e){

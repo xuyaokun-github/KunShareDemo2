@@ -1,4 +1,4 @@
-package cn.com.kun.springframework.springcloud.feign.config;
+package cn.com.kun.springframework.springcloud.feign.extend.localinvoke;
 
 
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -10,7 +10,7 @@ import org.springframework.context.annotation.Import;
  * date:2021/11/17
  * desc:
 */
-//@EnableFeignLocalInvoke
+@EnableFeignLocalInvoke
 @ConditionalOnProperty(prefix = "feign.localinvoke", value = {"enabled"}, havingValue = "true", matchIfMissing = false)
 @Configuration
 @Import(FeignClientsLocalInvokeBeanPostProcessor.class)

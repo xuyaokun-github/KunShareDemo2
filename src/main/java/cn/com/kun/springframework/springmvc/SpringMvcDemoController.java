@@ -292,4 +292,15 @@ public class SpringMvcDemoController {
         return ResultVo.valueOfSuccess();
     }
 
+
+    @GetMapping("/test-global-exception")
+    public ResultVo testGlobalException(){
+
+        if (true){
+           throw new AssertionError("自定义Throwable");
+        }
+
+        return ResultVo.valueOfSuccess();
+    }
+
 }

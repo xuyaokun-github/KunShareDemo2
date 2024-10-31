@@ -1,4 +1,4 @@
-package cn.com.kun.component.tthawk.dynamicpointcut;
+package cn.com.kun.component.tthawk.core;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -25,6 +25,11 @@ public class MethodKeyExceptionHolder {
         return nestedExceptionClassMap.get(methodKey);
     }
 
+    /**
+     * methodKey语法：target.getClass().getName() + "." + method.getName()
+     * @param methodKey
+     * @return
+     */
     public static boolean contains(String methodKey) {
 
         return exceptionClassMap.containsKey(methodKey);

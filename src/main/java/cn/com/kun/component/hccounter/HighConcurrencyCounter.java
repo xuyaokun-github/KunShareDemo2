@@ -78,7 +78,11 @@ public class HighConcurrencyCounter {
         //启动线程
         new Thread(()->{
             while (threadWorkEnabled){
-                doWork();
+                try {
+                    doWork();
+                }catch (Exception e){
+                    LOGGER.error("计数组件异常", e);
+                }
             }
         }, threadName).start();
     }

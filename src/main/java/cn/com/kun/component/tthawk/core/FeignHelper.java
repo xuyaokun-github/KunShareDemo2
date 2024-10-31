@@ -1,4 +1,4 @@
-package cn.com.kun.component.tthawk.dynamicpointcut;
+package cn.com.kun.component.tthawk.core;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

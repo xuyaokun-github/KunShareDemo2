@@ -28,6 +28,7 @@ public class ConcurrenceTaskUtil {
     }
 
     /**
+     * 使用方可以自定义线程池（最好是做好线程池隔离）
      *
      * @param tasks
      */

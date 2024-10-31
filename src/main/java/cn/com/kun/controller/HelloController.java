@@ -4,13 +4,11 @@ import cn.com.kun.bean.model.people.People;
 import cn.com.kun.common.utils.SpringContextUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.io.Resource;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.client.RestTemplate;
 
 import javax.annotation.PostConstruct;
 import java.io.File;
@@ -22,9 +20,6 @@ import java.util.Set;
 public class HelloController {
 
     private final static Logger logger = LoggerFactory.getLogger(HelloController.class);
-
-    @Autowired
-    private RestTemplate restTemplate;
 
     @Value("#{'${test.set:}'.empty? null: '${test.set:}'.split(',')}")
     private Set<String> testSet;
@@ -52,14 +47,6 @@ public class HelloController {
     public String testString(){
         return "kunghsu";
     }
-
-    @GetMapping("/testRestTemplate")
-    public String testRestTemplate(){
-
-        restTemplate.getForObject("http://127.0.0.1:8081/one/test", String.class);
-        return "kunghsu";
-    }
-
 
     @GetMapping("/testExclude")
     public People testExclude(){

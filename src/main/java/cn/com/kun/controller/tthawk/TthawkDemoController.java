@@ -2,6 +2,7 @@ package cn.com.kun.controller.tthawk;
 
 import cn.com.kun.common.vo.ResultVo;
 import cn.com.kun.service.tthawk.TthawkDemoService;
+import cn.com.kun.service.tthawk.TthawkThirdDemoService;
 import cn.com.kun.service.tthawk.vo.TthawkDemoVO1;
 import cn.com.kun.service.tthawk.vo.TthawkDemoVO2;
 import org.slf4j.Logger;
@@ -21,6 +22,9 @@ public class TthawkDemoController {
 
     @Autowired
     private TthawkDemoService tthawkDemoService;
+
+    @Autowired
+    private TthawkThirdDemoService tthawkThirdDemoService;
 
     @GetMapping("/test")
     public ResultVo test() throws IOException {
@@ -73,4 +77,12 @@ public class TthawkDemoController {
         tthawkDemoService.test66();
         return ResultVo.valueOfSuccess("OK");
     }
+
+    @GetMapping("/test7")
+    public ResultVo test7() throws IOException {
+
+        tthawkThirdDemoService.doWork7();
+        return ResultVo.valueOfSuccess("OK");
+    }
+
 }

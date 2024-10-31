@@ -25,5 +25,7 @@ public interface KunwebdemoFeign2 {
     @GetMapping("/kunwebdemo/feigndemo/test")
     ResultVo result1(@RequestParam("name") String name);
 
+    @GetMapping("/kunwebdemo/restTemplate-demo/entrance")
+    ResultVo entrance(@RequestParam("id") String id);
 
 }

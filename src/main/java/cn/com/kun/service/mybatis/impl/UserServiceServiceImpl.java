@@ -254,5 +254,9 @@ public class UserServiceServiceImpl implements UserService {
         userMapper.insert(user);
     }
 
-
+    @Transactional
+    @Override
+    public void saveByManualCommit(User user) {
+        userMapper.insert(user);
+    }
 }

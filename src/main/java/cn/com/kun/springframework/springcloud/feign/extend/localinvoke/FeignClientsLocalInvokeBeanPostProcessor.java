@@ -3,6 +3,8 @@ package cn.com.kun.springframework.springcloud.feign.extend.localinvoke;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.aop.framework.ProxyFactory;
+import org.springframework.aop.target.SingletonTargetSource;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.context.EnvironmentAware;
@@ -20,6 +22,10 @@ import java.util.regex.Pattern;
  * 功能：支持通过开关控制是否启用本地调试模式，仅支持OpenFeign，不支持Feign(工厂bean的class类型：org.springframework.cloud.openfeign.FeignClientFactoryBean)
  * 原理：设置了url,feign就不会再通过注册中心的方式找目标地址
  *
+ * 使用注意事项
+ * 1.feignclient的起名必须包含feign字样
+ *
+ *
  * author:xuyaokun_kzx
  * date:2021/11/17
  * desc:
@@ -32,9 +38,13 @@ public class FeignClientsLocalInvokeBeanPostProcessor implements BeanPostProcess
 
     @Override
     public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
+
         String beanToString = null;
         try {
-            beanToString = bean.toString();
+            //有些scope作用域的bean调用toString方法会报错，为了规避这个错，加一个约束: feignclient的类名必须含有feign或者Feign才进行增强
+            if (beanName.toLowerCase().contains("feign")){
+                beanToString = bean.toString();
+            }
         }catch (Exception e){
             LOGGER.warn("{}调用toString方法异常", beanName, e);
         }
@@ -64,11 +74,58 @@ public class FeignClientsLocalInvokeBeanPostProcessor implements BeanPostProcess
             h.setAccessible(true);
             Object aopProxy =  h.get(bean);
 
+
+            Field[] fields = aopProxy.getClass().getDeclaredFields();
+            if (existArg3(fields)){
+                doModifyUrl(aopProxy, configUrl);
+            }else {
+                //说明被二次代理
+                String name = aopProxy.getClass().getName();
+                if (name.equals("org.springframework.aop.framework.JdkDynamicAopProxy")){
+                    Field advised = aopProxy.getClass().getDeclaredField("advised");
+                    advised.setAccessible(true);
+                    Object advisedObj = advised.get(aopProxy);
+                    if (advisedObj instanceof ProxyFactory){
+                        Object targetSourceObj = ((ProxyFactory) advisedObj).getTargetSource();
+                        if (targetSourceObj instanceof SingletonTargetSource){
+                            Object target = ((SingletonTargetSource) targetSourceObj).getTarget();
+                            h = target.getClass().getSuperclass().getDeclaredField("h");
+                            h.setAccessible(true);
+                            aopProxy = h.get(target);
+                            if (existArg3(aopProxy.getClass().getDeclaredFields())){
+                                doModifyUrl(aopProxy, configUrl);
+                            }
+                        }
+                    }
+
+
+                }
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    private boolean existArg3(Field[] fields) {
+
+        if (fields != null && fields.length > 0){
+            for (Field field : fields){
+                if (field.getName().equals("arg$3")){
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    private void doModifyUrl(Object aopProxy, String configUrl) {
+
+        try {
             Field arg$3 = aopProxy.getClass().getDeclaredField("arg$3");
             arg$3.setAccessible(true);
 
             Object innetType = arg$3.get(aopProxy);
-
             Field url = innetType.getClass().getDeclaredField("url");
             url.setAccessible(true);
             url.set(innetType, configUrl);
@@ -78,16 +135,14 @@ public class FeignClientsLocalInvokeBeanPostProcessor implements BeanPostProcess
     }
 
 
-
     private String extractFeignClientName(String toString) {
 
         Pattern pattern = Pattern.compile("name=(.*?),");
         Matcher matcher = pattern.matcher(toString);
-        while(matcher.find()) {
+        if (matcher.find()){
             //只输出匹配的串
             return matcher.group(1);
         }
-
         return "";
     }
 

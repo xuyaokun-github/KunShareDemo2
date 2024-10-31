@@ -1,6 +1,5 @@
 package cn.com.kun.service.tthawk;
 
-import cn.com.kun.service.switchcheck.SwitchCheckerDemoService;
 import cn.com.kun.service.tthawk.vo.TthawkDemoEnum;
 import cn.com.kun.service.tthawk.vo.TthawkDemoVO3;
 import org.slf4j.Logger;
@@ -10,7 +9,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class TthawkThirdDemoService {
 
-    private final static Logger LOGGER = LoggerFactory.getLogger(SwitchCheckerDemoService.class);
+    private final static Logger LOGGER = LoggerFactory.getLogger(TthawkThirdDemoService.class);
 
     public void doWork5() {
 
@@ -20,6 +19,11 @@ public class TthawkThirdDemoService {
     public void doWork6() /*throws InterruptedException*/{
 
         LOGGER.info("This is TthawkThirdDemoService doWork66666666.");
+    }
+
+    public void doWork7() /*throws InterruptedException*/{
+
+        LOGGER.info("This is TthawkThirdDemoService doWork7. this:{}", this.toString());
     }
 
     /**

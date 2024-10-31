@@ -17,6 +17,19 @@ public class TestPattern3 {
             System.out.println(matcher.group(1));
         }
 
+        String str = method();
+        System.out.println(str);
+    }
+
+    private static String method() {
+
+        String toString = "aaaa name=kkkk, bbbb";
+        Pattern pattern = Pattern.compile("name=(.*?),");
+        Matcher matcher = pattern.matcher(toString);
+        if (matcher.find()){
+            return matcher.group(1);
+        }
+        return "";
     }
 
 

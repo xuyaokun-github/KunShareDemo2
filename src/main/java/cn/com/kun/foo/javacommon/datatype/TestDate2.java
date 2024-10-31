@@ -1,5 +1,7 @@
 package cn.com.kun.foo.javacommon.datatype;
 
+import cn.com.kun.common.utils.DateUtils;
+
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
@@ -22,6 +24,12 @@ public class TestDate2 {
 //        changeDate(date);
         changeDate2(date);
         System.out.println(date);
+
+        //计算两个日期之间的天数
+        long days = DateUtils.betweenDays("20240101", "20241010");
+        System.out.println(days);
+
+        System.out.println((138.38 * 10000)/283.0);
     }
 
     private static void changeDate2(Date date) {

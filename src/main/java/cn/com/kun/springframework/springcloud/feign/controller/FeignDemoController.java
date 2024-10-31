@@ -126,6 +126,17 @@ public class FeignDemoController {
         return ResultVo.valueOfSuccess();
     }
 
+    @GetMapping("/test-entrance")
+    public ResultVo testEntrance(){
+
+        String paramVaue = "123+456";
+        ResultVo resultVo2 = kunwebdemoFeign2.entrance(paramVaue);
+        logger.info("resultVo2:{}", JacksonUtils.toJSONString(resultVo2));
+
+        return ResultVo.valueOfSuccess();
+    }
+
+
 
     @GetMapping("/test-jackson")
     public ResultVo testJacksonServer() throws InterruptedException {

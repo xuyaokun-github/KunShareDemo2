@@ -1,4 +1,4 @@
-package cn.com.kun.component.tthawk.reflect;
+package cn.com.kun.component.tthawk.core;
 
 import java.util.Base64;
 

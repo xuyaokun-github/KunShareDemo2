@@ -27,7 +27,7 @@ public class SpringAopDemoController {
     @Autowired
     AopProxyUtilsDemo aopProxyUtilsDemo;
 
-//    @Autowired
+    @Autowired
     private SpringAopTimeLogDemoService springAopTimeLogDemoService;
 
 

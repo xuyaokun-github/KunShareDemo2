@@ -1,5 +1,6 @@
 package cn.com.kun.component.tthawk.dynamicpointcut;
 
+import cn.com.kun.component.tthawk.core.MethodKeyExceptionHolder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -17,11 +18,11 @@ import java.io.IOException;
  * desc:
 */
 @ConditionalOnProperty(prefix = "tthawk", value = {"enabled"}, havingValue = "true", matchIfMissing = false)
-@RequestMapping("/tthawk-dynamicpointcut")
+@RequestMapping("/tthawk-dpc")
 @RestController
-public class TthawkDynamicpointcutController {
+public class TthawkDynamicPointcutController {
 
-    private final static Logger LOGGER = LoggerFactory.getLogger(TthawkDynamicpointcutController.class);
+    private final static Logger LOGGER = LoggerFactory.getLogger(TthawkDynamicPointcutController.class);
 
     @PostMapping("/attack")
     public String attack(@RequestBody MethodKeyVO methodKeyVO) throws IOException {

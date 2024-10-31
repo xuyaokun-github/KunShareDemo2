@@ -1,5 +1,6 @@
 package cn.com.kun.component.tthawk.reflect;
 
+import cn.com.kun.component.tthawk.core.SpringBeanUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -11,11 +12,11 @@ import org.springframework.web.bind.annotation.RestController;
 import java.io.IOException;
 
 @ConditionalOnProperty(prefix = "tthawk", value = {"enabled"}, havingValue = "true", matchIfMissing = false)
-@RequestMapping("/tthawk-second")
+@RequestMapping("/tthawk-rf")
 @RestController
-public class TthawkSecondController {
+public class TthawkReflectController {
 
-    private final static Logger LOGGER = LoggerFactory.getLogger(TthawkSecondController.class);
+    private final static Logger LOGGER = LoggerFactory.getLogger(TthawkReflectController.class);
 
     @PostMapping("/attack")
     public String attack(@RequestBody ReflectVO reflectVO) throws IOException {

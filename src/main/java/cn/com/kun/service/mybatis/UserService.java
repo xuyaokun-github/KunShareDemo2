@@ -27,4 +27,6 @@ public interface UserService extends BaseService<UserQueryParam, User> {
     User queryUserByFirstName(String firstname);
 
     void save(User user);
+
+    void saveByManualCommit(User user);
 }

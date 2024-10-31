@@ -22,10 +22,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static cn.com.kun.common.utils.DateUtils.PATTERN_yyyy_MM_dd_HH_mm_ss_SSS;
 
@@ -261,5 +258,25 @@ public class MybatisDemoController {
         return ResultVo.valueOfSuccess();
     }
 
+    @GetMapping("/auto-commit")
+    public ResultVo testAutoCommit(){
 
+        User user = new User();
+        user.setFirstname("Firstname" + UUID.randomUUID().toString());
+        user.setLastname("Lastname" + UUID.randomUUID().toString());
+        user.setCreateTime(new Date());
+        userService.save(user);
+        return ResultVo.valueOfSuccess(null);
+    }
+
+    @GetMapping("/manual-commit")
+    public ResultVo testManualCommit(){
+
+        User user = new User();
+        user.setFirstname("Firstname" + UUID.randomUUID().toString());
+        user.setLastname("Lastname" + UUID.randomUUID().toString());
+        user.setCreateTime(new Date());
+        userService.saveByManualCommit(user);
+        return ResultVo.valueOfSuccess(null);
+    }
 }

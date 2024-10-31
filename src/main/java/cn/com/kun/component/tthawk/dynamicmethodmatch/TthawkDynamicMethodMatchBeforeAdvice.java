@@ -1,6 +1,7 @@
 package cn.com.kun.component.tthawk.dynamicmethodmatch;
 
-import cn.com.kun.component.tthawk.dynamicpointcut.FeignHelper;
+import cn.com.kun.component.tthawk.core.FeignHelper;
+import cn.com.kun.component.tthawk.core.NestedExceptionHelper;
 import org.aopalliance.aop.Advice;
 import org.aopalliance.intercept.MethodInterceptor;
 import org.slf4j.Logger;
@@ -39,7 +40,7 @@ public class TthawkDynamicMethodMatchBeforeAdvice implements MethodBeforeAdvice,
 
         //是否需要主动抛出异常
         if(DynamicMethodMatchHolder.contains(methodKey)){
-            Object obj = buildException(DynamicMethodMatchHolder.getExceptionClass(methodKey));
+            Object obj = NestedExceptionHelper.buildException(DynamicMethodMatchHolder.getExceptionClass(methodKey));
             if(obj != null){
                 LOGGER.info("抛出异常：{}", obj.getClass().getName());
                 throw (Throwable) obj;
@@ -47,27 +48,8 @@ public class TthawkDynamicMethodMatchBeforeAdvice implements MethodBeforeAdvice,
         }
     }
 
-    private Object buildException(String exceptionClass) {
-
-        Class clazz = null;
-        Object sourceBean = null;
-        try {
-            clazz = Class.forName(exceptionClass);
-            sourceBean = clazz.newInstance();
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        } catch (InstantiationException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        }
-
-        return sourceBean;
-    }
-
     @Override
     public void afterReturning(Object returnValue, Method method, Object[] args, Object target) throws Throwable {
-//        System.out.println("afterReturning");
     }
 
     @Override

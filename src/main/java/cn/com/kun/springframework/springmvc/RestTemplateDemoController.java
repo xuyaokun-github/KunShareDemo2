@@ -11,6 +11,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
+import javax.servlet.http.HttpServletRequest;
+
 @RequestMapping("/restTemplate-demo")
 @RestController
 public class RestTemplateDemoController {
@@ -23,6 +25,43 @@ public class RestTemplateDemoController {
     private String targetUrl = "http://127.0.0.1:8091/kunwebdemo/student/update";
 
     private String ownTargetUrl = "http://127.0.0.1:8080/kunsharedemo/restTemplate-demo/add";
+
+    /**
+     * 验证RestTemplate “+”号自动转换问题
+     * springboot2.7客户端 请求 springboot1.5.15服务端，参数 有问题  结果：123 456
+     *
+     * @return
+     */
+    @GetMapping("/testRestTemplateProblem1")
+    public String testRestTemplateProblem1(){
+
+        String param = "id=123+456";
+        Object object = restTemplate.getForObject("http://127.0.0.1:8091/kunwebdemo/restTemplate-demo/entrance?" + param, String.class);
+        LOGGER.info("result:{}", object);
+        return "kunghsu";
+    }
+
+    /**
+     * springboot2.7客户端 请求 springboot2.7服务端，参数 有问题  结果：123 456
+     *
+     * @return
+     */
+    @GetMapping("/testRestTemplateProblem2")
+    public String testRestTemplateProblem2(){
+
+        String param = "id=123+456";
+        Object object = restTemplate.getForObject("http://127.0.0.1:8082/kunsharedemo27/restTemplate-demo/entrance?" + param, String.class);
+        LOGGER.info("result:{}", object);
+        return "kunghsu";
+    }
+
+    @GetMapping("/entrance")
+    public String entrance(HttpServletRequest request){
+
+        String id = request.getParameter("id");
+        LOGGER.info("接收到的id:{}", id);
+        return "kunghsu from kunsharedemo27";
+    }
 
     @GetMapping("/test")
     public Object test(){

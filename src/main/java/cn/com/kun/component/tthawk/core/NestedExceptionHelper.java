@@ -1,4 +1,4 @@
-package cn.com.kun.component.tthawk.reflect;
+package cn.com.kun.component.tthawk.core;
 
 import java.io.IOException;
 import java.lang.reflect.Constructor;
@@ -71,12 +71,12 @@ public class NestedExceptionHelper {
         return (Throwable) sourceBean;
     }
 
-    private static Throwable buildException(String className) throws InstantiationException {
+    public static Throwable buildException(String exceptionClass) throws InstantiationException {
         Class clazz = null;
-        Object sourceBean = null;
+        Object throwable = null;
         try {
-            clazz = Class.forName(className);
-            sourceBean = clazz.newInstance();
+            clazz = Class.forName(exceptionClass);
+            throwable = clazz.newInstance();
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         } catch (InstantiationException e) {
@@ -89,7 +89,7 @@ public class NestedExceptionHelper {
         } catch (IllegalAccessException e) {
             e.printStackTrace();
         }
-        return (Throwable) sourceBean;
+        return (Throwable) throwable;
     }
 
     private static Throwable buildOneThrowableParamException(String className, Throwable cause) {

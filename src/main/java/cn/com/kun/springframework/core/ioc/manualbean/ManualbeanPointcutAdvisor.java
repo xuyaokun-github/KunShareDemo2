@@ -1,4 +1,4 @@
-package cn.com.kun.springframework.core.aop.abstractPointcutAdvisorDemo;
+package cn.com.kun.springframework.core.ioc.manualbean;
 
 import org.aopalliance.aop.Advice;
 import org.springframework.aop.ClassFilter;
@@ -13,7 +13,6 @@ import org.springframework.aop.support.annotation.AnnotationMethodMatcher;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.BeanFactoryAware;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.ReflectionUtils;
@@ -35,8 +34,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * date:2021/10/26
  * desc:
 */
-@Configuration
-public class TimeLogPointcutAdvisorConfig extends AbstractPointcutAdvisor implements IntroductionAdvisor, BeanFactoryAware {
+public class ManualbeanPointcutAdvisor extends AbstractPointcutAdvisor implements IntroductionAdvisor, BeanFactoryAware {
 
     private BeanFactory beanFactory;
 
@@ -53,7 +51,7 @@ public class TimeLogPointcutAdvisorConfig extends AbstractPointcutAdvisor implem
     @PostConstruct
     public void init() {
         Set<Class<? extends Annotation>> retryableAnnotationTypes = new LinkedHashSet<Class<? extends Annotation>>(1);
-        retryableAnnotationTypes.add(TimeLog.class);
+        retryableAnnotationTypes.add(ManualbeanTimeLog.class);
         //构建切入点
         this.pointcut = buildPointcut(retryableAnnotationTypes);
         //构建通知
@@ -65,10 +63,16 @@ public class TimeLogPointcutAdvisorConfig extends AbstractPointcutAdvisor implem
 
     private Advice buildAdvice() {
         //通知实现类，实现了IntroductionInterceptor接口
-        TimeLogIntroductionInterceptor interceptor = new TimeLogIntroductionInterceptor();
+        ManualbeanTimeLogIntroductionInterceptor interceptor = new ManualbeanTimeLogIntroductionInterceptor();
         return interceptor;
     }
 
+    /**
+     * 按注解匹配切入点
+     *
+     * @param retryAnnotationTypes
+     * @return
+     */
     private Pointcut buildPointcut(Set<Class<? extends Annotation>> retryAnnotationTypes) {
         //切入点是可以组合的，可以组合多个切入点
         ComposablePointcut result = null;
@@ -96,12 +100,13 @@ public class TimeLogPointcutAdvisorConfig extends AbstractPointcutAdvisor implem
         AnnotationClassOrMethodPointcut(Class<? extends Annotation> annotationType) {
             this.methodResolver = new AnnotationMethodMatcher(annotationType);
             //类过期器
-            setClassFilter(new AnnotationClassOrMethodFilter(annotationType));
+//            setClassFilter(new AnnotationClassOrMethodFilter(annotationType));
         }
 
         @Override
         public boolean matches(Method method, Class<?> targetClass) {
-            return getClassFilter().matches(targetClass) || this.methodResolver.matches(method, targetClass);
+            return this.methodResolver.matches(method, targetClass);
+//            return getClassFilter().matches(targetClass) || this.methodResolver.matches(method, targetClass);
         }
 
         @Override
@@ -136,7 +141,7 @@ public class TimeLogPointcutAdvisorConfig extends AbstractPointcutAdvisor implem
 
     /**
      * 方法解析器
-     * 判断是否存在该注解类型的方法
+     * 作用：判断是否存在该注解类型的方法
      */
     private static class AnnotationMethodsResolver {
 
@@ -151,8 +156,7 @@ public class TimeLogPointcutAdvisorConfig extends AbstractPointcutAdvisor implem
             ReflectionUtils.doWithMethods(clazz,
                     new ReflectionUtils.MethodCallback() {
                         @Override
-                        public void doWith(Method method) throws IllegalArgumentException,
-                                IllegalAccessException {
+                        public void doWith(Method method) throws IllegalArgumentException {
                             if (found.get()) {
                                 return;
                             }
@@ -179,7 +183,7 @@ public class TimeLogPointcutAdvisorConfig extends AbstractPointcutAdvisor implem
 
     @Override
     public Class<?>[] getInterfaces() {
-        return new Class[] { TimeLog.class };
+        return new Class[] { ManualbeanTimeLog.class};
     }
 
     @Override

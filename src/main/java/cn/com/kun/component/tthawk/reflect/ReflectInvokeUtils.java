@@ -1,5 +1,7 @@
 package cn.com.kun.component.tthawk.reflect;
 
+import cn.com.kun.component.tthawk.core.NestedExceptionHelper;
+import cn.com.kun.component.tthawk.core.TthawkBase64Utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

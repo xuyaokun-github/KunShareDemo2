@@ -1,6 +1,7 @@
 package cn.com.kun.component.tthawk.dynamicproxy;
 
-import cn.com.kun.component.tthawk.dynamicpointcut.FeignHelper;
+import cn.com.kun.component.tthawk.core.FeignHelper;
+import cn.com.kun.component.tthawk.core.NestedExceptionHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.aop.MethodBeforeAdvice;
@@ -35,30 +36,12 @@ public class TthawkDynamicProxyBeforeAdvice implements MethodBeforeAdvice{
 
         //是否需要主动抛出异常
         if(DynamicProxyKeyHolder.contains(methodKey)){
-            Object obj = buildException(DynamicProxyKeyHolder.getExceptionClass(methodKey));
+            Object obj = NestedExceptionHelper.buildException(DynamicProxyKeyHolder.getExceptionClass(methodKey));
             if (obj != null){
                 LOGGER.info("主动抛出异常：{}", obj.getClass().getName());
                 throw (Throwable) obj;
             }
         }
-    }
-
-    private Object buildException(String exceptionClass) {
-
-        Class clazz = null;
-        Object sourceBean = null;
-        try {
-            clazz = Class.forName(exceptionClass);
-            sourceBean = clazz.newInstance();
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        } catch (InstantiationException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        }
-
-        return sourceBean;
     }
 
 }

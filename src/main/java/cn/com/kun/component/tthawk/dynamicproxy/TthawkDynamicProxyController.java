@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @ConditionalOnProperty(prefix = "tthawk", value = {"enabled"}, havingValue = "true", matchIfMissing = false)
-@RequestMapping("/tthawk-dynamicproxy")
+@RequestMapping("/tthawk-dp")
 @RestController
 public class TthawkDynamicProxyController {
 

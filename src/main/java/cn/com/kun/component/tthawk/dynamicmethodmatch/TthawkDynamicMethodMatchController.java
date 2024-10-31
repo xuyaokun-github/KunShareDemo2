@@ -17,7 +17,7 @@ import java.io.IOException;
  * desc:
 */
 @ConditionalOnProperty(prefix = "tthawk", value = {"enabled"}, havingValue = "true", matchIfMissing = false)
-@RequestMapping("/tthawk-dynamicmethodmatch")
+@RequestMapping("/tthawk-dmm")
 @RestController
 public class TthawkDynamicMethodMatchController {
 

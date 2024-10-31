@@ -1,6 +1,8 @@
 package cn.com.kun.component.tthawk.dynamicpointcut;
 
-import cn.com.kun.component.tthawk.reflect.NestedExceptionHelper;
+import cn.com.kun.component.tthawk.core.FeignHelper;
+import cn.com.kun.component.tthawk.core.MethodKeyExceptionHolder;
+import cn.com.kun.component.tthawk.core.NestedExceptionHelper;
 import org.aopalliance.aop.Advice;
 import org.aopalliance.intercept.MethodInterceptor;
 import org.slf4j.Logger;
@@ -45,7 +47,7 @@ public class TthawkDynamicPointcutBeforeAdvice extends TthawkInterceptor impleme
             if (nestedExceptionClass != null){
                 obj = NestedExceptionHelper.buildNestedException(nestedExceptionClass);
             }else {
-                obj = buildException(MethodKeyExceptionHolder.getExceptionClass(methodKey));
+                obj = NestedExceptionHelper.buildException(MethodKeyExceptionHolder.getExceptionClass(methodKey));
             }
 
             if (obj != null){
@@ -55,27 +57,8 @@ public class TthawkDynamicPointcutBeforeAdvice extends TthawkInterceptor impleme
         }
     }
 
-    private Object buildException(String exceptionClass) {
-
-        Class clazz = null;
-        Object sourceBean = null;
-        try {
-            clazz = Class.forName(exceptionClass);
-            sourceBean = clazz.newInstance();
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        } catch (InstantiationException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        }
-
-        return sourceBean;
-    }
-
     @Override
     public void afterReturning(Object returnValue, Method method, Object[] args, Object target) throws Throwable {
-//        System.out.println("afterReturning");
     }
 
     @Override

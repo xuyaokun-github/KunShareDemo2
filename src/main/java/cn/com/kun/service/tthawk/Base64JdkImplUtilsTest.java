@@ -1,7 +1,7 @@
 package cn.com.kun.service.tthawk;
 
 import cn.com.kun.common.utils.JacksonUtils;
-import cn.com.kun.component.tthawk.reflect.TthawkBase64Utils;
+import cn.com.kun.component.tthawk.core.TthawkBase64Utils;
 import cn.com.kun.service.tthawk.vo.TthawkDemoEnum;
 import cn.com.kun.service.tthawk.vo.TthawkDemoVO1;
 import cn.com.kun.service.tthawk.vo.TthawkDemoVO2;
